@@ -1,0 +1,10 @@
+a.out
+*.cmo
+*.cmi
+
+minic
+miniclexer.ml
+minicparser.automaton
+minicparser.conflicts
+minicparser.ml
+minicparser.mli
