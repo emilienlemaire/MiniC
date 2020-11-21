@@ -71,7 +71,7 @@ rule token = parse
   | ident as i { add_to_col (String.length i); IDENT (i) }
   | _ as c     { failwith ( Printf.sprintf
                 "Unexpected character %d:%d '%c'" !line !col c ) }
-  | eof        { raise Eof }
+  | eof        { EOF }
 
 (*{*)
   (*let lexbuf = Lexing.from_channel (open_in Sys.argv.(1))*)

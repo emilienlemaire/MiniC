@@ -1,6 +1,6 @@
 all: minic
 
-minic: miniclexer.cmo minicparser.cmo minic.cmo
+minic: miniclexer.cmo minicparser.cmo minictypechecker.cmo minic.cmo
 	ocamlc -o minic $?
 
 minic.cmo:
@@ -18,6 +18,9 @@ minicparser.cmo: minicparser.mli
 
 minicparser.mli: ast_types.cmo
 	menhir -v minicparser.mly
+
+minictypechecker.cmo: minictypechecker.ml
+	ocamlc -c minictypechecker.ml
 
 ast_types.cmo:
 	ocamlc -c ast_types.ml

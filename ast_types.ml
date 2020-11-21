@@ -5,6 +5,7 @@ type expr =
   | Lth  of expr * expr
   | Get  of string
   | Call of string * expr list
+  | Bool of bool
 
 type instr =
   | Putchar of expr

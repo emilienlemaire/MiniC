@@ -1,6 +1,15 @@
 %{
   open Ast_types
 
+  type valuet =
+    | Val of int
+    | None
+
+  type var = {
+    prototype: (string * typ);
+    value: valuet
+  }
+
   let typ_of_string s =
     match s with
     | "int" -> Int
@@ -39,12 +48,12 @@ prog:
 ;
 
 glob_vars:
-  | glob_var { [$1] } 
-  | glob_vars glob_var { $1@[$2] }
+  | glob_var { [$1.prototype] } 
+  | glob_vars glob_var { $1@[$2.prototype] }
 ;
 
 glob_var:
-  decl opt_const SEMI { $1 }
+  decl opt_const SEMI { {prototype= $1; value= $2} }
 ;
 
 decl:
@@ -56,8 +65,8 @@ funcs:
 ;
 
 opt_const:
-    {  }
-  | EQ CONST {  }
+    { None }
+  | EQ CONST { Val($2) }
 ;
 
 func:
@@ -135,6 +144,7 @@ expr:
   | lth { $1 }
   | get { $1 }
   | call { $1 }
+  | bool { $1 }
   | PARO expr PARC { $2 }
 
 add:
@@ -157,8 +167,13 @@ call:
   IDENT PARO args PARC { Call ($1, $3) }
 ;
 
+bool:
+    TRUE { Bool(true) }
+  | FALSE { Bool(false) }
+;
+
 args:
    { [] }
   | expr { [$1] }
   | args COMMA expr { $1@[$3] }
-
+;
