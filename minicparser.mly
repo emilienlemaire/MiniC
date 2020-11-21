@@ -25,6 +25,8 @@
   let reset_locals =
     locals_tmp := []
 
+  exception SyntaxError of string
+
 %}
 
 %token <string> TYPE IDENT
@@ -35,9 +37,11 @@
 %token TRUE FALSE
 %token PUTCHAR
 %token EOF
+
 %left LTH
 %left PLUS
 %left TIMES
+
 %start prog
 %type <Ast_types.prog> prog
 
@@ -45,6 +49,11 @@
 
 prog:
   glob_vars funcs EOF { {globals = $1; functions = $2} }
+  | error {
+      let pos = $startpos in
+      let msg = Printf.sprintf "Syntax error: line %d, col %d" pos.pos_lnum (pos.pos_cnum - pos.pos_bol) in
+      raise (SyntaxError msg)
+    }
 ;
 
 glob_vars:
