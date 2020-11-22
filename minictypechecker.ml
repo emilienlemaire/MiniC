@@ -86,7 +86,7 @@ let rec check_expr expr env =
           end
         else
           ret
-      | Bool (_) -> Bool
+      | BoolLit (_) -> Bool
 and check_args argst args env =
   let rec loop argst args res =
     match args with
@@ -165,4 +165,25 @@ and check_seq seq env =
     | hd::tl ->
         let _ = check_instr hd env in
         check_seq tl env
+
+let check_func func env =
+  let (_, paramst) = List.split func.params in
+  let proto = (func.name, (func.return, paramst)) in
+  let env2 = {
+    vars= env.vars@func.params@func.locals;
+    funcs= env.funcs@[proto];
+    current_ret_type = func.return;
+  } in
+  let _ = check_seq func.code env2 in
+  {
+    vars= env.vars;
+    funcs= env2.funcs;
+    current_ret_type = env.current_ret_type;
+  }
+
+let rec check_funcs (funcs: func_def list) (env: context) =
+  match funcs with
+    | [] -> env
+    | hd::tl ->
+      check_funcs tl (check_func hd env)
 

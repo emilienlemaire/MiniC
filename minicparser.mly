@@ -1,15 +1,6 @@
 %{
   open Ast_types
 
-  type valuet =
-    | Val of int
-    | None
-
-  type var = {
-    prototype: (string * typ);
-    value: valuet
-  }
-
   let typ_of_string s =
     match s with
     | "int" -> Int
@@ -24,8 +15,6 @@
 
   let reset_locals =
     locals_tmp := []
-
-  exception SyntaxError of string
 
 %}
 
@@ -49,20 +38,15 @@
 
 prog:
   glob_vars funcs EOF { {globals = $1; functions = $2} }
-  | error {
-      let pos = $startpos in
-      let msg = Printf.sprintf "Syntax error: line %d, col %d" pos.pos_lnum (pos.pos_cnum - pos.pos_bol) in
-      raise (SyntaxError msg)
-    }
 ;
 
 glob_vars:
-  | glob_var { [$1.prototype] } 
-  | glob_vars glob_var { $1@[$2.prototype] }
+  | glob_var { [$1] } 
+  | glob_vars glob_var { $1@[$2] }
 ;
 
 glob_var:
-  decl opt_const SEMI { {prototype= $1; value= $2} }
+  decl opt_const SEMI { $1 }
 ;
 
 decl:
@@ -74,12 +58,12 @@ funcs:
 ;
 
 opt_const:
-    { None }
-  | EQ CONST { Val($2) }
+    {  }
+  | EQ CONST {  }
 ;
 
 func:
-  decl PARO params PARC BRAO body BRAC {
+  decl PARO params_opt PARC BRAO body BRAC {
       let (n, t) = $1 in
       let func_def = {
         name = n;
@@ -93,10 +77,14 @@ func:
   }
 ;
 
-params:
+params_opt:
     { [] }
-  | param { [$1] }
-  | params COMMA param { $1@[$3] }
+  | params { $1 }
+;
+
+params:
+   param { [$1] }
+  | param COMMA params { $3@[$1] }
 ;
 
 param:
@@ -124,7 +112,7 @@ local:
 ;
 
 putchar:
-  PUTCHAR expr SEMI { Putchar ($2) }
+  PUTCHAR PARO expr PARC SEMI { Putchar ($3) }
 ;
 
 set:
@@ -173,16 +161,20 @@ get:
 ;
 
 call:
-  IDENT PARO args PARC { Call ($1, $3) }
+  IDENT PARO args_opt PARC { Call ($1, $3) }
 ;
 
 bool:
-    TRUE { Bool(true) }
-  | FALSE { Bool(false) }
+    TRUE { BoolLit(true) }
+  | FALSE { BoolLit(false) }
+;
+
+args_opt:
+    { [] }
+  | args { $1 }
 ;
 
 args:
-   { [] }
-  | expr { [$1] }
-  | args COMMA expr { $1@[$3] }
+    expr { [$1] }
+  | expr COMMA args { $3@[$1] }
 ;

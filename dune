@@ -1,0 +1,13 @@
+(ocamllex miniclexer)
+(menhir
+  (flags --table -v)
+  (modules minicparser))
+
+(rule
+  (targets error_meaages.ml)
+  (deps minicparser.messages minicparser.mly)
+  (action (with-stdout-to %{targets} (run menhir --compile-errors %{deps}))))
+
+(executable
+  (name minic)
+  (libraries menhirLib))

@@ -44,31 +44,31 @@ let ident = alpha (alpha | digit | '_')*
 let cst   = ('-')? (digit)+
 
 rule token = parse
-  | ' '        { space (); token lexbuf }
-  | '\t'       { tab (); token lexbuf }
-  | '\n'       { newline (); token lexbuf }
-  | "int"      { add_to_col 3; TYPE "int"}
-  | "bool"     { add_to_col 4; TYPE "bool" }
-  | "void"     { add_to_col 4; TYPE "void" }
-  | cst as n   { add_to_col (String.length n); CONST (int_of_string n) }
-  | "true"     { add_to_col 4; TRUE }
-  | "false"    { add_to_col 5; FALSE }
-  | '='        { add_to_col 1; EQ }
-  | '('        { add_to_col 1; PARO }
-  | ')'        { add_to_col 1; PARC }
-  | ','        { add_to_col 1; COMMA }
-  | '{'        { add_to_col 1; BRAO }
-  | '}'        { add_to_col 1; BRAC }
-  | "if"       { add_to_col 2; IF }
-  | "else"     { add_to_col 4; ELSE }
-  | "while"    { add_to_col 5; WHILE }
-  | "return"   { add_to_col 6; RETURN }
-  | "putchar"  { add_to_col 6; PUTCHAR }
-  | ';'        { add_to_col 1; SEMI }
-  | '+'        { add_to_col 1; PLUS }
-  | '*'        { add_to_col 1; TIMES }
-  | '<'        { add_to_col 1; LTH }
-  | ident as i { add_to_col (String.length i); IDENT (i) }
+  | ' '        { token lexbuf }
+  | '\t'       { token lexbuf }
+  | '\n'       { Lexing.new_line lexbuf; token lexbuf }
+  | "int"      { TYPE "int"}
+  | "bool"     { TYPE "bool" }
+  | "void"     { TYPE "void" }
+  | cst as n   { CONST (int_of_string n) }
+  | "true"     { TRUE }
+  | "false"    { FALSE }
+  | '='        { EQ }
+  | '('        { PARO }
+  | ')'        { PARC }
+  | ','        { COMMA }
+  | '{'        { BRAO }
+  | '}'        { BRAC }
+  | "if"       { IF }
+  | "else"     { ELSE }
+  | "while"    { WHILE }
+  | "return"   { RETURN }
+  | "putchar"  { PUTCHAR }
+  | ';'        { SEMI }
+  | '+'        { PLUS }
+  | '*'        { TIMES }
+  | '<'        { LTH }
+  | ident as i { IDENT (i) }
   | _ as c     { failwith ( Printf.sprintf
                 "Unexpected character %d:%d '%c'" !line !col c ) }
   | eof        { EOF }

@@ -1,11 +1,11 @@
 type expr =
-  | Cst  of int
-  | Add  of expr * expr
-  | Mul  of expr * expr
-  | Lth  of expr * expr
-  | Get  of string
-  | Call of string * expr list
-  | Bool of bool
+  | Cst     of int
+  | Add     of expr * expr
+  | Mul     of expr * expr
+  | Lth     of expr * expr
+  | Get     of string
+  | Call    of string * expr list
+  | BoolLit of bool
 
 type instr =
   | Putchar of expr

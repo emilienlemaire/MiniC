@@ -8,3 +8,5 @@ minicparser.automaton
 minicparser.conflicts
 minicparser.ml
 minicparser.mli
+
+_build
