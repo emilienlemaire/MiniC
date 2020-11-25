@@ -44,7 +44,8 @@ let make_check prog =
     funcs = [];
     current_ret_type = Void;
   } in
-  check_funcs prog.functions env
+  let _ = check_funcs prog.functions env in
+  Printf.printf "The program was validated by the analyzers\n"
 
 let _ =
   let cin = open_in Sys.argv.(1) in

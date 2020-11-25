@@ -3,6 +3,11 @@ type expr =
   | Add     of expr * expr
   | Mul     of expr * expr
   | Lth     of expr * expr
+  | Gth     of expr * expr
+  | Leq     of expr * expr
+  | Geq     of expr * expr
+  | Eq      of expr * expr
+  | Neq     of expr * expr
   | Get     of string
   | Call    of string * expr list
   | BoolLit of bool

@@ -22,12 +22,13 @@
 %token <int> CONST
 %token PARO PARC COMMA SEMI BRAO BRAC
 %token IF ELSE WHILE RETURN
-%token EQ LTH PLUS TIMES
+%token EQ LTH GTH GEQ LEQ EQEQ NEQ PLUS TIMES
 %token TRUE FALSE
 %token PUTCHAR
 %token EOF
 
-%left LTH
+%left NEQ EQEQ
+%left LTH GTH GEQ LEQ
 %left PLUS
 %left TIMES
 
@@ -139,6 +140,11 @@ expr:
   | add { $1 }
   | mul { $1 }
   | lth { $1 }
+  | gth { $1 }
+  | leq { $1 }
+  | geq { $1 }
+  | eq  { $1 }
+  | neq { $1 }
   | get { $1 }
   | call { $1 }
   | bool { $1 }
@@ -154,6 +160,26 @@ mul:
 
 lth:
   expr LTH expr { Lth($1, $3) }
+;
+
+gth:
+  expr GTH expr { Gth($1, $3) }
+;
+
+leq:
+  expr LEQ expr { Leq($1, $3) }
+;
+
+geq:
+  expr GEQ expr { Geq($1, $3) }
+;
+
+eq:
+  expr EQEQ expr { Eq($1, $3) }
+;
+
+neq:
+  expr NEQ expr { Neq($1, $1) }
 ;
 
 get:
