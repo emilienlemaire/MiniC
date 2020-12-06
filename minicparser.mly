@@ -42,16 +42,18 @@
 %token <int> CONST
 %token PARO PARC COMMA SEMI BRAO BRAC DOT
 %token IF ELSE WHILE RETURN
-%token EQ LTH GTH GEQ LEQ EQEQ NEQ PLUS TIMES
+%token EQ LTH GTH GEQ LEQ EQEQ NEQ PLUS TIMES BY AND
+%token MINUS NOT
 %token TRUE FALSE
 %token PUTCHAR
 %token EOF
 %token STRUCT
 
+%right NOT AND
 %left NEQ EQEQ
 %left LTH GTH GEQ LEQ
-%left PLUS
-%left TIMES
+%left PLUS MINUS
+%left TIMES BY
 
 %start prog
 %type <Ast_types.prog> prog
@@ -67,11 +69,21 @@ structs:
 ;
 
 struct_def:
-  STRUCT id = IDENT BRAO d = decls BRAC SEMI { Hashtbl.add struct_defs id (id, d); (id, d) }
+  STRUCT id = IDENT BRAO d = struct_type_decls BRAC SEMI { Hashtbl.add struct_defs id (id, d); (id, d) }
 ;
 
-decls:
-  nonempty_list(decl SEMI {$1}) { $1 }
+decl:
+    t = TYPE id = IDENT { (id, (typ_of_string t)) }
+  | t = TYPE TIMES id = IDENT { (id, Ptr(typ_of_string t)) }
+;
+
+struct_type_decls:
+  nonempty_list(struct_type_decl SEMI {$1}) { $1 }
+;
+
+struct_type_decl:
+    d = decl { d }
+  | s = struct_decl { s }
 ;
 
 glob_vars:
@@ -90,9 +102,6 @@ glob_var:
   | struct_decl opt_init_list SEMI { $1 }
 ;
 
-decl:
-  t = TYPE id = IDENT { (id, (typ_of_string t)) }
-;
 
 struct_decl:
   n = IDENT id = IDENT { (id, (typ_of_string n)) }
@@ -110,11 +119,6 @@ funcs:
 opt_const:
     { None }
   | EQ CONST { Some (Cst $2) }
-;
-
-struct_type_decl:
-    d = decl { d }
-  | s = struct_decl { s }
 ;
 
 func:
@@ -162,6 +166,7 @@ instr:
  | expr SEMI { Expr ($1) }
  | set_struct { $1 }
  | set_struct_member { $1 }
+ | set_ptr_val { $1 }
 ;
 
 local:
@@ -203,6 +208,10 @@ set_struct_member:
   SetStructMember(name, member, e) }
 ;
 
+set_ptr_val:
+  d = deref EQ e = expr SEMI { SetPtrVal(d, e) }
+;
+
 init_list:
   BRAO separated_list(COMMA, expr) BRAC { $2 }
 ;
@@ -210,7 +219,9 @@ init_list:
 expr:
   CONST { Cst($1) }
   | add { $1 }
+  | sub { $1 }
   | mul { $1 }
+  | div { $1 }
   | lth { $1 }
   | gth { $1 }
   | leq { $1 }
@@ -220,19 +231,31 @@ expr:
   | get { $1 }
   | call { $1 }
   | bool { $1 }
-  | PARO expr PARC { $2 }
+  | not { $1 }
+  | neg { $1 }
+  | deref { $1 }
+  | address { $1 }
   | name_member = struct_access {
-  let (name, member) = name_member in
-  StructMember(name, member) }
+      let (name, member) = name_member in
+      StructMember(name, member)
+    }
+  | PARO expr PARC { $2 }
 ;
 
 add:
   expr PLUS expr { Add($1, $3) }
 ;
 
-mul:
-  expr TIMES expr { Ast_types.Mul($1, $3) }
+sub:
+  expr MINUS expr { Sub($1, $3) }
 ;
+
+mul:
+  expr TIMES expr { Mul($1, $3) }
+;
+
+div:
+  expr BY expr { Div($1, $3) }
 
 lth:
   expr LTH expr { Lth($1, $3) }
@@ -266,9 +289,25 @@ call:
   IDENT PARO args_opt PARC { Call ($1, $3) }
 ;
 
+not:
+  NOT expr { Not($2) }
+;
+
+neg:
+  MINUS expr { Neg($2) }
+;
+
 bool:
     TRUE { BoolLit(true) }
   | FALSE { BoolLit(false) }
+;
+
+deref:
+  TIMES expr { Deref($2) }
+;
+
+address:
+  AND expr { Address($2) }
 ;
 
 struct_access:

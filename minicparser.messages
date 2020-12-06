@@ -1,6 +1,40 @@
+prog: IDENT IDENT EQ BRAO AND TRUE WHILE
+##
+## Ends in an error in state: 44.
+##
+## add -> expr . PLUS expr [ TIMES SEMI PLUS PARC NEQ MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC ]
+## address -> AND expr . [ TIMES SEMI PLUS PARC NEQ MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC ]
+## div -> expr . BY expr [ TIMES SEMI PLUS PARC NEQ MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC ]
+## eq -> expr . EQEQ expr [ TIMES SEMI PLUS PARC NEQ MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC ]
+## geq -> expr . GEQ expr [ TIMES SEMI PLUS PARC NEQ MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC ]
+## gth -> expr . GTH expr [ TIMES SEMI PLUS PARC NEQ MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC ]
+## leq -> expr . LEQ expr [ TIMES SEMI PLUS PARC NEQ MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC ]
+## lth -> expr . LTH expr [ TIMES SEMI PLUS PARC NEQ MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC ]
+## mul -> expr . TIMES expr [ TIMES SEMI PLUS PARC NEQ MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC ]
+## neq -> expr . NEQ expr [ TIMES SEMI PLUS PARC NEQ MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC ]
+## sub -> expr . MINUS expr [ TIMES SEMI PLUS PARC NEQ MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC ]
+##
+## The known suffix of the stack is as follows:
+## AND expr
+##
+
+Unexpected statement inside an expression
+
+prog: IDENT IDENT EQ BRAO AND WHILE
+##
+## Ends in an error in state: 32.
+##
+## address -> AND . expr [ TIMES SEMI PLUS PARC NEQ MINUS LTH LEQ GTH GEQ EQEQ COMMA BY BRAC ]
+##
+## The known suffix of the stack is as follows:
+## AND
+##
+
+Expecting expression after '&'.
+
 prog: IDENT IDENT EQ BRAO BRAC WHILE
 ##
-## Ends in an error in state: 70.
+## Ends in an error in state: 92.
 ##
 ## glob_var -> struct_decl opt_init_list . SEMI [ TYPE IDENT ]
 ##
@@ -12,9 +46,9 @@ Unexpected instruction outside of function body.
 
 prog: IDENT IDENT EQ BRAO IDENT DOT WHILE
 ##
-## Ends in an error in state: 59.
+## Ends in an error in state: 78.
 ##
-## struct_access -> IDENT DOT . IDENT [ TIMES SEMI PLUS PARC NEQ LTH LEQ GTH GEQ EQEQ EQ COMMA BRAC ]
+## struct_access -> IDENT DOT . IDENT [ TIMES SEMI PLUS PARC NEQ MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC ]
 ##
 ## The known suffix of the stack is as follows:
 ## IDENT DOT
@@ -24,7 +58,7 @@ Expecting an identifier after '.'.
 
 prog: IDENT IDENT EQ BRAO IDENT PARO TRUE COMMA WHILE
 ##
-## Ends in an error in state: 54.
+## Ends in an error in state: 73.
 ##
 ## args -> expr COMMA . args [ PARC ]
 ##
@@ -36,30 +70,32 @@ Arguments of a function must be an expression
 
 prog: IDENT IDENT EQ BRAO IDENT PARO TRUE WHILE
 ##
-## Ends in an error in state: 33.
+## Ends in an error in state: 72.
 ##
-## add -> expr . PLUS expr [ TIMES PLUS PARC NEQ LTH LEQ GTH GEQ EQEQ COMMA ]
+## add -> expr . PLUS expr [ TIMES PLUS PARC NEQ MINUS LTH LEQ GTH GEQ EQEQ COMMA BY ]
 ## args -> expr . [ PARC ]
 ## args -> expr . COMMA args [ PARC ]
-## eq -> expr . EQEQ expr [ TIMES PLUS PARC NEQ LTH LEQ GTH GEQ EQEQ COMMA ]
-## geq -> expr . GEQ expr [ TIMES PLUS PARC NEQ LTH LEQ GTH GEQ EQEQ COMMA ]
-## gth -> expr . GTH expr [ TIMES PLUS PARC NEQ LTH LEQ GTH GEQ EQEQ COMMA ]
-## leq -> expr . LEQ expr [ TIMES PLUS PARC NEQ LTH LEQ GTH GEQ EQEQ COMMA ]
-## lth -> expr . LTH expr [ TIMES PLUS PARC NEQ LTH LEQ GTH GEQ EQEQ COMMA ]
-## mul -> expr . TIMES expr [ TIMES PLUS PARC NEQ LTH LEQ GTH GEQ EQEQ COMMA ]
-## neq -> expr . NEQ expr [ TIMES PLUS PARC NEQ LTH LEQ GTH GEQ EQEQ COMMA ]
+## div -> expr . BY expr [ TIMES PLUS PARC NEQ MINUS LTH LEQ GTH GEQ EQEQ COMMA BY ]
+## eq -> expr . EQEQ expr [ TIMES PLUS PARC NEQ MINUS LTH LEQ GTH GEQ EQEQ COMMA BY ]
+## geq -> expr . GEQ expr [ TIMES PLUS PARC NEQ MINUS LTH LEQ GTH GEQ EQEQ COMMA BY ]
+## gth -> expr . GTH expr [ TIMES PLUS PARC NEQ MINUS LTH LEQ GTH GEQ EQEQ COMMA BY ]
+## leq -> expr . LEQ expr [ TIMES PLUS PARC NEQ MINUS LTH LEQ GTH GEQ EQEQ COMMA BY ]
+## lth -> expr . LTH expr [ TIMES PLUS PARC NEQ MINUS LTH LEQ GTH GEQ EQEQ COMMA BY ]
+## mul -> expr . TIMES expr [ TIMES PLUS PARC NEQ MINUS LTH LEQ GTH GEQ EQEQ COMMA BY ]
+## neq -> expr . NEQ expr [ TIMES PLUS PARC NEQ MINUS LTH LEQ GTH GEQ EQEQ COMMA BY ]
+## sub -> expr . MINUS expr [ TIMES PLUS PARC NEQ MINUS LTH LEQ GTH GEQ EQEQ COMMA BY ]
 ##
 ## The known suffix of the stack is as follows:
 ## expr
 ##
 
-Missing matching ')'.
+Unexpected statement inside of an expression.
 
 prog: IDENT IDENT EQ BRAO IDENT PARO WHILE
 ##
-## Ends in an error in state: 22.
+## Ends in an error in state: 29.
 ##
-## call -> IDENT PARO . args_opt PARC [ TIMES SEMI PLUS PARC NEQ LTH LEQ GTH GEQ EQEQ COMMA BRAC ]
+## call -> IDENT PARO . args_opt PARC [ TIMES SEMI PLUS PARC NEQ MINUS LTH LEQ GTH GEQ EQEQ COMMA BY BRAC ]
 ##
 ## The known suffix of the stack is as follows:
 ## IDENT PARO
@@ -69,11 +105,11 @@ Arguments of a function must be expressions.
 
 prog: IDENT IDENT EQ BRAO IDENT WHILE
 ##
-## Ends in an error in state: 21.
+## Ends in an error in state: 28.
 ##
-## call -> IDENT . PARO args_opt PARC [ TIMES SEMI PLUS PARC NEQ LTH LEQ GTH GEQ EQEQ COMMA BRAC ]
-## get -> IDENT . [ TIMES SEMI PLUS PARC NEQ LTH LEQ GTH GEQ EQEQ COMMA BRAC ]
-## struct_access -> IDENT . DOT IDENT [ TIMES SEMI PLUS PARC NEQ LTH LEQ GTH GEQ EQEQ COMMA BRAC ]
+## call -> IDENT . PARO args_opt PARC [ TIMES SEMI PLUS PARC NEQ MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC ]
+## get -> IDENT . [ TIMES SEMI PLUS PARC NEQ MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC ]
+## struct_access -> IDENT . DOT IDENT [ TIMES SEMI PLUS PARC NEQ MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC ]
 ##
 ## The known suffix of the stack is as follows:
 ## IDENT
@@ -81,19 +117,89 @@ prog: IDENT IDENT EQ BRAO IDENT WHILE
 
 Unexpected instruction inside of an expression.
 
+prog: IDENT IDENT EQ BRAO MINUS TRUE WHILE
+##
+## Ends in an error in state: 80.
+##
+## add -> expr . PLUS expr [ TIMES SEMI PLUS PARC NEQ MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC ]
+## div -> expr . BY expr [ TIMES SEMI PLUS PARC NEQ MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC ]
+## eq -> expr . EQEQ expr [ TIMES SEMI PLUS PARC NEQ MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC ]
+## geq -> expr . GEQ expr [ TIMES SEMI PLUS PARC NEQ MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC ]
+## gth -> expr . GTH expr [ TIMES SEMI PLUS PARC NEQ MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC ]
+## leq -> expr . LEQ expr [ TIMES SEMI PLUS PARC NEQ MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC ]
+## lth -> expr . LTH expr [ TIMES SEMI PLUS PARC NEQ MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC ]
+## mul -> expr . TIMES expr [ TIMES SEMI PLUS PARC NEQ MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC ]
+## neg -> MINUS expr . [ TIMES SEMI PLUS PARC NEQ MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC ]
+## neq -> expr . NEQ expr [ TIMES SEMI PLUS PARC NEQ MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC ]
+## sub -> expr . MINUS expr [ TIMES SEMI PLUS PARC NEQ MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC ]
+##
+## The known suffix of the stack is as follows:
+## MINUS expr
+##
+
+Unexpected statement inside an expression.
+
+prog: IDENT IDENT EQ BRAO MINUS WHILE
+##
+## Ends in an error in state: 27.
+##
+## neg -> MINUS . expr [ TIMES SEMI PLUS PARC NEQ MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC ]
+##
+## The known suffix of the stack is as follows:
+## MINUS
+##
+
+Expecting an expression after '-';
+
+prog: IDENT IDENT EQ BRAO NOT TRUE WHILE
+##
+## Ends in an error in state: 81.
+##
+## add -> expr . PLUS expr [ TIMES SEMI PLUS PARC NEQ MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC ]
+## div -> expr . BY expr [ TIMES SEMI PLUS PARC NEQ MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC ]
+## eq -> expr . EQEQ expr [ TIMES SEMI PLUS PARC NEQ MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC ]
+## geq -> expr . GEQ expr [ TIMES SEMI PLUS PARC NEQ MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC ]
+## gth -> expr . GTH expr [ TIMES SEMI PLUS PARC NEQ MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC ]
+## leq -> expr . LEQ expr [ TIMES SEMI PLUS PARC NEQ MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC ]
+## lth -> expr . LTH expr [ TIMES SEMI PLUS PARC NEQ MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC ]
+## mul -> expr . TIMES expr [ TIMES SEMI PLUS PARC NEQ MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC ]
+## neq -> expr . NEQ expr [ TIMES SEMI PLUS PARC NEQ MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC ]
+## not -> NOT expr . [ TIMES SEMI PLUS PARC NEQ MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC ]
+## sub -> expr . MINUS expr [ TIMES SEMI PLUS PARC NEQ MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC ]
+##
+## The known suffix of the stack is as follows:
+## NOT expr
+##
+
+Unexpected statement inside an expression.
+
+prog: IDENT IDENT EQ BRAO NOT WHILE
+##
+## Ends in an error in state: 26.
+##
+## not -> NOT . expr [ TIMES SEMI PLUS PARC NEQ MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC ]
+##
+## The known suffix of the stack is as follows:
+## NOT
+##
+
+Expecting an expression after operator '!'.
+
 prog: IDENT IDENT EQ BRAO PARO TRUE WHILE
 ##
-## Ends in an error in state: 61.
+## Ends in an error in state: 82.
 ##
-## add -> expr . PLUS expr [ TIMES PLUS PARC NEQ LTH LEQ GTH GEQ EQEQ ]
-## eq -> expr . EQEQ expr [ TIMES PLUS PARC NEQ LTH LEQ GTH GEQ EQEQ ]
-## expr -> PARO expr . PARC [ TIMES SEMI PLUS PARC NEQ LTH LEQ GTH GEQ EQEQ COMMA BRAC ]
-## geq -> expr . GEQ expr [ TIMES PLUS PARC NEQ LTH LEQ GTH GEQ EQEQ ]
-## gth -> expr . GTH expr [ TIMES PLUS PARC NEQ LTH LEQ GTH GEQ EQEQ ]
-## leq -> expr . LEQ expr [ TIMES PLUS PARC NEQ LTH LEQ GTH GEQ EQEQ ]
-## lth -> expr . LTH expr [ TIMES PLUS PARC NEQ LTH LEQ GTH GEQ EQEQ ]
-## mul -> expr . TIMES expr [ TIMES PLUS PARC NEQ LTH LEQ GTH GEQ EQEQ ]
-## neq -> expr . NEQ expr [ TIMES PLUS PARC NEQ LTH LEQ GTH GEQ EQEQ ]
+## add -> expr . PLUS expr [ TIMES PLUS PARC NEQ MINUS LTH LEQ GTH GEQ EQEQ BY ]
+## div -> expr . BY expr [ TIMES PLUS PARC NEQ MINUS LTH LEQ GTH GEQ EQEQ BY ]
+## eq -> expr . EQEQ expr [ TIMES PLUS PARC NEQ MINUS LTH LEQ GTH GEQ EQEQ BY ]
+## expr -> PARO expr . PARC [ TIMES SEMI PLUS PARC NEQ MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC ]
+## geq -> expr . GEQ expr [ TIMES PLUS PARC NEQ MINUS LTH LEQ GTH GEQ EQEQ BY ]
+## gth -> expr . GTH expr [ TIMES PLUS PARC NEQ MINUS LTH LEQ GTH GEQ EQEQ BY ]
+## leq -> expr . LEQ expr [ TIMES PLUS PARC NEQ MINUS LTH LEQ GTH GEQ EQEQ BY ]
+## lth -> expr . LTH expr [ TIMES PLUS PARC NEQ MINUS LTH LEQ GTH GEQ EQEQ BY ]
+## mul -> expr . TIMES expr [ TIMES PLUS PARC NEQ MINUS LTH LEQ GTH GEQ EQEQ BY ]
+## neq -> expr . NEQ expr [ TIMES PLUS PARC NEQ MINUS LTH LEQ GTH GEQ EQEQ BY ]
+## sub -> expr . MINUS expr [ TIMES PLUS PARC NEQ MINUS LTH LEQ GTH GEQ EQEQ BY ]
 ##
 ## The known suffix of the stack is as follows:
 ## PARO expr
@@ -103,9 +209,9 @@ Expecting ';' after an assignment.
 
 prog: IDENT IDENT EQ BRAO PARO WHILE
 ##
-## Ends in an error in state: 20.
+## Ends in an error in state: 25.
 ##
-## expr -> PARO . expr PARC [ TIMES SEMI PLUS PARC NEQ LTH LEQ GTH GEQ EQEQ COMMA BRAC ]
+## expr -> PARO . expr PARC [ TIMES SEMI PLUS PARC NEQ MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC ]
 ##
 ## The known suffix of the stack is as follows:
 ## PARO
@@ -113,9 +219,33 @@ prog: IDENT IDENT EQ BRAO PARO WHILE
 
 Unexpected instruction inside of an expression.
 
+prog: IDENT IDENT EQ BRAO TIMES WHILE
+##
+## Ends in an error in state: 24.
+##
+## deref -> TIMES . expr [ TIMES SEMI PLUS PARC NEQ MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC ]
+##
+## The known suffix of the stack is as follows:
+## TIMES
+##
+
+Expecting an expression after operator '*'.
+
+prog: IDENT IDENT EQ BRAO TRUE BY WHILE
+##
+## Ends in an error in state: 56.
+##
+## div -> expr BY . expr [ TIMES SEMI PLUS PARC NEQ MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC ]
+##
+## The known suffix of the stack is as follows:
+## expr BY
+##
+
+Missing right operand in binary expression.
+
 prog: IDENT IDENT EQ BRAO TRUE COMMA WHILE
 ##
-## Ends in an error in state: 67.
+## Ends in an error in state: 89.
 ##
 ## separated_nonempty_list(COMMA,expr) -> expr COMMA . separated_nonempty_list(COMMA,expr) [ BRAC ]
 ##
@@ -127,17 +257,19 @@ Unexpected instruction inside of a list of expressions.
 
 prog: IDENT IDENT EQ BRAO TRUE EQEQ TRUE WHILE
 ##
-## Ends in an error in state: 53.
+## Ends in an error in state: 71.
 ##
-## add -> expr . PLUS expr [ TIMES SEMI PLUS PARC NEQ LTH LEQ GTH GEQ EQEQ COMMA BRAC ]
-## eq -> expr . EQEQ expr [ TIMES SEMI PLUS PARC NEQ LTH LEQ GTH GEQ EQEQ COMMA BRAC ]
-## eq -> expr EQEQ expr . [ TIMES SEMI PLUS PARC NEQ LTH LEQ GTH GEQ EQEQ COMMA BRAC ]
-## geq -> expr . GEQ expr [ TIMES SEMI PLUS PARC NEQ LTH LEQ GTH GEQ EQEQ COMMA BRAC ]
-## gth -> expr . GTH expr [ TIMES SEMI PLUS PARC NEQ LTH LEQ GTH GEQ EQEQ COMMA BRAC ]
-## leq -> expr . LEQ expr [ TIMES SEMI PLUS PARC NEQ LTH LEQ GTH GEQ EQEQ COMMA BRAC ]
-## lth -> expr . LTH expr [ TIMES SEMI PLUS PARC NEQ LTH LEQ GTH GEQ EQEQ COMMA BRAC ]
-## mul -> expr . TIMES expr [ TIMES SEMI PLUS PARC NEQ LTH LEQ GTH GEQ EQEQ COMMA BRAC ]
-## neq -> expr . NEQ expr [ TIMES SEMI PLUS PARC NEQ LTH LEQ GTH GEQ EQEQ COMMA BRAC ]
+## add -> expr . PLUS expr [ TIMES SEMI PLUS PARC NEQ MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC ]
+## div -> expr . BY expr [ TIMES SEMI PLUS PARC NEQ MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC ]
+## eq -> expr . EQEQ expr [ TIMES SEMI PLUS PARC NEQ MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC ]
+## eq -> expr EQEQ expr . [ TIMES SEMI PLUS PARC NEQ MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC ]
+## geq -> expr . GEQ expr [ TIMES SEMI PLUS PARC NEQ MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC ]
+## gth -> expr . GTH expr [ TIMES SEMI PLUS PARC NEQ MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC ]
+## leq -> expr . LEQ expr [ TIMES SEMI PLUS PARC NEQ MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC ]
+## lth -> expr . LTH expr [ TIMES SEMI PLUS PARC NEQ MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC ]
+## mul -> expr . TIMES expr [ TIMES SEMI PLUS PARC NEQ MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC ]
+## neq -> expr . NEQ expr [ TIMES SEMI PLUS PARC NEQ MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC ]
+## sub -> expr . MINUS expr [ TIMES SEMI PLUS PARC NEQ MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC ]
 ##
 ## The known suffix of the stack is as follows:
 ## expr EQEQ expr
@@ -147,9 +279,9 @@ Expecting ';' after an assignment.
 
 prog: IDENT IDENT EQ BRAO TRUE EQEQ WHILE
 ##
-## Ends in an error in state: 52.
+## Ends in an error in state: 70.
 ##
-## eq -> expr EQEQ . expr [ TIMES SEMI PLUS PARC NEQ LTH LEQ GTH GEQ EQEQ COMMA BRAC ]
+## eq -> expr EQEQ . expr [ TIMES SEMI PLUS PARC NEQ MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC ]
 ##
 ## The known suffix of the stack is as follows:
 ## expr EQEQ
@@ -159,17 +291,19 @@ Unexpected instruction inside of an expression.
 
 prog: IDENT IDENT EQ BRAO TRUE GEQ TRUE WHILE
 ##
-## Ends in an error in state: 51.
+## Ends in an error in state: 69.
 ##
-## add -> expr . PLUS expr [ TIMES SEMI PLUS PARC NEQ LTH LEQ GTH GEQ EQEQ COMMA BRAC ]
-## eq -> expr . EQEQ expr [ TIMES SEMI PLUS PARC NEQ LTH LEQ GTH GEQ EQEQ COMMA BRAC ]
-## geq -> expr . GEQ expr [ TIMES SEMI PLUS PARC NEQ LTH LEQ GTH GEQ EQEQ COMMA BRAC ]
-## geq -> expr GEQ expr . [ TIMES SEMI PLUS PARC NEQ LTH LEQ GTH GEQ EQEQ COMMA BRAC ]
-## gth -> expr . GTH expr [ TIMES SEMI PLUS PARC NEQ LTH LEQ GTH GEQ EQEQ COMMA BRAC ]
-## leq -> expr . LEQ expr [ TIMES SEMI PLUS PARC NEQ LTH LEQ GTH GEQ EQEQ COMMA BRAC ]
-## lth -> expr . LTH expr [ TIMES SEMI PLUS PARC NEQ LTH LEQ GTH GEQ EQEQ COMMA BRAC ]
-## mul -> expr . TIMES expr [ TIMES SEMI PLUS PARC NEQ LTH LEQ GTH GEQ EQEQ COMMA BRAC ]
-## neq -> expr . NEQ expr [ TIMES SEMI PLUS PARC NEQ LTH LEQ GTH GEQ EQEQ COMMA BRAC ]
+## add -> expr . PLUS expr [ TIMES SEMI PLUS PARC NEQ MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC ]
+## div -> expr . BY expr [ TIMES SEMI PLUS PARC NEQ MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC ]
+## eq -> expr . EQEQ expr [ TIMES SEMI PLUS PARC NEQ MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC ]
+## geq -> expr . GEQ expr [ TIMES SEMI PLUS PARC NEQ MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC ]
+## geq -> expr GEQ expr . [ TIMES SEMI PLUS PARC NEQ MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC ]
+## gth -> expr . GTH expr [ TIMES SEMI PLUS PARC NEQ MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC ]
+## leq -> expr . LEQ expr [ TIMES SEMI PLUS PARC NEQ MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC ]
+## lth -> expr . LTH expr [ TIMES SEMI PLUS PARC NEQ MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC ]
+## mul -> expr . TIMES expr [ TIMES SEMI PLUS PARC NEQ MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC ]
+## neq -> expr . NEQ expr [ TIMES SEMI PLUS PARC NEQ MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC ]
+## sub -> expr . MINUS expr [ TIMES SEMI PLUS PARC NEQ MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC ]
 ##
 ## The known suffix of the stack is as follows:
 ## expr GEQ expr
@@ -179,9 +313,9 @@ Expecting ';' after an assignment.
 
 prog: IDENT IDENT EQ BRAO TRUE GEQ WHILE
 ##
-## Ends in an error in state: 50.
+## Ends in an error in state: 68.
 ##
-## geq -> expr GEQ . expr [ TIMES SEMI PLUS PARC NEQ LTH LEQ GTH GEQ EQEQ COMMA BRAC ]
+## geq -> expr GEQ . expr [ TIMES SEMI PLUS PARC NEQ MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC ]
 ##
 ## The known suffix of the stack is as follows:
 ## expr GEQ
@@ -191,17 +325,19 @@ Unexpected instruction inside of an expression.
 
 prog: IDENT IDENT EQ BRAO TRUE GTH TRUE WHILE
 ##
-## Ends in an error in state: 49.
+## Ends in an error in state: 67.
 ##
-## add -> expr . PLUS expr [ TIMES SEMI PLUS PARC NEQ LTH LEQ GTH GEQ EQEQ COMMA BRAC ]
-## eq -> expr . EQEQ expr [ TIMES SEMI PLUS PARC NEQ LTH LEQ GTH GEQ EQEQ COMMA BRAC ]
-## geq -> expr . GEQ expr [ TIMES SEMI PLUS PARC NEQ LTH LEQ GTH GEQ EQEQ COMMA BRAC ]
-## gth -> expr . GTH expr [ TIMES SEMI PLUS PARC NEQ LTH LEQ GTH GEQ EQEQ COMMA BRAC ]
-## gth -> expr GTH expr . [ TIMES SEMI PLUS PARC NEQ LTH LEQ GTH GEQ EQEQ COMMA BRAC ]
-## leq -> expr . LEQ expr [ TIMES SEMI PLUS PARC NEQ LTH LEQ GTH GEQ EQEQ COMMA BRAC ]
-## lth -> expr . LTH expr [ TIMES SEMI PLUS PARC NEQ LTH LEQ GTH GEQ EQEQ COMMA BRAC ]
-## mul -> expr . TIMES expr [ TIMES SEMI PLUS PARC NEQ LTH LEQ GTH GEQ EQEQ COMMA BRAC ]
-## neq -> expr . NEQ expr [ TIMES SEMI PLUS PARC NEQ LTH LEQ GTH GEQ EQEQ COMMA BRAC ]
+## add -> expr . PLUS expr [ TIMES SEMI PLUS PARC NEQ MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC ]
+## div -> expr . BY expr [ TIMES SEMI PLUS PARC NEQ MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC ]
+## eq -> expr . EQEQ expr [ TIMES SEMI PLUS PARC NEQ MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC ]
+## geq -> expr . GEQ expr [ TIMES SEMI PLUS PARC NEQ MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC ]
+## gth -> expr . GTH expr [ TIMES SEMI PLUS PARC NEQ MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC ]
+## gth -> expr GTH expr . [ TIMES SEMI PLUS PARC NEQ MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC ]
+## leq -> expr . LEQ expr [ TIMES SEMI PLUS PARC NEQ MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC ]
+## lth -> expr . LTH expr [ TIMES SEMI PLUS PARC NEQ MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC ]
+## mul -> expr . TIMES expr [ TIMES SEMI PLUS PARC NEQ MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC ]
+## neq -> expr . NEQ expr [ TIMES SEMI PLUS PARC NEQ MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC ]
+## sub -> expr . MINUS expr [ TIMES SEMI PLUS PARC NEQ MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC ]
 ##
 ## The known suffix of the stack is as follows:
 ## expr GTH expr
@@ -211,9 +347,9 @@ Expecting ';' after an assignment.
 
 prog: IDENT IDENT EQ BRAO TRUE GTH WHILE
 ##
-## Ends in an error in state: 48.
+## Ends in an error in state: 66.
 ##
-## gth -> expr GTH . expr [ TIMES SEMI PLUS PARC NEQ LTH LEQ GTH GEQ EQEQ COMMA BRAC ]
+## gth -> expr GTH . expr [ TIMES SEMI PLUS PARC NEQ MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC ]
 ##
 ## The known suffix of the stack is as follows:
 ## expr GTH
@@ -223,17 +359,19 @@ Unexpected instruction inside of an expression.
 
 prog: IDENT IDENT EQ BRAO TRUE LEQ TRUE WHILE
 ##
-## Ends in an error in state: 47.
+## Ends in an error in state: 65.
 ##
-## add -> expr . PLUS expr [ TIMES SEMI PLUS PARC NEQ LTH LEQ GTH GEQ EQEQ COMMA BRAC ]
-## eq -> expr . EQEQ expr [ TIMES SEMI PLUS PARC NEQ LTH LEQ GTH GEQ EQEQ COMMA BRAC ]
-## geq -> expr . GEQ expr [ TIMES SEMI PLUS PARC NEQ LTH LEQ GTH GEQ EQEQ COMMA BRAC ]
-## gth -> expr . GTH expr [ TIMES SEMI PLUS PARC NEQ LTH LEQ GTH GEQ EQEQ COMMA BRAC ]
-## leq -> expr . LEQ expr [ TIMES SEMI PLUS PARC NEQ LTH LEQ GTH GEQ EQEQ COMMA BRAC ]
-## leq -> expr LEQ expr . [ TIMES SEMI PLUS PARC NEQ LTH LEQ GTH GEQ EQEQ COMMA BRAC ]
-## lth -> expr . LTH expr [ TIMES SEMI PLUS PARC NEQ LTH LEQ GTH GEQ EQEQ COMMA BRAC ]
-## mul -> expr . TIMES expr [ TIMES SEMI PLUS PARC NEQ LTH LEQ GTH GEQ EQEQ COMMA BRAC ]
-## neq -> expr . NEQ expr [ TIMES SEMI PLUS PARC NEQ LTH LEQ GTH GEQ EQEQ COMMA BRAC ]
+## add -> expr . PLUS expr [ TIMES SEMI PLUS PARC NEQ MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC ]
+## div -> expr . BY expr [ TIMES SEMI PLUS PARC NEQ MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC ]
+## eq -> expr . EQEQ expr [ TIMES SEMI PLUS PARC NEQ MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC ]
+## geq -> expr . GEQ expr [ TIMES SEMI PLUS PARC NEQ MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC ]
+## gth -> expr . GTH expr [ TIMES SEMI PLUS PARC NEQ MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC ]
+## leq -> expr . LEQ expr [ TIMES SEMI PLUS PARC NEQ MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC ]
+## leq -> expr LEQ expr . [ TIMES SEMI PLUS PARC NEQ MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC ]
+## lth -> expr . LTH expr [ TIMES SEMI PLUS PARC NEQ MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC ]
+## mul -> expr . TIMES expr [ TIMES SEMI PLUS PARC NEQ MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC ]
+## neq -> expr . NEQ expr [ TIMES SEMI PLUS PARC NEQ MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC ]
+## sub -> expr . MINUS expr [ TIMES SEMI PLUS PARC NEQ MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC ]
 ##
 ## The known suffix of the stack is as follows:
 ## expr LEQ expr
@@ -243,9 +381,9 @@ Expecting ';' after an assignment.
 
 prog: IDENT IDENT EQ BRAO TRUE LEQ WHILE
 ##
-## Ends in an error in state: 46.
+## Ends in an error in state: 64.
 ##
-## leq -> expr LEQ . expr [ TIMES SEMI PLUS PARC NEQ LTH LEQ GTH GEQ EQEQ COMMA BRAC ]
+## leq -> expr LEQ . expr [ TIMES SEMI PLUS PARC NEQ MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC ]
 ##
 ## The known suffix of the stack is as follows:
 ## expr LEQ
@@ -255,17 +393,19 @@ Binary operator expecting a right operand.
 
 prog: IDENT IDENT EQ BRAO TRUE LTH TRUE WHILE
 ##
-## Ends in an error in state: 45.
+## Ends in an error in state: 63.
 ##
-## add -> expr . PLUS expr [ TIMES SEMI PLUS PARC NEQ LTH LEQ GTH GEQ EQEQ COMMA BRAC ]
-## eq -> expr . EQEQ expr [ TIMES SEMI PLUS PARC NEQ LTH LEQ GTH GEQ EQEQ COMMA BRAC ]
-## geq -> expr . GEQ expr [ TIMES SEMI PLUS PARC NEQ LTH LEQ GTH GEQ EQEQ COMMA BRAC ]
-## gth -> expr . GTH expr [ TIMES SEMI PLUS PARC NEQ LTH LEQ GTH GEQ EQEQ COMMA BRAC ]
-## leq -> expr . LEQ expr [ TIMES SEMI PLUS PARC NEQ LTH LEQ GTH GEQ EQEQ COMMA BRAC ]
-## lth -> expr . LTH expr [ TIMES SEMI PLUS PARC NEQ LTH LEQ GTH GEQ EQEQ COMMA BRAC ]
-## lth -> expr LTH expr . [ TIMES SEMI PLUS PARC NEQ LTH LEQ GTH GEQ EQEQ COMMA BRAC ]
-## mul -> expr . TIMES expr [ TIMES SEMI PLUS PARC NEQ LTH LEQ GTH GEQ EQEQ COMMA BRAC ]
-## neq -> expr . NEQ expr [ TIMES SEMI PLUS PARC NEQ LTH LEQ GTH GEQ EQEQ COMMA BRAC ]
+## add -> expr . PLUS expr [ TIMES SEMI PLUS PARC NEQ MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC ]
+## div -> expr . BY expr [ TIMES SEMI PLUS PARC NEQ MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC ]
+## eq -> expr . EQEQ expr [ TIMES SEMI PLUS PARC NEQ MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC ]
+## geq -> expr . GEQ expr [ TIMES SEMI PLUS PARC NEQ MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC ]
+## gth -> expr . GTH expr [ TIMES SEMI PLUS PARC NEQ MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC ]
+## leq -> expr . LEQ expr [ TIMES SEMI PLUS PARC NEQ MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC ]
+## lth -> expr . LTH expr [ TIMES SEMI PLUS PARC NEQ MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC ]
+## lth -> expr LTH expr . [ TIMES SEMI PLUS PARC NEQ MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC ]
+## mul -> expr . TIMES expr [ TIMES SEMI PLUS PARC NEQ MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC ]
+## neq -> expr . NEQ expr [ TIMES SEMI PLUS PARC NEQ MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC ]
+## sub -> expr . MINUS expr [ TIMES SEMI PLUS PARC NEQ MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC ]
 ##
 ## The known suffix of the stack is as follows:
 ## expr LTH expr
@@ -275,9 +415,9 @@ Expecting ';' after an assignment.
 
 prog: IDENT IDENT EQ BRAO TRUE LTH WHILE
 ##
-## Ends in an error in state: 44.
+## Ends in an error in state: 62.
 ##
-## lth -> expr LTH . expr [ TIMES SEMI PLUS PARC NEQ LTH LEQ GTH GEQ EQEQ COMMA BRAC ]
+## lth -> expr LTH . expr [ TIMES SEMI PLUS PARC NEQ MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC ]
 ##
 ## The known suffix of the stack is as follows:
 ## expr LTH
@@ -285,19 +425,55 @@ prog: IDENT IDENT EQ BRAO TRUE LTH WHILE
 
 Missing right operand on a binary operator.
 
+prog: IDENT IDENT EQ BRAO TRUE MINUS TRUE WHILE
+##
+## Ends in an error in state: 61.
+##
+## add -> expr . PLUS expr [ TIMES SEMI PLUS PARC NEQ MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC ]
+## div -> expr . BY expr [ TIMES SEMI PLUS PARC NEQ MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC ]
+## eq -> expr . EQEQ expr [ TIMES SEMI PLUS PARC NEQ MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC ]
+## geq -> expr . GEQ expr [ TIMES SEMI PLUS PARC NEQ MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC ]
+## gth -> expr . GTH expr [ TIMES SEMI PLUS PARC NEQ MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC ]
+## leq -> expr . LEQ expr [ TIMES SEMI PLUS PARC NEQ MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC ]
+## lth -> expr . LTH expr [ TIMES SEMI PLUS PARC NEQ MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC ]
+## mul -> expr . TIMES expr [ TIMES SEMI PLUS PARC NEQ MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC ]
+## neq -> expr . NEQ expr [ TIMES SEMI PLUS PARC NEQ MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC ]
+## sub -> expr . MINUS expr [ TIMES SEMI PLUS PARC NEQ MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC ]
+## sub -> expr MINUS expr . [ TIMES SEMI PLUS PARC NEQ MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC ]
+##
+## The known suffix of the stack is as follows:
+## expr MINUS expr
+##
+
+Unexpected statement inside an expression.
+
+prog: IDENT IDENT EQ BRAO TRUE MINUS WHILE
+##
+## Ends in an error in state: 60.
+##
+## sub -> expr MINUS . expr [ TIMES SEMI PLUS PARC NEQ MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC ]
+##
+## The known suffix of the stack is as follows:
+## expr MINUS
+##
+
+Missing right operand on binary expression.
+
 prog: IDENT IDENT EQ BRAO TRUE NEQ TRUE WHILE
 ##
-## Ends in an error in state: 43.
+## Ends in an error in state: 59.
 ##
-## add -> expr . PLUS expr [ TIMES SEMI PLUS PARC NEQ LTH LEQ GTH GEQ EQEQ COMMA BRAC ]
-## eq -> expr . EQEQ expr [ TIMES SEMI PLUS PARC NEQ LTH LEQ GTH GEQ EQEQ COMMA BRAC ]
-## geq -> expr . GEQ expr [ TIMES SEMI PLUS PARC NEQ LTH LEQ GTH GEQ EQEQ COMMA BRAC ]
-## gth -> expr . GTH expr [ TIMES SEMI PLUS PARC NEQ LTH LEQ GTH GEQ EQEQ COMMA BRAC ]
-## leq -> expr . LEQ expr [ TIMES SEMI PLUS PARC NEQ LTH LEQ GTH GEQ EQEQ COMMA BRAC ]
-## lth -> expr . LTH expr [ TIMES SEMI PLUS PARC NEQ LTH LEQ GTH GEQ EQEQ COMMA BRAC ]
-## mul -> expr . TIMES expr [ TIMES SEMI PLUS PARC NEQ LTH LEQ GTH GEQ EQEQ COMMA BRAC ]
-## neq -> expr . NEQ expr [ TIMES SEMI PLUS PARC NEQ LTH LEQ GTH GEQ EQEQ COMMA BRAC ]
-## neq -> expr NEQ expr . [ TIMES SEMI PLUS PARC NEQ LTH LEQ GTH GEQ EQEQ COMMA BRAC ]
+## add -> expr . PLUS expr [ TIMES SEMI PLUS PARC NEQ MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC ]
+## div -> expr . BY expr [ TIMES SEMI PLUS PARC NEQ MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC ]
+## eq -> expr . EQEQ expr [ TIMES SEMI PLUS PARC NEQ MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC ]
+## geq -> expr . GEQ expr [ TIMES SEMI PLUS PARC NEQ MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC ]
+## gth -> expr . GTH expr [ TIMES SEMI PLUS PARC NEQ MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC ]
+## leq -> expr . LEQ expr [ TIMES SEMI PLUS PARC NEQ MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC ]
+## lth -> expr . LTH expr [ TIMES SEMI PLUS PARC NEQ MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC ]
+## mul -> expr . TIMES expr [ TIMES SEMI PLUS PARC NEQ MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC ]
+## neq -> expr . NEQ expr [ TIMES SEMI PLUS PARC NEQ MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC ]
+## neq -> expr NEQ expr . [ TIMES SEMI PLUS PARC NEQ MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC ]
+## sub -> expr . MINUS expr [ TIMES SEMI PLUS PARC NEQ MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC ]
 ##
 ## The known suffix of the stack is as follows:
 ## expr NEQ expr
@@ -307,9 +483,9 @@ Expecting ';' after an assignment.
 
 prog: IDENT IDENT EQ BRAO TRUE NEQ WHILE
 ##
-## Ends in an error in state: 42.
+## Ends in an error in state: 58.
 ##
-## neq -> expr NEQ . expr [ TIMES SEMI PLUS PARC NEQ LTH LEQ GTH GEQ EQEQ COMMA BRAC ]
+## neq -> expr NEQ . expr [ TIMES SEMI PLUS PARC NEQ MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC ]
 ##
 ## The known suffix of the stack is as follows:
 ## expr NEQ
@@ -319,17 +495,19 @@ Expecting expression as right operand of a binary operator.
 
 prog: IDENT IDENT EQ BRAO TRUE PLUS TRUE WHILE
 ##
-## Ends in an error in state: 41.
+## Ends in an error in state: 55.
 ##
-## add -> expr . PLUS expr [ TIMES SEMI PLUS PARC NEQ LTH LEQ GTH GEQ EQEQ COMMA BRAC ]
-## add -> expr PLUS expr . [ TIMES SEMI PLUS PARC NEQ LTH LEQ GTH GEQ EQEQ COMMA BRAC ]
-## eq -> expr . EQEQ expr [ TIMES SEMI PLUS PARC NEQ LTH LEQ GTH GEQ EQEQ COMMA BRAC ]
-## geq -> expr . GEQ expr [ TIMES SEMI PLUS PARC NEQ LTH LEQ GTH GEQ EQEQ COMMA BRAC ]
-## gth -> expr . GTH expr [ TIMES SEMI PLUS PARC NEQ LTH LEQ GTH GEQ EQEQ COMMA BRAC ]
-## leq -> expr . LEQ expr [ TIMES SEMI PLUS PARC NEQ LTH LEQ GTH GEQ EQEQ COMMA BRAC ]
-## lth -> expr . LTH expr [ TIMES SEMI PLUS PARC NEQ LTH LEQ GTH GEQ EQEQ COMMA BRAC ]
-## mul -> expr . TIMES expr [ TIMES SEMI PLUS PARC NEQ LTH LEQ GTH GEQ EQEQ COMMA BRAC ]
-## neq -> expr . NEQ expr [ TIMES SEMI PLUS PARC NEQ LTH LEQ GTH GEQ EQEQ COMMA BRAC ]
+## add -> expr . PLUS expr [ TIMES SEMI PLUS PARC NEQ MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC ]
+## add -> expr PLUS expr . [ TIMES SEMI PLUS PARC NEQ MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC ]
+## div -> expr . BY expr [ TIMES SEMI PLUS PARC NEQ MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC ]
+## eq -> expr . EQEQ expr [ TIMES SEMI PLUS PARC NEQ MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC ]
+## geq -> expr . GEQ expr [ TIMES SEMI PLUS PARC NEQ MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC ]
+## gth -> expr . GTH expr [ TIMES SEMI PLUS PARC NEQ MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC ]
+## leq -> expr . LEQ expr [ TIMES SEMI PLUS PARC NEQ MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC ]
+## lth -> expr . LTH expr [ TIMES SEMI PLUS PARC NEQ MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC ]
+## mul -> expr . TIMES expr [ TIMES SEMI PLUS PARC NEQ MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC ]
+## neq -> expr . NEQ expr [ TIMES SEMI PLUS PARC NEQ MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC ]
+## sub -> expr . MINUS expr [ TIMES SEMI PLUS PARC NEQ MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC ]
 ##
 ## The known suffix of the stack is as follows:
 ## expr PLUS expr
@@ -339,9 +517,9 @@ Expecting ';' after an assignment.
 
 prog: IDENT IDENT EQ BRAO TRUE PLUS WHILE
 ##
-## Ends in an error in state: 40.
+## Ends in an error in state: 54.
 ##
-## add -> expr PLUS . expr [ TIMES SEMI PLUS PARC NEQ LTH LEQ GTH GEQ EQEQ COMMA BRAC ]
+## add -> expr PLUS . expr [ TIMES SEMI PLUS PARC NEQ MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC ]
 ##
 ## The known suffix of the stack is as follows:
 ## expr PLUS
@@ -351,9 +529,9 @@ Expecting expression as right operand of a binary operator.
 
 prog: IDENT IDENT EQ BRAO TRUE TIMES WHILE
 ##
-## Ends in an error in state: 34.
+## Ends in an error in state: 45.
 ##
-## mul -> expr TIMES . expr [ TIMES SEMI PLUS PARC NEQ LTH LEQ GTH GEQ EQEQ COMMA BRAC ]
+## mul -> expr TIMES . expr [ TIMES SEMI PLUS PARC NEQ MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC ]
 ##
 ## The known suffix of the stack is as follows:
 ## expr TIMES
@@ -363,18 +541,20 @@ Expecting expression as right operand of a binary operator.
 
 prog: IDENT IDENT EQ BRAO TRUE WHILE
 ##
-## Ends in an error in state: 66.
+## Ends in an error in state: 88.
 ##
-## add -> expr . PLUS expr [ TIMES PLUS NEQ LTH LEQ GTH GEQ EQEQ COMMA BRAC ]
-## eq -> expr . EQEQ expr [ TIMES PLUS NEQ LTH LEQ GTH GEQ EQEQ COMMA BRAC ]
-## geq -> expr . GEQ expr [ TIMES PLUS NEQ LTH LEQ GTH GEQ EQEQ COMMA BRAC ]
-## gth -> expr . GTH expr [ TIMES PLUS NEQ LTH LEQ GTH GEQ EQEQ COMMA BRAC ]
-## leq -> expr . LEQ expr [ TIMES PLUS NEQ LTH LEQ GTH GEQ EQEQ COMMA BRAC ]
-## lth -> expr . LTH expr [ TIMES PLUS NEQ LTH LEQ GTH GEQ EQEQ COMMA BRAC ]
-## mul -> expr . TIMES expr [ TIMES PLUS NEQ LTH LEQ GTH GEQ EQEQ COMMA BRAC ]
-## neq -> expr . NEQ expr [ TIMES PLUS NEQ LTH LEQ GTH GEQ EQEQ COMMA BRAC ]
+## add -> expr . PLUS expr [ TIMES PLUS NEQ MINUS LTH LEQ GTH GEQ EQEQ COMMA BY BRAC ]
+## div -> expr . BY expr [ TIMES PLUS NEQ MINUS LTH LEQ GTH GEQ EQEQ COMMA BY BRAC ]
+## eq -> expr . EQEQ expr [ TIMES PLUS NEQ MINUS LTH LEQ GTH GEQ EQEQ COMMA BY BRAC ]
+## geq -> expr . GEQ expr [ TIMES PLUS NEQ MINUS LTH LEQ GTH GEQ EQEQ COMMA BY BRAC ]
+## gth -> expr . GTH expr [ TIMES PLUS NEQ MINUS LTH LEQ GTH GEQ EQEQ COMMA BY BRAC ]
+## leq -> expr . LEQ expr [ TIMES PLUS NEQ MINUS LTH LEQ GTH GEQ EQEQ COMMA BY BRAC ]
+## lth -> expr . LTH expr [ TIMES PLUS NEQ MINUS LTH LEQ GTH GEQ EQEQ COMMA BY BRAC ]
+## mul -> expr . TIMES expr [ TIMES PLUS NEQ MINUS LTH LEQ GTH GEQ EQEQ COMMA BY BRAC ]
+## neq -> expr . NEQ expr [ TIMES PLUS NEQ MINUS LTH LEQ GTH GEQ EQEQ COMMA BY BRAC ]
 ## separated_nonempty_list(COMMA,expr) -> expr . [ BRAC ]
 ## separated_nonempty_list(COMMA,expr) -> expr . COMMA separated_nonempty_list(COMMA,expr) [ BRAC ]
+## sub -> expr . MINUS expr [ TIMES PLUS NEQ MINUS LTH LEQ GTH GEQ EQEQ COMMA BY BRAC ]
 ##
 ## The known suffix of the stack is as follows:
 ## expr
@@ -384,7 +564,7 @@ Expecting ';' after an assignment.
 
 prog: IDENT IDENT EQ BRAO WHILE
 ##
-## Ends in an error in state: 18.
+## Ends in an error in state: 22.
 ##
 ## option(__anonymous_1) -> EQ BRAO . loption(separated_nonempty_list(COMMA,expr)) BRAC [ SEMI ]
 ##
@@ -396,7 +576,7 @@ Unexpected instruction inside an initializer list.
 
 prog: IDENT IDENT EQ WHILE
 ##
-## Ends in an error in state: 17.
+## Ends in an error in state: 21.
 ##
 ## option(__anonymous_1) -> EQ . BRAO loption(separated_nonempty_list(COMMA,expr)) BRAC [ SEMI ]
 ##
@@ -408,7 +588,7 @@ Expecting an initializer list.
 
 prog: IDENT IDENT WHILE
 ##
-## Ends in an error in state: 16.
+## Ends in an error in state: 20.
 ##
 ## glob_var -> struct_decl . opt_init_list SEMI [ TYPE IDENT ]
 ##
@@ -420,7 +600,7 @@ Expecting ';' after variable declaration.
 
 prog: IDENT WHILE
 ##
-## Ends in an error in state: 14.
+## Ends in an error in state: 8.
 ##
 ## struct_decl -> IDENT . IDENT [ SEMI PARO EQ ]
 ##
@@ -432,7 +612,7 @@ Unexepected instruction outside of function body.
 
 prog: STRUCT IDENT BRAO TYPE IDENT SEMI BRAC SEMI WHILE
 ##
-## Ends in an error in state: 158.
+## Ends in an error in state: 183.
 ##
 ## list(struct_def) -> struct_def . list(struct_def) [ TYPE IDENT ]
 ##
@@ -444,38 +624,38 @@ Unexpected statement after a struct definition
 
 prog: STRUCT IDENT BRAO TYPE IDENT SEMI BRAC WHILE
 ##
-## Ends in an error in state: 8.
+## Ends in an error in state: 11.
 ##
-## struct_def -> STRUCT IDENT BRAO decls BRAC . SEMI [ TYPE STRUCT IDENT ]
+## struct_def -> STRUCT IDENT BRAO struct_type_decls BRAC . SEMI [ TYPE STRUCT IDENT ]
 ##
 ## The known suffix of the stack is as follows:
-## STRUCT IDENT BRAO decls BRAC
+## STRUCT IDENT BRAO struct_type_decls BRAC
 ##
 
 Expecting a ';' after a struct definition.
 
 prog: STRUCT IDENT BRAO TYPE IDENT SEMI WHILE
 ##
-## Ends in an error in state: 11.
+## Ends in an error in state: 14.
 ##
-## nonempty_list(__anonymous_0) -> decl SEMI . [ BRAC ]
-## nonempty_list(__anonymous_0) -> decl SEMI . nonempty_list(__anonymous_0) [ BRAC ]
+## nonempty_list(__anonymous_0) -> struct_type_decl SEMI . [ BRAC ]
+## nonempty_list(__anonymous_0) -> struct_type_decl SEMI . nonempty_list(__anonymous_0) [ BRAC ]
 ##
 ## The known suffix of the stack is as follows:
-## decl SEMI
+## struct_type_decl SEMI
 ##
 
 Only declarations are authorized inside a struct definition.
 
 prog: STRUCT IDENT BRAO TYPE IDENT WHILE
 ##
-## Ends in an error in state: 10.
+## Ends in an error in state: 13.
 ##
-## nonempty_list(__anonymous_0) -> decl . SEMI [ BRAC ]
-## nonempty_list(__anonymous_0) -> decl . SEMI nonempty_list(__anonymous_0) [ BRAC ]
+## nonempty_list(__anonymous_0) -> struct_type_decl . SEMI [ BRAC ]
+## nonempty_list(__anonymous_0) -> struct_type_decl . SEMI nonempty_list(__anonymous_0) [ BRAC ]
 ##
 ## The known suffix of the stack is as follows:
-## decl
+## struct_type_decl
 ##
 
 Expecting a ';' after a memeber declaration;
@@ -484,7 +664,7 @@ prog: STRUCT IDENT BRAO WHILE
 ##
 ## Ends in an error in state: 3.
 ##
-## struct_def -> STRUCT IDENT BRAO . decls BRAC SEMI [ TYPE STRUCT IDENT ]
+## struct_def -> STRUCT IDENT BRAO . struct_type_decls BRAC SEMI [ TYPE STRUCT IDENT ]
 ##
 ## The known suffix of the stack is as follows:
 ## STRUCT IDENT BRAO
@@ -496,7 +676,7 @@ prog: STRUCT IDENT WHILE
 ##
 ## Ends in an error in state: 2.
 ##
-## struct_def -> STRUCT IDENT . BRAO decls BRAC SEMI [ TYPE STRUCT IDENT ]
+## struct_def -> STRUCT IDENT . BRAO struct_type_decls BRAC SEMI [ TYPE STRUCT IDENT ]
 ##
 ## The known suffix of the stack is as follows:
 ## STRUCT IDENT
@@ -508,7 +688,7 @@ prog: STRUCT WHILE
 ##
 ## Ends in an error in state: 1.
 ##
-## struct_def -> STRUCT . IDENT BRAO decls BRAC SEMI [ TYPE STRUCT IDENT ]
+## struct_def -> STRUCT . IDENT BRAO struct_type_decls BRAC SEMI [ TYPE STRUCT IDENT ]
 ##
 ## The known suffix of the stack is as follows:
 ## STRUCT
@@ -518,7 +698,7 @@ Identifier expected after 'struct'.
 
 prog: TYPE IDENT EQ CONST WHILE
 ##
-## Ends in an error in state: 154.
+## Ends in an error in state: 179.
 ##
 ## glob_var -> decl opt_const . SEMI [ TYPE IDENT ]
 ##
@@ -530,7 +710,7 @@ Missing ';' after global variable assignment.
 
 prog: TYPE IDENT EQ WHILE
 ##
-## Ends in an error in state: 124.
+## Ends in an error in state: 151.
 ##
 ## opt_const -> EQ . CONST [ SEMI ]
 ##
@@ -542,7 +722,7 @@ Global assignment expects an expression after '='.
 
 prog: TYPE IDENT SEMI IDENT IDENT WHILE
 ##
-## Ends in an error in state: 145.
+## Ends in an error in state: 172.
 ##
 ## glob_var -> struct_decl . opt_init_list SEMI [ TYPE IDENT ]
 ## struct_type_decl -> struct_decl . [ PARO ]
@@ -555,7 +735,7 @@ Expecting ';' after variable declaration.
 
 prog: TYPE IDENT SEMI TYPE IDENT PARO PARC BRAO CONST SEMI BRAC TYPE IDENT WHILE
 ##
-## Ends in an error in state: 73.
+## Ends in an error in state: 95.
 ##
 ## func -> struct_type_decl . PARO params_opt PARC BRAO body BRAC [ TYPE IDENT EOF ]
 ##
@@ -567,7 +747,7 @@ Missing '(' after function declaration.
 
 prog: TYPE IDENT SEMI TYPE IDENT PARO PARC BRAO CONST SEMI BRAC WHILE
 ##
-## Ends in an error in state: 142.
+## Ends in an error in state: 174.
 ##
 ## funcs -> funcs . func [ TYPE IDENT EOF ]
 ## prog -> structs glob_vars funcs . EOF [ # ]
@@ -580,17 +760,19 @@ Unexpected statement outside of a function body.
 
 prog: TYPE IDENT SEMI TYPE IDENT PARO PARC BRAO IDENT DOT IDENT EQ TRUE WHILE
 ##
-## Ends in an error in state: 111.
+## Ends in an error in state: 133.
 ##
-## add -> expr . PLUS expr [ TIMES SEMI PLUS NEQ LTH LEQ GTH GEQ EQEQ ]
-## eq -> expr . EQEQ expr [ TIMES SEMI PLUS NEQ LTH LEQ GTH GEQ EQEQ ]
-## geq -> expr . GEQ expr [ TIMES SEMI PLUS NEQ LTH LEQ GTH GEQ EQEQ ]
-## gth -> expr . GTH expr [ TIMES SEMI PLUS NEQ LTH LEQ GTH GEQ EQEQ ]
-## leq -> expr . LEQ expr [ TIMES SEMI PLUS NEQ LTH LEQ GTH GEQ EQEQ ]
-## lth -> expr . LTH expr [ TIMES SEMI PLUS NEQ LTH LEQ GTH GEQ EQEQ ]
-## mul -> expr . TIMES expr [ TIMES SEMI PLUS NEQ LTH LEQ GTH GEQ EQEQ ]
-## neq -> expr . NEQ expr [ TIMES SEMI PLUS NEQ LTH LEQ GTH GEQ EQEQ ]
-## set_struct_member -> struct_access EQ expr . SEMI [ WHILE TYPE TRUE RETURN PUTCHAR PARO IF IDENT FALSE CONST BRAC ]
+## add -> expr . PLUS expr [ TIMES SEMI PLUS NEQ MINUS LTH LEQ GTH GEQ EQEQ BY ]
+## div -> expr . BY expr [ TIMES SEMI PLUS NEQ MINUS LTH LEQ GTH GEQ EQEQ BY ]
+## eq -> expr . EQEQ expr [ TIMES SEMI PLUS NEQ MINUS LTH LEQ GTH GEQ EQEQ BY ]
+## geq -> expr . GEQ expr [ TIMES SEMI PLUS NEQ MINUS LTH LEQ GTH GEQ EQEQ BY ]
+## gth -> expr . GTH expr [ TIMES SEMI PLUS NEQ MINUS LTH LEQ GTH GEQ EQEQ BY ]
+## leq -> expr . LEQ expr [ TIMES SEMI PLUS NEQ MINUS LTH LEQ GTH GEQ EQEQ BY ]
+## lth -> expr . LTH expr [ TIMES SEMI PLUS NEQ MINUS LTH LEQ GTH GEQ EQEQ BY ]
+## mul -> expr . TIMES expr [ TIMES SEMI PLUS NEQ MINUS LTH LEQ GTH GEQ EQEQ BY ]
+## neq -> expr . NEQ expr [ TIMES SEMI PLUS NEQ MINUS LTH LEQ GTH GEQ EQEQ BY ]
+## set_struct_member -> struct_access EQ expr . SEMI [ WHILE TYPE TRUE TIMES RETURN PUTCHAR PARO NOT MINUS IF IDENT FALSE CONST BRAC AND ]
+## sub -> expr . MINUS expr [ TIMES SEMI PLUS NEQ MINUS LTH LEQ GTH GEQ EQEQ BY ]
 ##
 ## The known suffix of the stack is as follows:
 ## struct_access EQ expr
@@ -600,9 +782,9 @@ Expecting ';' at the end of the instruction
 
 prog: TYPE IDENT SEMI TYPE IDENT PARO PARC BRAO IDENT DOT IDENT EQ WHILE
 ##
-## Ends in an error in state: 110.
+## Ends in an error in state: 132.
 ##
-## set_struct_member -> struct_access EQ . expr SEMI [ WHILE TYPE TRUE RETURN PUTCHAR PARO IF IDENT FALSE CONST BRAC ]
+## set_struct_member -> struct_access EQ . expr SEMI [ WHILE TYPE TRUE TIMES RETURN PUTCHAR PARO NOT MINUS IF IDENT FALSE CONST BRAC AND ]
 ##
 ## The known suffix of the stack is as follows:
 ## struct_access EQ
@@ -612,10 +794,10 @@ Expecting an expression on right side of the assignment operator
 
 prog: TYPE IDENT SEMI TYPE IDENT PARO PARC BRAO IDENT DOT IDENT WHILE
 ##
-## Ends in an error in state: 109.
+## Ends in an error in state: 131.
 ##
-## expr -> struct_access . [ TIMES SEMI PLUS NEQ LTH LEQ GTH GEQ EQEQ ]
-## set_struct_member -> struct_access . EQ expr SEMI [ WHILE TYPE TRUE RETURN PUTCHAR PARO IF IDENT FALSE CONST BRAC ]
+## expr -> struct_access . [ TIMES SEMI PLUS NEQ MINUS LTH LEQ GTH GEQ EQEQ BY ]
+## set_struct_member -> struct_access . EQ expr SEMI [ WHILE TYPE TRUE TIMES RETURN PUTCHAR PARO NOT MINUS IF IDENT FALSE CONST BRAC AND ]
 ##
 ## The known suffix of the stack is as follows:
 ## struct_access
@@ -625,9 +807,9 @@ Expecting ';' at the end of an instruction.
 
 prog: TYPE IDENT SEMI TYPE IDENT PARO PARC BRAO IDENT EQ BRAO BRAC WHILE
 ##
-## Ends in an error in state: 101.
+## Ends in an error in state: 123.
 ##
-## set_struct -> IDENT EQ init_list . SEMI [ WHILE TYPE TRUE RETURN PUTCHAR PARO IF IDENT FALSE CONST BRAC ]
+## set_struct -> IDENT EQ init_list . SEMI [ WHILE TYPE TRUE TIMES RETURN PUTCHAR PARO NOT MINUS IF IDENT FALSE CONST BRAC AND ]
 ##
 ## The known suffix of the stack is as follows:
 ## IDENT EQ init_list
@@ -637,7 +819,7 @@ Expecting ';' after struct assignment.
 
 prog: TYPE IDENT SEMI TYPE IDENT PARO PARC BRAO IDENT EQ BRAO WHILE
 ##
-## Ends in an error in state: 98.
+## Ends in an error in state: 120.
 ##
 ## init_list -> BRAO . loption(separated_nonempty_list(COMMA,expr)) BRAC [ SEMI ]
 ##
@@ -649,17 +831,19 @@ Unexpected instruction inside an initializer list.
 
 prog: TYPE IDENT SEMI TYPE IDENT PARO PARC BRAO IDENT EQ TRUE WHILE
 ##
-## Ends in an error in state: 103.
+## Ends in an error in state: 125.
 ##
-## add -> expr . PLUS expr [ TIMES SEMI PLUS NEQ LTH LEQ GTH GEQ EQEQ ]
-## eq -> expr . EQEQ expr [ TIMES SEMI PLUS NEQ LTH LEQ GTH GEQ EQEQ ]
-## geq -> expr . GEQ expr [ TIMES SEMI PLUS NEQ LTH LEQ GTH GEQ EQEQ ]
-## gth -> expr . GTH expr [ TIMES SEMI PLUS NEQ LTH LEQ GTH GEQ EQEQ ]
-## leq -> expr . LEQ expr [ TIMES SEMI PLUS NEQ LTH LEQ GTH GEQ EQEQ ]
-## lth -> expr . LTH expr [ TIMES SEMI PLUS NEQ LTH LEQ GTH GEQ EQEQ ]
-## mul -> expr . TIMES expr [ TIMES SEMI PLUS NEQ LTH LEQ GTH GEQ EQEQ ]
-## neq -> expr . NEQ expr [ TIMES SEMI PLUS NEQ LTH LEQ GTH GEQ EQEQ ]
-## set -> IDENT EQ expr . SEMI [ WHILE TYPE TRUE RETURN PUTCHAR PARO IF IDENT FALSE CONST BRAC ]
+## add -> expr . PLUS expr [ TIMES SEMI PLUS NEQ MINUS LTH LEQ GTH GEQ EQEQ BY ]
+## div -> expr . BY expr [ TIMES SEMI PLUS NEQ MINUS LTH LEQ GTH GEQ EQEQ BY ]
+## eq -> expr . EQEQ expr [ TIMES SEMI PLUS NEQ MINUS LTH LEQ GTH GEQ EQEQ BY ]
+## geq -> expr . GEQ expr [ TIMES SEMI PLUS NEQ MINUS LTH LEQ GTH GEQ EQEQ BY ]
+## gth -> expr . GTH expr [ TIMES SEMI PLUS NEQ MINUS LTH LEQ GTH GEQ EQEQ BY ]
+## leq -> expr . LEQ expr [ TIMES SEMI PLUS NEQ MINUS LTH LEQ GTH GEQ EQEQ BY ]
+## lth -> expr . LTH expr [ TIMES SEMI PLUS NEQ MINUS LTH LEQ GTH GEQ EQEQ BY ]
+## mul -> expr . TIMES expr [ TIMES SEMI PLUS NEQ MINUS LTH LEQ GTH GEQ EQEQ BY ]
+## neq -> expr . NEQ expr [ TIMES SEMI PLUS NEQ MINUS LTH LEQ GTH GEQ EQEQ BY ]
+## set -> IDENT EQ expr . SEMI [ WHILE TYPE TRUE TIMES RETURN PUTCHAR PARO NOT MINUS IF IDENT FALSE CONST BRAC AND ]
+## sub -> expr . MINUS expr [ TIMES SEMI PLUS NEQ MINUS LTH LEQ GTH GEQ EQEQ BY ]
 ##
 ## The known suffix of the stack is as follows:
 ## IDENT EQ expr
@@ -669,10 +853,10 @@ Missing ';' at the end of a variable assignment.
 
 prog: TYPE IDENT SEMI TYPE IDENT PARO PARC BRAO IDENT EQ WHILE
 ##
-## Ends in an error in state: 97.
+## Ends in an error in state: 119.
 ##
-## set -> IDENT EQ . expr SEMI [ WHILE TYPE TRUE RETURN PUTCHAR PARO IF IDENT FALSE CONST BRAC ]
-## set_struct -> IDENT EQ . init_list SEMI [ WHILE TYPE TRUE RETURN PUTCHAR PARO IF IDENT FALSE CONST BRAC ]
+## set -> IDENT EQ . expr SEMI [ WHILE TYPE TRUE TIMES RETURN PUTCHAR PARO NOT MINUS IF IDENT FALSE CONST BRAC AND ]
+## set_struct -> IDENT EQ . init_list SEMI [ WHILE TYPE TRUE TIMES RETURN PUTCHAR PARO NOT MINUS IF IDENT FALSE CONST BRAC AND ]
 ##
 ## The known suffix of the stack is as follows:
 ## IDENT EQ
@@ -682,9 +866,9 @@ Expecting an expression after '='.
 
 prog: TYPE IDENT SEMI TYPE IDENT PARO PARC BRAO IDENT IDENT EQ BRAO BRAC WHILE
 ##
-## Ends in an error in state: 107.
+## Ends in an error in state: 129.
 ##
-## local -> struct_decl opt_init_list . SEMI [ WHILE TYPE TRUE RETURN PUTCHAR PARO IF IDENT FALSE CONST BRAC ]
+## local -> struct_decl opt_init_list . SEMI [ WHILE TYPE TRUE TIMES RETURN PUTCHAR PARO NOT MINUS IF IDENT FALSE CONST BRAC AND ]
 ##
 ## The known suffix of the stack is as follows:
 ## struct_decl opt_init_list
@@ -694,9 +878,9 @@ Expecting a ';' after variable declaration.
 
 prog: TYPE IDENT SEMI TYPE IDENT PARO PARC BRAO IDENT IDENT WHILE
 ##
-## Ends in an error in state: 106.
+## Ends in an error in state: 128.
 ##
-## local -> struct_decl . opt_init_list SEMI [ WHILE TYPE TRUE RETURN PUTCHAR PARO IF IDENT FALSE CONST BRAC ]
+## local -> struct_decl . opt_init_list SEMI [ WHILE TYPE TRUE TIMES RETURN PUTCHAR PARO NOT MINUS IF IDENT FALSE CONST BRAC AND ]
 ##
 ## The known suffix of the stack is as follows:
 ## struct_decl
@@ -706,13 +890,13 @@ Expecting a ';' after variable declaration.
 
 prog: TYPE IDENT SEMI TYPE IDENT PARO PARC BRAO IDENT WHILE
 ##
-## Ends in an error in state: 96.
+## Ends in an error in state: 118.
 ##
-## call -> IDENT . PARO args_opt PARC [ TIMES SEMI PLUS NEQ LTH LEQ GTH GEQ EQEQ ]
-## get -> IDENT . [ TIMES SEMI PLUS NEQ LTH LEQ GTH GEQ EQEQ ]
-## set -> IDENT . EQ expr SEMI [ WHILE TYPE TRUE RETURN PUTCHAR PARO IF IDENT FALSE CONST BRAC ]
-## set_struct -> IDENT . EQ init_list SEMI [ WHILE TYPE TRUE RETURN PUTCHAR PARO IF IDENT FALSE CONST BRAC ]
-## struct_access -> IDENT . DOT IDENT [ TIMES SEMI PLUS NEQ LTH LEQ GTH GEQ EQEQ EQ ]
+## call -> IDENT . PARO args_opt PARC [ TIMES SEMI PLUS NEQ MINUS LTH LEQ GTH GEQ EQEQ BY ]
+## get -> IDENT . [ TIMES SEMI PLUS NEQ MINUS LTH LEQ GTH GEQ EQEQ BY ]
+## set -> IDENT . EQ expr SEMI [ WHILE TYPE TRUE TIMES RETURN PUTCHAR PARO NOT MINUS IF IDENT FALSE CONST BRAC AND ]
+## set_struct -> IDENT . EQ init_list SEMI [ WHILE TYPE TRUE TIMES RETURN PUTCHAR PARO NOT MINUS IF IDENT FALSE CONST BRAC AND ]
+## struct_access -> IDENT . DOT IDENT [ TIMES SEMI PLUS NEQ MINUS LTH LEQ GTH GEQ EQEQ EQ BY ]
 ## struct_decl -> IDENT . IDENT [ SEMI EQ ]
 ##
 ## The known suffix of the stack is as follows:
@@ -721,11 +905,11 @@ prog: TYPE IDENT SEMI TYPE IDENT PARO PARC BRAO IDENT WHILE
 
 Identifier is expected to be followed by ';' or '(' or '=' or a binary operator.
 
-prog: TYPE IDENT SEMI TYPE IDENT PARO PARC BRAO IF PARO TRUE PARC BRAO TIMES
+prog: TYPE IDENT SEMI TYPE IDENT PARO PARC BRAO IF PARO TRUE PARC BRAO STRUCT
 ##
-## Ends in an error in state: 95.
+## Ends in an error in state: 117.
 ##
-## ifi -> IF PARO expr PARC BRAO . body BRAC ELSE BRAO body BRAC [ WHILE TYPE TRUE RETURN PUTCHAR PARO IF IDENT FALSE CONST BRAC ]
+## ifi -> IF PARO expr PARC BRAO . body BRAC ELSE BRAO body BRAC [ WHILE TYPE TRUE TIMES RETURN PUTCHAR PARO NOT MINUS IF IDENT FALSE CONST BRAC AND ]
 ##
 ## The known suffix of the stack is as follows:
 ## IF PARO expr PARC BRAO
@@ -733,11 +917,11 @@ prog: TYPE IDENT SEMI TYPE IDENT PARO PARC BRAO IF PARO TRUE PARC BRAO TIMES
 
 Missing left operand on a binary operator.
 
-prog: TYPE IDENT SEMI TYPE IDENT PARO PARC BRAO IF PARO TRUE PARC BRAO TRUE SEMI BRAC ELSE BRAO TIMES
+prog: TYPE IDENT SEMI TYPE IDENT PARO PARC BRAO IF PARO TRUE PARC BRAO TRUE SEMI BRAC ELSE BRAO STRUCT
 ##
-## Ends in an error in state: 131.
+## Ends in an error in state: 158.
 ##
-## ifi -> IF PARO expr PARC BRAO body BRAC ELSE BRAO . body BRAC [ WHILE TYPE TRUE RETURN PUTCHAR PARO IF IDENT FALSE CONST BRAC ]
+## ifi -> IF PARO expr PARC BRAO body BRAC ELSE BRAO . body BRAC [ WHILE TYPE TRUE TIMES RETURN PUTCHAR PARO NOT MINUS IF IDENT FALSE CONST BRAC AND ]
 ##
 ## The known suffix of the stack is as follows:
 ## IF PARO expr PARC BRAO body BRAC ELSE BRAO
@@ -745,13 +929,13 @@ prog: TYPE IDENT SEMI TYPE IDENT PARO PARC BRAO IF PARO TRUE PARC BRAO TRUE SEMI
 
 Missing left operand on a binary operator.
 
-prog: TYPE IDENT SEMI TYPE IDENT PARO PARC BRAO IF PARO TRUE PARC BRAO TRUE SEMI BRAC ELSE BRAO TRUE SEMI TIMES
+prog: TYPE IDENT SEMI TYPE IDENT PARO PARC BRAO IF PARO TRUE PARC BRAO TRUE SEMI BRAC ELSE BRAO TRUE SEMI STRUCT
 ##
-## Ends in an error in state: 132.
+## Ends in an error in state: 159.
 ##
-## body -> body . instr [ WHILE TYPE TRUE RETURN PUTCHAR PARO IF IDENT FALSE CONST BRAC ]
-## body -> body . local [ WHILE TYPE TRUE RETURN PUTCHAR PARO IF IDENT FALSE CONST BRAC ]
-## ifi -> IF PARO expr PARC BRAO body BRAC ELSE BRAO body . BRAC [ WHILE TYPE TRUE RETURN PUTCHAR PARO IF IDENT FALSE CONST BRAC ]
+## body -> body . instr [ WHILE TYPE TRUE TIMES RETURN PUTCHAR PARO NOT MINUS IF IDENT FALSE CONST BRAC AND ]
+## body -> body . local [ WHILE TYPE TRUE TIMES RETURN PUTCHAR PARO NOT MINUS IF IDENT FALSE CONST BRAC AND ]
+## ifi -> IF PARO expr PARC BRAO body BRAC ELSE BRAO body . BRAC [ WHILE TYPE TRUE TIMES RETURN PUTCHAR PARO NOT MINUS IF IDENT FALSE CONST BRAC AND ]
 ##
 ## The known suffix of the stack is as follows:
 ## IF PARO expr PARC BRAO body BRAC ELSE BRAO body
@@ -761,9 +945,9 @@ Missing left operand on a binary operator.
 
 prog: TYPE IDENT SEMI TYPE IDENT PARO PARC BRAO IF PARO TRUE PARC BRAO TRUE SEMI BRAC ELSE WHILE
 ##
-## Ends in an error in state: 130.
+## Ends in an error in state: 157.
 ##
-## ifi -> IF PARO expr PARC BRAO body BRAC ELSE . BRAO body BRAC [ WHILE TYPE TRUE RETURN PUTCHAR PARO IF IDENT FALSE CONST BRAC ]
+## ifi -> IF PARO expr PARC BRAO body BRAC ELSE . BRAO body BRAC [ WHILE TYPE TRUE TIMES RETURN PUTCHAR PARO NOT MINUS IF IDENT FALSE CONST BRAC AND ]
 ##
 ## The known suffix of the stack is as follows:
 ## IF PARO expr PARC BRAO body BRAC ELSE
@@ -773,9 +957,9 @@ Missing '{' after 'else' statement.
 
 prog: TYPE IDENT SEMI TYPE IDENT PARO PARC BRAO IF PARO TRUE PARC BRAO TRUE SEMI BRAC WHILE
 ##
-## Ends in an error in state: 129.
+## Ends in an error in state: 156.
 ##
-## ifi -> IF PARO expr PARC BRAO body BRAC . ELSE BRAO body BRAC [ WHILE TYPE TRUE RETURN PUTCHAR PARO IF IDENT FALSE CONST BRAC ]
+## ifi -> IF PARO expr PARC BRAO body BRAC . ELSE BRAO body BRAC [ WHILE TYPE TRUE TIMES RETURN PUTCHAR PARO NOT MINUS IF IDENT FALSE CONST BRAC AND ]
 ##
 ## The known suffix of the stack is as follows:
 ## IF PARO expr PARC BRAO body BRAC
@@ -783,13 +967,13 @@ prog: TYPE IDENT SEMI TYPE IDENT PARO PARC BRAO IF PARO TRUE PARC BRAO TRUE SEMI
 
 Missing 'else' statement.
 
-prog: TYPE IDENT SEMI TYPE IDENT PARO PARC BRAO IF PARO TRUE PARC BRAO TRUE SEMI TIMES
+prog: TYPE IDENT SEMI TYPE IDENT PARO PARC BRAO IF PARO TRUE PARC BRAO TRUE SEMI STRUCT
 ##
-## Ends in an error in state: 123.
+## Ends in an error in state: 155.
 ##
-## body -> body . instr [ WHILE TYPE TRUE RETURN PUTCHAR PARO IF IDENT FALSE CONST BRAC ]
-## body -> body . local [ WHILE TYPE TRUE RETURN PUTCHAR PARO IF IDENT FALSE CONST BRAC ]
-## ifi -> IF PARO expr PARC BRAO body . BRAC ELSE BRAO body BRAC [ WHILE TYPE TRUE RETURN PUTCHAR PARO IF IDENT FALSE CONST BRAC ]
+## body -> body . instr [ WHILE TYPE TRUE TIMES RETURN PUTCHAR PARO NOT MINUS IF IDENT FALSE CONST BRAC AND ]
+## body -> body . local [ WHILE TYPE TRUE TIMES RETURN PUTCHAR PARO NOT MINUS IF IDENT FALSE CONST BRAC AND ]
+## ifi -> IF PARO expr PARC BRAO body . BRAC ELSE BRAO body BRAC [ WHILE TYPE TRUE TIMES RETURN PUTCHAR PARO NOT MINUS IF IDENT FALSE CONST BRAC AND ]
 ##
 ## The known suffix of the stack is as follows:
 ## IF PARO expr PARC BRAO body
@@ -799,9 +983,9 @@ Missing left operand on a binary operator.
 
 prog: TYPE IDENT SEMI TYPE IDENT PARO PARC BRAO IF PARO TRUE PARC WHILE
 ##
-## Ends in an error in state: 94.
+## Ends in an error in state: 116.
 ##
-## ifi -> IF PARO expr PARC . BRAO body BRAC ELSE BRAO body BRAC [ WHILE TYPE TRUE RETURN PUTCHAR PARO IF IDENT FALSE CONST BRAC ]
+## ifi -> IF PARO expr PARC . BRAO body BRAC ELSE BRAO body BRAC [ WHILE TYPE TRUE TIMES RETURN PUTCHAR PARO NOT MINUS IF IDENT FALSE CONST BRAC AND ]
 ##
 ## The known suffix of the stack is as follows:
 ## IF PARO expr PARC
@@ -811,29 +995,31 @@ Missing '{' after if condition.
 
 prog: TYPE IDENT SEMI TYPE IDENT PARO PARC BRAO IF PARO TRUE WHILE
 ##
-## Ends in an error in state: 93.
+## Ends in an error in state: 115.
 ##
-## add -> expr . PLUS expr [ TIMES PLUS PARC NEQ LTH LEQ GTH GEQ EQEQ ]
-## eq -> expr . EQEQ expr [ TIMES PLUS PARC NEQ LTH LEQ GTH GEQ EQEQ ]
-## geq -> expr . GEQ expr [ TIMES PLUS PARC NEQ LTH LEQ GTH GEQ EQEQ ]
-## gth -> expr . GTH expr [ TIMES PLUS PARC NEQ LTH LEQ GTH GEQ EQEQ ]
-## ifi -> IF PARO expr . PARC BRAO body BRAC ELSE BRAO body BRAC [ WHILE TYPE TRUE RETURN PUTCHAR PARO IF IDENT FALSE CONST BRAC ]
-## leq -> expr . LEQ expr [ TIMES PLUS PARC NEQ LTH LEQ GTH GEQ EQEQ ]
-## lth -> expr . LTH expr [ TIMES PLUS PARC NEQ LTH LEQ GTH GEQ EQEQ ]
-## mul -> expr . TIMES expr [ TIMES PLUS PARC NEQ LTH LEQ GTH GEQ EQEQ ]
-## neq -> expr . NEQ expr [ TIMES PLUS PARC NEQ LTH LEQ GTH GEQ EQEQ ]
+## add -> expr . PLUS expr [ TIMES PLUS PARC NEQ MINUS LTH LEQ GTH GEQ EQEQ BY ]
+## div -> expr . BY expr [ TIMES PLUS PARC NEQ MINUS LTH LEQ GTH GEQ EQEQ BY ]
+## eq -> expr . EQEQ expr [ TIMES PLUS PARC NEQ MINUS LTH LEQ GTH GEQ EQEQ BY ]
+## geq -> expr . GEQ expr [ TIMES PLUS PARC NEQ MINUS LTH LEQ GTH GEQ EQEQ BY ]
+## gth -> expr . GTH expr [ TIMES PLUS PARC NEQ MINUS LTH LEQ GTH GEQ EQEQ BY ]
+## ifi -> IF PARO expr . PARC BRAO body BRAC ELSE BRAO body BRAC [ WHILE TYPE TRUE TIMES RETURN PUTCHAR PARO NOT MINUS IF IDENT FALSE CONST BRAC AND ]
+## leq -> expr . LEQ expr [ TIMES PLUS PARC NEQ MINUS LTH LEQ GTH GEQ EQEQ BY ]
+## lth -> expr . LTH expr [ TIMES PLUS PARC NEQ MINUS LTH LEQ GTH GEQ EQEQ BY ]
+## mul -> expr . TIMES expr [ TIMES PLUS PARC NEQ MINUS LTH LEQ GTH GEQ EQEQ BY ]
+## neq -> expr . NEQ expr [ TIMES PLUS PARC NEQ MINUS LTH LEQ GTH GEQ EQEQ BY ]
+## sub -> expr . MINUS expr [ TIMES PLUS PARC NEQ MINUS LTH LEQ GTH GEQ EQEQ BY ]
 ##
 ## The known suffix of the stack is as follows:
 ## IF PARO expr
 ##
 
-Missing matching ')'.
+Unexpected statement inside of an expression.
 
 prog: TYPE IDENT SEMI TYPE IDENT PARO PARC BRAO IF PARO WHILE
 ##
-## Ends in an error in state: 92.
+## Ends in an error in state: 114.
 ##
-## ifi -> IF PARO . expr PARC BRAO body BRAC ELSE BRAO body BRAC [ WHILE TYPE TRUE RETURN PUTCHAR PARO IF IDENT FALSE CONST BRAC ]
+## ifi -> IF PARO . expr PARC BRAO body BRAC ELSE BRAO body BRAC [ WHILE TYPE TRUE TIMES RETURN PUTCHAR PARO NOT MINUS IF IDENT FALSE CONST BRAC AND ]
 ##
 ## The known suffix of the stack is as follows:
 ## IF PARO
@@ -843,9 +1029,9 @@ if condition should be an expression.
 
 prog: TYPE IDENT SEMI TYPE IDENT PARO PARC BRAO IF WHILE
 ##
-## Ends in an error in state: 91.
+## Ends in an error in state: 113.
 ##
-## ifi -> IF . PARO expr PARC BRAO body BRAC ELSE BRAO body BRAC [ WHILE TYPE TRUE RETURN PUTCHAR PARO IF IDENT FALSE CONST BRAC ]
+## ifi -> IF . PARO expr PARC BRAO body BRAC ELSE BRAO body BRAC [ WHILE TYPE TRUE TIMES RETURN PUTCHAR PARO NOT MINUS IF IDENT FALSE CONST BRAC AND ]
 ##
 ## The known suffix of the stack is as follows:
 ## IF
@@ -855,9 +1041,9 @@ Missing '(' after if statement.
 
 prog: TYPE IDENT SEMI TYPE IDENT PARO PARC BRAO PUTCHAR PARO TRUE PARC WHILE
 ##
-## Ends in an error in state: 89.
+## Ends in an error in state: 111.
 ##
-## putchar -> PUTCHAR PARO expr PARC . SEMI [ WHILE TYPE TRUE RETURN PUTCHAR PARO IF IDENT FALSE CONST BRAC ]
+## putchar -> PUTCHAR PARO expr PARC . SEMI [ WHILE TYPE TRUE TIMES RETURN PUTCHAR PARO NOT MINUS IF IDENT FALSE CONST BRAC AND ]
 ##
 ## The known suffix of the stack is as follows:
 ## PUTCHAR PARO expr PARC
@@ -867,29 +1053,31 @@ Missing ';' after function call.
 
 prog: TYPE IDENT SEMI TYPE IDENT PARO PARC BRAO PUTCHAR PARO TRUE WHILE
 ##
-## Ends in an error in state: 88.
+## Ends in an error in state: 110.
 ##
-## add -> expr . PLUS expr [ TIMES PLUS PARC NEQ LTH LEQ GTH GEQ EQEQ ]
-## eq -> expr . EQEQ expr [ TIMES PLUS PARC NEQ LTH LEQ GTH GEQ EQEQ ]
-## geq -> expr . GEQ expr [ TIMES PLUS PARC NEQ LTH LEQ GTH GEQ EQEQ ]
-## gth -> expr . GTH expr [ TIMES PLUS PARC NEQ LTH LEQ GTH GEQ EQEQ ]
-## leq -> expr . LEQ expr [ TIMES PLUS PARC NEQ LTH LEQ GTH GEQ EQEQ ]
-## lth -> expr . LTH expr [ TIMES PLUS PARC NEQ LTH LEQ GTH GEQ EQEQ ]
-## mul -> expr . TIMES expr [ TIMES PLUS PARC NEQ LTH LEQ GTH GEQ EQEQ ]
-## neq -> expr . NEQ expr [ TIMES PLUS PARC NEQ LTH LEQ GTH GEQ EQEQ ]
-## putchar -> PUTCHAR PARO expr . PARC SEMI [ WHILE TYPE TRUE RETURN PUTCHAR PARO IF IDENT FALSE CONST BRAC ]
+## add -> expr . PLUS expr [ TIMES PLUS PARC NEQ MINUS LTH LEQ GTH GEQ EQEQ BY ]
+## div -> expr . BY expr [ TIMES PLUS PARC NEQ MINUS LTH LEQ GTH GEQ EQEQ BY ]
+## eq -> expr . EQEQ expr [ TIMES PLUS PARC NEQ MINUS LTH LEQ GTH GEQ EQEQ BY ]
+## geq -> expr . GEQ expr [ TIMES PLUS PARC NEQ MINUS LTH LEQ GTH GEQ EQEQ BY ]
+## gth -> expr . GTH expr [ TIMES PLUS PARC NEQ MINUS LTH LEQ GTH GEQ EQEQ BY ]
+## leq -> expr . LEQ expr [ TIMES PLUS PARC NEQ MINUS LTH LEQ GTH GEQ EQEQ BY ]
+## lth -> expr . LTH expr [ TIMES PLUS PARC NEQ MINUS LTH LEQ GTH GEQ EQEQ BY ]
+## mul -> expr . TIMES expr [ TIMES PLUS PARC NEQ MINUS LTH LEQ GTH GEQ EQEQ BY ]
+## neq -> expr . NEQ expr [ TIMES PLUS PARC NEQ MINUS LTH LEQ GTH GEQ EQEQ BY ]
+## putchar -> PUTCHAR PARO expr . PARC SEMI [ WHILE TYPE TRUE TIMES RETURN PUTCHAR PARO NOT MINUS IF IDENT FALSE CONST BRAC AND ]
+## sub -> expr . MINUS expr [ TIMES PLUS PARC NEQ MINUS LTH LEQ GTH GEQ EQEQ BY ]
 ##
 ## The known suffix of the stack is as follows:
 ## PUTCHAR PARO expr
 ##
 
-Missing matching ')'.
+Unexpected statement inside of an expression.
 
 prog: TYPE IDENT SEMI TYPE IDENT PARO PARC BRAO PUTCHAR PARO WHILE
 ##
-## Ends in an error in state: 87.
+## Ends in an error in state: 109.
 ##
-## putchar -> PUTCHAR PARO . expr PARC SEMI [ WHILE TYPE TRUE RETURN PUTCHAR PARO IF IDENT FALSE CONST BRAC ]
+## putchar -> PUTCHAR PARO . expr PARC SEMI [ WHILE TYPE TRUE TIMES RETURN PUTCHAR PARO NOT MINUS IF IDENT FALSE CONST BRAC AND ]
 ##
 ## The known suffix of the stack is as follows:
 ## PUTCHAR PARO
@@ -899,9 +1087,9 @@ prog: TYPE IDENT SEMI TYPE IDENT PARO PARC BRAO PUTCHAR PARO WHILE
 
 prog: TYPE IDENT SEMI TYPE IDENT PARO PARC BRAO PUTCHAR WHILE
 ##
-## Ends in an error in state: 86.
+## Ends in an error in state: 108.
 ##
-## putchar -> PUTCHAR . PARO expr PARC SEMI [ WHILE TYPE TRUE RETURN PUTCHAR PARO IF IDENT FALSE CONST BRAC ]
+## putchar -> PUTCHAR . PARO expr PARC SEMI [ WHILE TYPE TRUE TIMES RETURN PUTCHAR PARO NOT MINUS IF IDENT FALSE CONST BRAC AND ]
 ##
 ## The known suffix of the stack is as follows:
 ## PUTCHAR
@@ -911,17 +1099,19 @@ Missing '(' after puthcar call.
 
 prog: TYPE IDENT SEMI TYPE IDENT PARO PARC BRAO RETURN TRUE WHILE
 ##
-## Ends in an error in state: 84.
+## Ends in an error in state: 106.
 ##
-## add -> expr . PLUS expr [ TIMES SEMI PLUS NEQ LTH LEQ GTH GEQ EQEQ ]
-## eq -> expr . EQEQ expr [ TIMES SEMI PLUS NEQ LTH LEQ GTH GEQ EQEQ ]
-## geq -> expr . GEQ expr [ TIMES SEMI PLUS NEQ LTH LEQ GTH GEQ EQEQ ]
-## gth -> expr . GTH expr [ TIMES SEMI PLUS NEQ LTH LEQ GTH GEQ EQEQ ]
-## leq -> expr . LEQ expr [ TIMES SEMI PLUS NEQ LTH LEQ GTH GEQ EQEQ ]
-## lth -> expr . LTH expr [ TIMES SEMI PLUS NEQ LTH LEQ GTH GEQ EQEQ ]
-## mul -> expr . TIMES expr [ TIMES SEMI PLUS NEQ LTH LEQ GTH GEQ EQEQ ]
-## neq -> expr . NEQ expr [ TIMES SEMI PLUS NEQ LTH LEQ GTH GEQ EQEQ ]
-## returni -> RETURN expr . SEMI [ WHILE TYPE TRUE RETURN PUTCHAR PARO IF IDENT FALSE CONST BRAC ]
+## add -> expr . PLUS expr [ TIMES SEMI PLUS NEQ MINUS LTH LEQ GTH GEQ EQEQ BY ]
+## div -> expr . BY expr [ TIMES SEMI PLUS NEQ MINUS LTH LEQ GTH GEQ EQEQ BY ]
+## eq -> expr . EQEQ expr [ TIMES SEMI PLUS NEQ MINUS LTH LEQ GTH GEQ EQEQ BY ]
+## geq -> expr . GEQ expr [ TIMES SEMI PLUS NEQ MINUS LTH LEQ GTH GEQ EQEQ BY ]
+## gth -> expr . GTH expr [ TIMES SEMI PLUS NEQ MINUS LTH LEQ GTH GEQ EQEQ BY ]
+## leq -> expr . LEQ expr [ TIMES SEMI PLUS NEQ MINUS LTH LEQ GTH GEQ EQEQ BY ]
+## lth -> expr . LTH expr [ TIMES SEMI PLUS NEQ MINUS LTH LEQ GTH GEQ EQEQ BY ]
+## mul -> expr . TIMES expr [ TIMES SEMI PLUS NEQ MINUS LTH LEQ GTH GEQ EQEQ BY ]
+## neq -> expr . NEQ expr [ TIMES SEMI PLUS NEQ MINUS LTH LEQ GTH GEQ EQEQ BY ]
+## returni -> RETURN expr . SEMI [ WHILE TYPE TRUE TIMES RETURN PUTCHAR PARO NOT MINUS IF IDENT FALSE CONST BRAC AND ]
+## sub -> expr . MINUS expr [ TIMES SEMI PLUS NEQ MINUS LTH LEQ GTH GEQ EQEQ BY ]
 ##
 ## The known suffix of the stack is as follows:
 ## RETURN expr
@@ -931,9 +1121,9 @@ Missing ';' after return statement.
 
 prog: TYPE IDENT SEMI TYPE IDENT PARO PARC BRAO RETURN WHILE
 ##
-## Ends in an error in state: 83.
+## Ends in an error in state: 105.
 ##
-## returni -> RETURN . expr SEMI [ WHILE TYPE TRUE RETURN PUTCHAR PARO IF IDENT FALSE CONST BRAC ]
+## returni -> RETURN . expr SEMI [ WHILE TYPE TRUE TIMES RETURN PUTCHAR PARO NOT MINUS IF IDENT FALSE CONST BRAC AND ]
 ##
 ## The known suffix of the stack is as follows:
 ## RETURN
@@ -941,9 +1131,9 @@ prog: TYPE IDENT SEMI TYPE IDENT PARO PARC BRAO RETURN WHILE
 
 'return' expects an expression.
 
-prog: TYPE IDENT SEMI TYPE IDENT PARO PARC BRAO TIMES
+prog: TYPE IDENT SEMI TYPE IDENT PARO PARC BRAO STRUCT
 ##
-## Ends in an error in state: 77.
+## Ends in an error in state: 99.
 ##
 ## func -> struct_type_decl PARO params_opt PARC BRAO . body BRAC [ TYPE IDENT EOF ]
 ##
@@ -953,12 +1143,59 @@ prog: TYPE IDENT SEMI TYPE IDENT PARO PARC BRAO TIMES
 
 Missing left operand on a binary operator.
 
-prog: TYPE IDENT SEMI TYPE IDENT PARO PARC BRAO TRUE SEMI TIMES
+prog: TYPE IDENT SEMI TYPE IDENT PARO PARC BRAO TIMES CONST EQ TRUE WHILE
 ##
-## Ends in an error in state: 138.
+## Ends in an error in state: 148.
 ##
-## body -> body . instr [ WHILE TYPE TRUE RETURN PUTCHAR PARO IF IDENT FALSE CONST BRAC ]
-## body -> body . local [ WHILE TYPE TRUE RETURN PUTCHAR PARO IF IDENT FALSE CONST BRAC ]
+## add -> expr . PLUS expr [ TIMES SEMI PLUS NEQ MINUS LTH LEQ GTH GEQ EQEQ BY ]
+## div -> expr . BY expr [ TIMES SEMI PLUS NEQ MINUS LTH LEQ GTH GEQ EQEQ BY ]
+## eq -> expr . EQEQ expr [ TIMES SEMI PLUS NEQ MINUS LTH LEQ GTH GEQ EQEQ BY ]
+## geq -> expr . GEQ expr [ TIMES SEMI PLUS NEQ MINUS LTH LEQ GTH GEQ EQEQ BY ]
+## gth -> expr . GTH expr [ TIMES SEMI PLUS NEQ MINUS LTH LEQ GTH GEQ EQEQ BY ]
+## leq -> expr . LEQ expr [ TIMES SEMI PLUS NEQ MINUS LTH LEQ GTH GEQ EQEQ BY ]
+## lth -> expr . LTH expr [ TIMES SEMI PLUS NEQ MINUS LTH LEQ GTH GEQ EQEQ BY ]
+## mul -> expr . TIMES expr [ TIMES SEMI PLUS NEQ MINUS LTH LEQ GTH GEQ EQEQ BY ]
+## neq -> expr . NEQ expr [ TIMES SEMI PLUS NEQ MINUS LTH LEQ GTH GEQ EQEQ BY ]
+## set_ptr_val -> deref EQ expr . SEMI [ WHILE TYPE TRUE TIMES RETURN PUTCHAR PARO NOT MINUS IF IDENT FALSE CONST BRAC AND ]
+## sub -> expr . MINUS expr [ TIMES SEMI PLUS NEQ MINUS LTH LEQ GTH GEQ EQEQ BY ]
+##
+## The known suffix of the stack is as follows:
+## deref EQ expr
+##
+
+Unexpected statement inside an expression.
+
+prog: TYPE IDENT SEMI TYPE IDENT PARO PARC BRAO TIMES CONST EQ WHILE
+##
+## Ends in an error in state: 147.
+##
+## set_ptr_val -> deref EQ . expr SEMI [ WHILE TYPE TRUE TIMES RETURN PUTCHAR PARO NOT MINUS IF IDENT FALSE CONST BRAC AND ]
+##
+## The known suffix of the stack is as follows:
+## deref EQ
+##
+
+Expecting an expression after the assignment operator.
+
+prog: TYPE IDENT SEMI TYPE IDENT PARO PARC BRAO TIMES CONST WHILE
+##
+## Ends in an error in state: 146.
+##
+## expr -> deref . [ TIMES SEMI PLUS NEQ MINUS LTH LEQ GTH GEQ EQEQ BY ]
+## set_ptr_val -> deref . EQ expr SEMI [ WHILE TYPE TRUE TIMES RETURN PUTCHAR PARO NOT MINUS IF IDENT FALSE CONST BRAC AND ]
+##
+## The known suffix of the stack is as follows:
+## deref
+##
+
+Unexpected statement inside an expression.
+
+prog: TYPE IDENT SEMI TYPE IDENT PARO PARC BRAO TRUE SEMI STRUCT
+##
+## Ends in an error in state: 165.
+##
+## body -> body . instr [ WHILE TYPE TRUE TIMES RETURN PUTCHAR PARO NOT MINUS IF IDENT FALSE CONST BRAC AND ]
+## body -> body . local [ WHILE TYPE TRUE TIMES RETURN PUTCHAR PARO NOT MINUS IF IDENT FALSE CONST BRAC AND ]
 ## func -> struct_type_decl PARO params_opt PARC BRAO body . BRAC [ TYPE IDENT EOF ]
 ##
 ## The known suffix of the stack is as follows:
@@ -969,29 +1206,31 @@ Missing left operand on binary operator.
 
 prog: TYPE IDENT SEMI TYPE IDENT PARO PARC BRAO TRUE WHILE
 ##
-## Ends in an error in state: 121.
+## Ends in an error in state: 144.
 ##
-## add -> expr . PLUS expr [ TIMES SEMI PLUS NEQ LTH LEQ GTH GEQ EQEQ ]
-## eq -> expr . EQEQ expr [ TIMES SEMI PLUS NEQ LTH LEQ GTH GEQ EQEQ ]
-## geq -> expr . GEQ expr [ TIMES SEMI PLUS NEQ LTH LEQ GTH GEQ EQEQ ]
-## gth -> expr . GTH expr [ TIMES SEMI PLUS NEQ LTH LEQ GTH GEQ EQEQ ]
-## instr -> expr . SEMI [ WHILE TYPE TRUE RETURN PUTCHAR PARO IF IDENT FALSE CONST BRAC ]
-## leq -> expr . LEQ expr [ TIMES SEMI PLUS NEQ LTH LEQ GTH GEQ EQEQ ]
-## lth -> expr . LTH expr [ TIMES SEMI PLUS NEQ LTH LEQ GTH GEQ EQEQ ]
-## mul -> expr . TIMES expr [ TIMES SEMI PLUS NEQ LTH LEQ GTH GEQ EQEQ ]
-## neq -> expr . NEQ expr [ TIMES SEMI PLUS NEQ LTH LEQ GTH GEQ EQEQ ]
+## add -> expr . PLUS expr [ TIMES SEMI PLUS NEQ MINUS LTH LEQ GTH GEQ EQEQ BY ]
+## div -> expr . BY expr [ TIMES SEMI PLUS NEQ MINUS LTH LEQ GTH GEQ EQEQ BY ]
+## eq -> expr . EQEQ expr [ TIMES SEMI PLUS NEQ MINUS LTH LEQ GTH GEQ EQEQ BY ]
+## geq -> expr . GEQ expr [ TIMES SEMI PLUS NEQ MINUS LTH LEQ GTH GEQ EQEQ BY ]
+## gth -> expr . GTH expr [ TIMES SEMI PLUS NEQ MINUS LTH LEQ GTH GEQ EQEQ BY ]
+## instr -> expr . SEMI [ WHILE TYPE TRUE TIMES RETURN PUTCHAR PARO NOT MINUS IF IDENT FALSE CONST BRAC AND ]
+## leq -> expr . LEQ expr [ TIMES SEMI PLUS NEQ MINUS LTH LEQ GTH GEQ EQEQ BY ]
+## lth -> expr . LTH expr [ TIMES SEMI PLUS NEQ MINUS LTH LEQ GTH GEQ EQEQ BY ]
+## mul -> expr . TIMES expr [ TIMES SEMI PLUS NEQ MINUS LTH LEQ GTH GEQ EQEQ BY ]
+## neq -> expr . NEQ expr [ TIMES SEMI PLUS NEQ MINUS LTH LEQ GTH GEQ EQEQ BY ]
+## sub -> expr . MINUS expr [ TIMES SEMI PLUS NEQ MINUS LTH LEQ GTH GEQ EQEQ BY ]
 ##
 ## The known suffix of the stack is as follows:
 ## expr
 ##
 
-Missing matching ')'.
+Unexpected statement inside of an expression.
 
 prog: TYPE IDENT SEMI TYPE IDENT PARO PARC BRAO TYPE IDENT EQ CONST WHILE
 ##
-## Ends in an error in state: 126.
+## Ends in an error in state: 153.
 ##
-## local -> decl opt_const . SEMI [ WHILE TYPE TRUE RETURN PUTCHAR PARO IF IDENT FALSE CONST BRAC ]
+## local -> decl opt_const . SEMI [ WHILE TYPE TRUE TIMES RETURN PUTCHAR PARO NOT MINUS IF IDENT FALSE CONST BRAC AND ]
 ##
 ## The known suffix of the stack is as follows:
 ## decl opt_const
@@ -1001,9 +1240,9 @@ Missing ';' at the end of a local declaration.
 
 prog: TYPE IDENT SEMI TYPE IDENT PARO PARC BRAO TYPE IDENT WHILE
 ##
-## Ends in an error in state: 123.
+## Ends in an error in state: 150.
 ##
-## local -> decl . opt_const SEMI [ WHILE TYPE TRUE RETURN PUTCHAR PARO IF IDENT FALSE CONST BRAC ]
+## local -> decl . opt_const SEMI [ WHILE TYPE TRUE TIMES RETURN PUTCHAR PARO NOT MINUS IF IDENT FALSE CONST BRAC AND ]
 ##
 ## The known suffix of the stack is as follows:
 ## decl
@@ -1011,11 +1250,11 @@ prog: TYPE IDENT SEMI TYPE IDENT PARO PARC BRAO TYPE IDENT WHILE
 
 ';' or '=' expected after local declaration
 
-prog: TYPE IDENT SEMI TYPE IDENT PARO PARC BRAO WHILE PARO TRUE PARC BRAO TIMES
+prog: TYPE IDENT SEMI TYPE IDENT PARO PARC BRAO WHILE PARO TRUE PARC BRAO STRUCT
 ##
-## Ends in an error in state: 82.
+## Ends in an error in state: 104.
 ##
-## whilei -> WHILE PARO expr PARC BRAO . body BRAC [ WHILE TYPE TRUE RETURN PUTCHAR PARO IF IDENT FALSE CONST BRAC ]
+## whilei -> WHILE PARO expr PARC BRAO . body BRAC [ WHILE TYPE TRUE TIMES RETURN PUTCHAR PARO NOT MINUS IF IDENT FALSE CONST BRAC AND ]
 ##
 ## The known suffix of the stack is as follows:
 ## WHILE PARO expr PARC BRAO
@@ -1023,13 +1262,13 @@ prog: TYPE IDENT SEMI TYPE IDENT PARO PARC BRAO WHILE PARO TRUE PARC BRAO TIMES
 
 Missing left operand on binary operator.
 
-prog: TYPE IDENT SEMI TYPE IDENT PARO PARC BRAO WHILE PARO TRUE PARC BRAO TRUE SEMI TIMES
+prog: TYPE IDENT SEMI TYPE IDENT PARO PARC BRAO WHILE PARO TRUE PARC BRAO TRUE SEMI STRUCT
 ##
-## Ends in an error in state: 136.
+## Ends in an error in state: 163.
 ##
-## body -> body . instr [ WHILE TYPE TRUE RETURN PUTCHAR PARO IF IDENT FALSE CONST BRAC ]
-## body -> body . local [ WHILE TYPE TRUE RETURN PUTCHAR PARO IF IDENT FALSE CONST BRAC ]
-## whilei -> WHILE PARO expr PARC BRAO body . BRAC [ WHILE TYPE TRUE RETURN PUTCHAR PARO IF IDENT FALSE CONST BRAC ]
+## body -> body . instr [ WHILE TYPE TRUE TIMES RETURN PUTCHAR PARO NOT MINUS IF IDENT FALSE CONST BRAC AND ]
+## body -> body . local [ WHILE TYPE TRUE TIMES RETURN PUTCHAR PARO NOT MINUS IF IDENT FALSE CONST BRAC AND ]
+## whilei -> WHILE PARO expr PARC BRAO body . BRAC [ WHILE TYPE TRUE TIMES RETURN PUTCHAR PARO NOT MINUS IF IDENT FALSE CONST BRAC AND ]
 ##
 ## The known suffix of the stack is as follows:
 ## WHILE PARO expr PARC BRAO body
@@ -1039,9 +1278,9 @@ Missing left operand on binary operator.
 
 prog: TYPE IDENT SEMI TYPE IDENT PARO PARC BRAO WHILE PARO TRUE PARC WHILE
 ##
-## Ends in an error in state: 81.
+## Ends in an error in state: 103.
 ##
-## whilei -> WHILE PARO expr PARC . BRAO body BRAC [ WHILE TYPE TRUE RETURN PUTCHAR PARO IF IDENT FALSE CONST BRAC ]
+## whilei -> WHILE PARO expr PARC . BRAO body BRAC [ WHILE TYPE TRUE TIMES RETURN PUTCHAR PARO NOT MINUS IF IDENT FALSE CONST BRAC AND ]
 ##
 ## The known suffix of the stack is as follows:
 ## WHILE PARO expr PARC
@@ -1051,29 +1290,31 @@ Missing '{' after 'while' condition.
 
 prog: TYPE IDENT SEMI TYPE IDENT PARO PARC BRAO WHILE PARO TRUE WHILE
 ##
-## Ends in an error in state: 80.
+## Ends in an error in state: 102.
 ##
-## add -> expr . PLUS expr [ TIMES PLUS PARC NEQ LTH LEQ GTH GEQ EQEQ ]
-## eq -> expr . EQEQ expr [ TIMES PLUS PARC NEQ LTH LEQ GTH GEQ EQEQ ]
-## geq -> expr . GEQ expr [ TIMES PLUS PARC NEQ LTH LEQ GTH GEQ EQEQ ]
-## gth -> expr . GTH expr [ TIMES PLUS PARC NEQ LTH LEQ GTH GEQ EQEQ ]
-## leq -> expr . LEQ expr [ TIMES PLUS PARC NEQ LTH LEQ GTH GEQ EQEQ ]
-## lth -> expr . LTH expr [ TIMES PLUS PARC NEQ LTH LEQ GTH GEQ EQEQ ]
-## mul -> expr . TIMES expr [ TIMES PLUS PARC NEQ LTH LEQ GTH GEQ EQEQ ]
-## neq -> expr . NEQ expr [ TIMES PLUS PARC NEQ LTH LEQ GTH GEQ EQEQ ]
-## whilei -> WHILE PARO expr . PARC BRAO body BRAC [ WHILE TYPE TRUE RETURN PUTCHAR PARO IF IDENT FALSE CONST BRAC ]
+## add -> expr . PLUS expr [ TIMES PLUS PARC NEQ MINUS LTH LEQ GTH GEQ EQEQ BY ]
+## div -> expr . BY expr [ TIMES PLUS PARC NEQ MINUS LTH LEQ GTH GEQ EQEQ BY ]
+## eq -> expr . EQEQ expr [ TIMES PLUS PARC NEQ MINUS LTH LEQ GTH GEQ EQEQ BY ]
+## geq -> expr . GEQ expr [ TIMES PLUS PARC NEQ MINUS LTH LEQ GTH GEQ EQEQ BY ]
+## gth -> expr . GTH expr [ TIMES PLUS PARC NEQ MINUS LTH LEQ GTH GEQ EQEQ BY ]
+## leq -> expr . LEQ expr [ TIMES PLUS PARC NEQ MINUS LTH LEQ GTH GEQ EQEQ BY ]
+## lth -> expr . LTH expr [ TIMES PLUS PARC NEQ MINUS LTH LEQ GTH GEQ EQEQ BY ]
+## mul -> expr . TIMES expr [ TIMES PLUS PARC NEQ MINUS LTH LEQ GTH GEQ EQEQ BY ]
+## neq -> expr . NEQ expr [ TIMES PLUS PARC NEQ MINUS LTH LEQ GTH GEQ EQEQ BY ]
+## sub -> expr . MINUS expr [ TIMES PLUS PARC NEQ MINUS LTH LEQ GTH GEQ EQEQ BY ]
+## whilei -> WHILE PARO expr . PARC BRAO body BRAC [ WHILE TYPE TRUE TIMES RETURN PUTCHAR PARO NOT MINUS IF IDENT FALSE CONST BRAC AND ]
 ##
 ## The known suffix of the stack is as follows:
 ## WHILE PARO expr
 ##
 
-Missing matching '('
+Unexpected statement inside of an expression.
 
 prog: TYPE IDENT SEMI TYPE IDENT PARO PARC BRAO WHILE PARO WHILE
 ##
-## Ends in an error in state: 79.
+## Ends in an error in state: 101.
 ##
-## whilei -> WHILE PARO . expr PARC BRAO body BRAC [ WHILE TYPE TRUE RETURN PUTCHAR PARO IF IDENT FALSE CONST BRAC ]
+## whilei -> WHILE PARO . expr PARC BRAO body BRAC [ WHILE TYPE TRUE TIMES RETURN PUTCHAR PARO NOT MINUS IF IDENT FALSE CONST BRAC AND ]
 ##
 ## The known suffix of the stack is as follows:
 ## WHILE PARO
@@ -1083,9 +1324,9 @@ prog: TYPE IDENT SEMI TYPE IDENT PARO PARC BRAO WHILE PARO WHILE
 
 prog: TYPE IDENT SEMI TYPE IDENT PARO PARC BRAO WHILE WHILE
 ##
-## Ends in an error in state: 78.
+## Ends in an error in state: 100.
 ##
-## whilei -> WHILE . PARO expr PARC BRAO body BRAC [ WHILE TYPE TRUE RETURN PUTCHAR PARO IF IDENT FALSE CONST BRAC ]
+## whilei -> WHILE . PARO expr PARC BRAO body BRAC [ WHILE TYPE TRUE TIMES RETURN PUTCHAR PARO NOT MINUS IF IDENT FALSE CONST BRAC AND ]
 ##
 ## The known suffix of the stack is as follows:
 ## WHILE
@@ -1095,7 +1336,7 @@ Missing '(' after 'while'.
 
 prog: TYPE IDENT SEMI TYPE IDENT PARO PARC WHILE
 ##
-## Ends in an error in state: 76.
+## Ends in an error in state: 98.
 ##
 ## func -> struct_type_decl PARO params_opt PARC . BRAO body BRAC [ TYPE IDENT EOF ]
 ##
@@ -1107,7 +1348,7 @@ Missing '{' after function declaration.
 
 prog: TYPE IDENT SEMI TYPE IDENT PARO TYPE IDENT COMMA WHILE
 ##
-## Ends in an error in state: 142.
+## Ends in an error in state: 169.
 ##
 ## params -> param COMMA . params [ PARC ]
 ##
@@ -1119,7 +1360,7 @@ Function parameters should be a declaration (type ident).
 
 prog: TYPE IDENT SEMI TYPE IDENT PARO TYPE IDENT WHILE
 ##
-## Ends in an error in state: 141.
+## Ends in an error in state: 168.
 ##
 ## params -> param . [ PARC ]
 ## params -> param . COMMA params [ PARC ]
@@ -1132,7 +1373,7 @@ Parameters should be separated by commas.
 
 prog: TYPE IDENT SEMI TYPE IDENT PARO WHILE
 ##
-## Ends in an error in state: 74.
+## Ends in an error in state: 96.
 ##
 ## func -> struct_type_decl PARO . params_opt PARC BRAO body BRAC [ TYPE IDENT EOF ]
 ##
@@ -1144,7 +1385,7 @@ Function parameters should be a declaration (type ident).
 
 prog: TYPE IDENT SEMI TYPE IDENT WHILE
 ##
-## Ends in an error in state: 153.
+## Ends in an error in state: 178.
 ##
 ## glob_var -> decl . opt_const SEMI [ TYPE IDENT ]
 ## struct_type_decl -> decl . [ PARO ]
@@ -1157,7 +1398,7 @@ Expecting  '(' or ';' or '=' after declaration.
 
 prog: TYPE IDENT SEMI WHILE
 ##
-## Ends in an error in state: 72.
+## Ends in an error in state: 94.
 ##
 ## glob_vars -> glob_vars . glob_var [ TYPE IDENT ]
 ## prog -> structs glob_vars . funcs EOF [ # ]
@@ -1170,7 +1411,7 @@ While should be inside a function body.
 
 prog: TYPE IDENT WHILE
 ##
-## Ends in an error in state: 157.
+## Ends in an error in state: 182.
 ##
 ## glob_var -> decl . opt_const SEMI [ TYPE IDENT ]
 ##
@@ -1180,11 +1421,24 @@ prog: TYPE IDENT WHILE
 
 Expecting  '(' or ';' or '=' after declaration.
 
+prog: TYPE TIMES WHILE
+##
+## Ends in an error in state: 5.
+##
+## decl -> TYPE TIMES . IDENT [ SEMI PARO PARC EQ COMMA ]
+##
+## The known suffix of the stack is as follows:
+## TYPE TIMES
+##
+
+Expecting identifier in a variable declaration.
+
 prog: TYPE WHILE
 ##
 ## Ends in an error in state: 4.
 ##
 ## decl -> TYPE . IDENT [ SEMI PARO PARC EQ COMMA ]
+## decl -> TYPE . TIMES IDENT [ SEMI PARO PARC EQ COMMA ]
 ##
 ## The known suffix of the stack is as follows:
 ## TYPE

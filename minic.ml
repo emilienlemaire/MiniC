@@ -1,3 +1,24 @@
+(* Minic Emilien Lemaire - Projet Cours de Compilation
+ * Fichier: minic.ml
+ * Le fichier principal contenant la fonction de depart du programme
+ *
+ * Notes:
+ *   - J'ai utilisé l'API Incremental de Menhir, qui permet d'avoir des erreurs
+ *      de syntaxe contextualiée très précises. Pour générer l'executable utilsez
+ *      la commande:
+ *        $ dune build
+ *      Pour lancer le programme utilisez la commande:
+ *        $ dune exec ./minic.exe [fichier MiniC]
+ *  - Tous les type pour l'abre de syntaxe abstrait sont dans
+ *      le fichier ast_types.ml
+ *  - Le programme de verfication des types est dans le fichier
+ *      minictypechecker.ml
+ *  - Le fichier minicparser.messages contient tous les messages d'erreurs
+ *      utilisés par menhir. Il est assez long mais vous pouvez y voir
+ *      des exemples d'erreurs repérées grace à l'API Incremental de
+ *      menhir
+ * *)
+
 open Minictypechecker
 open Ast_types
 

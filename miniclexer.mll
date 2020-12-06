@@ -3,30 +3,6 @@
 
   exception Eof
   
-  (*let print_token t =*)
-    (*match t with*)
-      (*| TYPE(s) -> Printf.printf "TYPE(%s) " s*)
-      (*| CONST(i) -> Printf.printf "CONST(%d) " i*)
-      (*| IDENT(s) -> Printf.printf "IDENT(%s) " s*)
-      (*| EQ -> Printf.printf "EQ "*)
-      (*| PARO -> Printf.printf "PARO "*)
-      (*| PARC -> Printf.printf "PARC "*)
-      (*| COMMA -> Printf.printf "COMMA "*)
-      (*| BRAO -> Printf.printf "BRAO "*)
-      (*| BRAC -> Printf.printf "BRAC "*)
-      (*| IF -> Printf.printf "IF "*)
-      (*| ELSE -> Printf.printf "ELSE "*)
-      (*| WHILE -> Printf.printf "WHILE "*)
-      (*| RETURN -> Printf.printf "RETURN "*)
-      (*| SEMI -> Printf.printf "SEMI "*)
-      (*| LTH -> Printf.printf "LTH "*)
-      (*| PLUS -> Printf.printf "PLUS "*)
-      (*| TIMES -> Printf.printf "TIMES "*)
-      (*| TRUE -> Printf.printf "TRUE "*)
-      (*| FALSE -> Printf.printf "FALSE "*)
-      (*| PUTCHAR -> Printf.printf "PUTCHAR "*)
-      (*| EOF -> Printf.printf "EOF "*)
-
   let line = ref 1
   let col  = ref 0
 
@@ -75,22 +51,12 @@ rule token = parse
   | '<'        { LTH }
   | '>'        { GTH }
   | '.'        { DOT }
+  | '!'        { NOT }
+  | '-'        { MINUS }
+  | '/'        { BY }
+  | '&'        { AND }
   | ident as i { IDENT (i) }
   | _ as c     { failwith ( Printf.sprintf
                 "Unexpected character %d:%d '%c'" !line !col c ) }
   | eof        { EOF }
 
-(*{*)
-  (*let lexbuf = Lexing.from_channel (open_in Sys.argv.(1))*)
-
-  (*let rec loop () =*)
-    (*let t = token lexbuf in*)
-    (*if t <> EOF then*)
-      (*begin*)
-        (*print_token t;*)
-        (*loop ()*)
-      (*end*)
-  
-  (*let _ =*)
-    (*loop ()*)
-(*}*)
