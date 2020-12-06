@@ -40,6 +40,7 @@ let rec parse lexbuf (checkpoint : Ast_types.prog I.checkpoint) =
 
 let make_check prog =
   let env = {
+    structs = prog.structs;
     vars =  prog.globals;
     funcs = [];
     current_ret_type = Void;

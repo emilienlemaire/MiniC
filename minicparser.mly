@@ -1,31 +1,52 @@
 %{
   open Ast_types
 
+  let struct_defs =
+    Hashtbl.create 10
+
   let typ_of_string s =
     match s with
     | "int" -> Int
     | "bool" -> Bool
     | "void" -> Void
-    | _ -> failwith (Printf.sprintf "Unknown type %s" s)
+    | _ -> if (Hashtbl.mem struct_defs s) then
+        let ( name, members ) = Hashtbl.find struct_defs s in
+        Struct(name, members) 
+      else
+        failwith (Printf.sprintf "Unknown type: %s" s)
 
   let locals_tmp: (string * typ) list ref = ref []
 
-  let add_local l =
-    locals_tmp := !locals_tmp@[l]
+  let add_local l value =
+    let _ = locals_tmp := !locals_tmp@[l] in
+    match value with
+      | None -> []
+      | Some n -> [Set(fst l, n)]
+
+  let add_local_struct ident members_val =
+    let _ = locals_tmp := !locals_tmp@[ident] in
+    match members_val with
+     | None -> []
+     | Some v -> [SetStruct((fst ident), v)]
 
   let reset_locals =
     locals_tmp := []
 
+  let (globals_assign: seq ref) = ref []
+
+  let add_globals_assign s e =
+    globals_assign := !globals_assign@[Set(s, e)]
 %}
 
 %token <string> TYPE IDENT
 %token <int> CONST
-%token PARO PARC COMMA SEMI BRAO BRAC
+%token PARO PARC COMMA SEMI BRAO BRAC DOT
 %token IF ELSE WHILE RETURN
 %token EQ LTH GTH GEQ LEQ EQEQ NEQ PLUS TIMES
 %token TRUE FALSE
 %token PUTCHAR
 %token EOF
+%token STRUCT
 
 %left NEQ EQEQ
 %left LTH GTH GEQ LEQ
@@ -38,7 +59,19 @@
 %%
 
 prog:
-  glob_vars funcs EOF { {globals = $1; functions = $2} }
+    structs glob_vars funcs EOF { {structs = $1; globals = $2; functions = $3} }
+;
+
+structs:
+  list(struct_def) { $1 }
+;
+
+struct_def:
+  STRUCT id = IDENT BRAO d = decls BRAC SEMI { Hashtbl.add struct_defs id (id, d); (id, d) }
+;
+
+decls:
+  nonempty_list(decl SEMI {$1}) { $1 }
 ;
 
 glob_vars:
@@ -47,11 +80,27 @@ glob_vars:
 ;
 
 glob_var:
-  decl opt_const SEMI { $1 }
+    d = decl cst = opt_const SEMI { 
+      let _ = match cst with
+            | Some(n) -> (add_globals_assign (fst d) n)
+            | None -> ()
+      in
+      d
+    }
+  | struct_decl opt_init_list SEMI { $1 }
 ;
 
 decl:
-  TYPE IDENT { ($2, (typ_of_string $1)) }
+  t = TYPE id = IDENT { (id, (typ_of_string t)) }
+;
+
+struct_decl:
+  n = IDENT id = IDENT { (id, (typ_of_string n)) }
+;
+
+opt_init_list:
+  option(EQ BRAO l = separated_list(COMMA, expr) BRAC { l }) { $1 }
+;
 
 funcs:
   func { [$1] }
@@ -59,19 +108,24 @@ funcs:
 ;
 
 opt_const:
-    {  }
-  | EQ CONST {  }
+    { None }
+  | EQ CONST { Some (Cst $2) }
+;
+
+struct_type_decl:
+    d = decl { d }
+  | s = struct_decl { s }
 ;
 
 func:
-  decl PARO params_opt PARC BRAO body BRAC {
+  struct_type_decl PARO p = params_opt PARC BRAO b = body BRAC {
       let (n, t) = $1 in
       let func_def = {
         name = n;
-        params = $3;
+        params = p;
         return = (t);
         locals = !locals_tmp;
-        code = $6;
+        code = b;
       } in
       reset_locals;
       func_def
@@ -94,9 +148,9 @@ param:
 
 body:
   instr { [$1] }
-  | local { add_local $1; [] }
+  | l = local { l }
   | body instr { $1@[$2] }
-  | body local { add_local $2; $1 }
+  | body l = local { $1@l }
 ;
 
 instr:
@@ -106,10 +160,13 @@ instr:
  | whilei { $1 }
  | returni { $1 }
  | expr SEMI { Expr ($1) }
+ | set_struct { $1 }
+ | set_struct_member { $1 }
 ;
 
 local:
-  decl opt_const SEMI { $1 }
+    d = decl e = opt_const SEMI { add_local d e }
+  | s = struct_decl il = opt_init_list SEMI { add_local_struct s il }
 ;
 
 putchar:
@@ -121,19 +178,34 @@ set:
 ;
 
 ifi:
-  IF PARO expr PARC BRAO body BRAC ELSE BRAO body BRAC {
-    If ($3, $6, $10)
+  IF PARO cond = expr PARC BRAO th = body BRAC ELSE BRAO el = body BRAC {
+    If (cond, th, el)
   }
 ;
 
 whilei:
-  WHILE PARO expr PARC BRAO body BRAC {
-    While ($3, $6)
+  WHILE PARO cond = expr PARC BRAO b = body BRAC {
+    While (cond, b)
   }
 ;
 
 returni:
-  RETURN expr  SEMI { Return ($2) }
+  RETURN expr SEMI { Return ($2) }
+;
+
+set_struct:
+  id = IDENT EQ members = init_list SEMI { SetStruct(id, members) }
+;
+
+set_struct_member:
+  name_member = struct_access EQ e = expr SEMI { 
+  let (name, member) = name_member in
+  SetStructMember(name, member, e) }
+;
+
+init_list:
+  BRAO separated_list(COMMA, expr) BRAC { $2 }
+;
 
 expr:
   CONST { Cst($1) }
@@ -149,6 +221,10 @@ expr:
   | call { $1 }
   | bool { $1 }
   | PARO expr PARC { $2 }
+  | name_member = struct_access {
+  let (name, member) = name_member in
+  StructMember(name, member) }
+;
 
 add:
   expr PLUS expr { Add($1, $3) }
@@ -193,6 +269,10 @@ call:
 bool:
     TRUE { BoolLit(true) }
   | FALSE { BoolLit(false) }
+;
+
+struct_access:
+  name = IDENT DOT member = IDENT { (name, member) }
 ;
 
 args_opt:

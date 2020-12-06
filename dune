@@ -4,7 +4,7 @@
   (modules minicparser))
 
 (rule
-  (targets error_meaages.ml)
+  (targets error_messages.ml)
   (deps minicparser.messages minicparser.mly)
   (action (with-stdout-to %{targets} (run menhir --compile-errors %{deps}))))
 

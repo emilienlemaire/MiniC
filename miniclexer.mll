@@ -66,6 +66,7 @@ rule token = parse
   | "while"    { WHILE }
   | "return"   { RETURN }
   | "putchar"  { PUTCHAR }
+  | "struct"   { STRUCT }
   | ';'        { SEMI }
   | '+'        { PLUS }
   | '*'        { TIMES }
@@ -73,6 +74,7 @@ rule token = parse
   | ">="       { GEQ }
   | '<'        { LTH }
   | '>'        { GTH }
+  | '.'        { DOT }
   | ident as i { IDENT (i) }
   | _ as c     { failwith ( Printf.sprintf
                 "Unexpected character %d:%d '%c'" !line !col c ) }

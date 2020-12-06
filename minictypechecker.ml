@@ -1,9 +1,22 @@
+(* Fichier contenant toutes les fonctions qui permettent de verifier
+ * les types de toutes les expressions et fonctions.
+ * 
+ * Quelques notes importantes:
+ *  - J'ai decide de renvoyer un type Void quand j'analyse une instruction et qu'elle est valide
+ *  - Pour verifier les types des structures, lorsque l'on utilise des listes d'initialization,
+ *      pour leur assigner une valeur, les type des membres sont verfies les uns apres les autres
+ *      suivant l'ordre dans lequel ils ont ete declare dans la definition de la structure.
+ *  - 
+ *
+ * *)
+
 open Ast_types
 
 exception TypeError
 
 type context =
   {
+    structs: (string * (string * typ) list) list;
     vars: (string * typ) list;
     funcs: (string * (typ * typ list)) list;
     current_ret_type: typ;
@@ -14,6 +27,7 @@ let type_to_string t =
     | Bool -> "bool"
     | Int -> "int"
     | Void -> "void"
+    | Struct (n, _) -> Printf.sprintf "struct %s" n
 
 let string_of_argt argst =
   let rec loop argst acc =
@@ -77,6 +91,35 @@ let rec check_expr expr env =
       else
         ret
     | BoolLit (_) -> Bool
+    | StructMember (n, member) ->
+      let struct_type = List.assoc n env.vars in
+      let (name, struct_members) = match struct_type with
+        | Struct (name, members) -> (name, members)
+        | _ ->
+          begin
+            Printf.printf
+              "Trying to access member %s of type %s which is not a struct.\n"
+              member
+              (type_to_string struct_type)
+            ;
+            raise TypeError
+          end
+      in
+      let member_type =
+        try List.assoc member struct_members
+        with Not_found ->
+          (* J'ai decide d'inclure cette erreur ici car meme si en soit ca n'est pas une
+           * erreur de type, verfier ceci est obligatoire pour verifier les type.*)
+          begin
+            Printf.printf
+              "Trying to access member %s which does not belong to the struct %s\n"
+              member
+              name
+            ;
+            raise TypeError
+          end
+      in
+      member_type
 and check_args argst args env =
   let rec loop argst args res =
     match args with
@@ -91,6 +134,24 @@ and check_args argst args env =
         loop (List.tl argst) tl (resb, resl@[actualt])
   in
   loop argst args (true, [])
+
+let rec check_struct_members (members: (string * typ) list) (vals:expr list) (env: context)=
+  match members with
+    | [] -> Void
+    | (name, typ)::tl ->
+      let expr_typ = check_expr (List.hd vals) env in
+      if expr_typ = typ then
+        check_struct_members tl (List.tl vals) env
+      else
+        begin
+          Printf.printf
+            "Trying to assign member %s with an expression of type %s, when type %s is expected.\n"
+            name
+            (type_to_string expr_typ)
+            (type_to_string typ)
+          ;
+          raise TypeError
+        end
 
 let rec check_instr instr env =
   match instr with
@@ -149,6 +210,52 @@ let rec check_instr instr env =
     else
       env.current_ret_type
   | Expr (e) -> (check_expr e env)
+  | SetStruct(n, vals) ->
+    let struct_type = List.assoc n env.vars in
+    let members = 
+      match struct_type with
+       | Struct(_ , members) -> members
+       | _ ->
+         begin
+           Printf.printf
+             "Trying to assign an initializer list varaible %s of type %s which is not a struct.\n"
+             n
+             (type_to_string struct_type)
+           ;
+           raise TypeError
+         end
+    in
+    check_struct_members members vals env
+  | SetStructMember(name, member, expr) ->
+    let struct_type = List.assoc name env.vars in
+    let struct_members =
+      match struct_type with
+        | Struct(_, members) -> members
+        | _ ->
+          begin
+            Printf.printf
+              "Trying to assign a value to the member %s of the variable %s which is not a struct.\n"
+              member
+              name
+            ;
+            raise TypeError
+          end
+    in
+    let member_type = List.assoc member struct_members in
+    let expr_type = check_expr expr env in
+    if member_type = expr_type then
+      Void
+    else
+      begin
+        Printf.printf
+          "Trying to assign an expression of type %s to the member %s of variable %s which is type %s.\n"
+          (type_to_string expr_type)
+          member
+          name
+          (type_to_string member_type)
+        ;
+        raise TypeError
+      end
 and check_seq seq env =
   match seq with
   | [] -> Void
@@ -160,12 +267,14 @@ let check_func func env =
   let (_, paramst) = List.split func.params in
   let proto = (func.name, (func.return, paramst)) in
   let env2 = {
+    structs= env.structs;
     vars= env.vars@func.params@func.locals;
     funcs= env.funcs@[proto];
     current_ret_type = func.return;
   } in
   let _ = check_seq func.code env2 in
   {
+    structs= env.structs;
     vars= env.vars;
     funcs= env2.funcs;
     current_ret_type = env.current_ret_type;

@@ -1,3 +1,8 @@
+struct str {
+  int a;
+  int b;
+};
+
 int PARAM = 5;
 
 int fact(int n) {
@@ -14,6 +19,10 @@ void main() {
     } else {
       putchar(12);
     }
+    str structExample = {2, (2+2)};
+    structExample = {2, 2};
+    structExample.a = 14;
+    putchar(structExample.a);
     putchar(fact(PARAM));
 }
 
