@@ -51,6 +51,26 @@ let string_of_argt argst =
   let str = String.concat "" [str; ")"] in
   str
 
+let rec deref expr acc =
+  match expr with
+    | Deref(e) -> Printf.printf "Deref "; deref e (acc+1)
+    | _ -> print_endline ""; (expr, acc)
+
+let rec pointer_type_of typ num =
+  if num = 0 then
+    typ
+  else
+    match typ with
+     | Ptr(typ) -> pointer_type_of typ (num-1)
+     | _ ->
+       begin
+         Printf.printf
+           "Trying de dereference type %s which is not a pointer type."
+           (type_to_string typ)
+         ;
+         raise TypeError
+       end
+
 (*
  * Fonction qui permet de vérifier qu'une expression est bien typée.
  * @param expr l'expression a vérifier
@@ -333,14 +353,15 @@ let rec check_instr (instr: instr) (ctx: context): typ =
         ;
         raise TypeError
       end
-  | SetPtrVal(deref, expr) ->
-    let var_name, member = match deref with
-      | Deref(Get(name)) -> (name, None)
-      | Deref(StructMember(name, member)) -> (name, Some member)
+  | SetPtrVal(deref_expr, expr) ->
+    let (deref_expr, num) = deref deref_expr 0 in 
+    let var_name, member = match deref_expr with
+      | Get(name) -> (name, None)
+      | StructMember(name, member) -> (name, Some member)
       | _ ->
         begin
           Printf.printf
-            "Trying to set a value with derefence on a non assignable pointer expression.\n"
+            "Trying to derefrence an expression which shouldn't be derefrenced.\n"
           ;
           raise TypeError
         end
@@ -350,17 +371,7 @@ let rec check_instr (instr: instr) (ctx: context): typ =
       | None ->
         begin
           let var_type = List.assoc var_name ctx.vars in
-          let ptr_type = match var_type with
-            | Ptr(typ) -> typ
-            | _ ->
-              begin
-                Printf.printf
-                  "Trying to derefence variable %s which is not a pointer type.\n"
-                  var_name
-                ;
-                raise TypeError
-              end
-          in
+          let ptr_type = pointer_type_of var_type num in
           if ptr_type = expr_type then
             Void
           else

@@ -36,6 +36,17 @@
 
   let add_globals_assign s e =
     globals_assign := !globals_assign@[Set(s, e)]
+
+  let pointer_num = ref 0
+
+  let rec build_ptr num typ =
+    if num = 1 then
+      Ptr(typ)
+    else
+      if num < 1 then
+        raise (Invalid_argument "Num under one.")
+      else
+        build_ptr (num-1) (Ptr(typ))
 %}
 
 %token <string> TYPE IDENT
@@ -74,7 +85,15 @@ struct_def:
 
 decl:
     t = TYPE id = IDENT { (id, (typ_of_string t)) }
-  | t = TYPE TIMES id = IDENT { (id, Ptr(typ_of_string t)) }
+  | pointer_decl        { $1 }
+;
+
+pointer_decl:
+  t = TYPE nonempty_list(TIMES {incr pointer_num}) id = IDENT {
+    let typ = build_ptr (!pointer_num) (typ_of_string t) in
+    pointer_num := 0;
+    (id, typ)
+  }
 ;
 
 struct_type_decls:

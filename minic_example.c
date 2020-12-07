@@ -9,13 +9,13 @@ struct myStruct {
 };
 
 struct A {
-  int *a;
-  int b;
+  int **a;
+  int *b;
 };
 
 int PARAM = 5;
 
-int *PTR;
+int **PTR;
 
 int fact(int n) {
     if (n < 2) {
@@ -37,7 +37,7 @@ void main() {
     structExample.a = 14;
     myStruct example = {structExample, 2};
 
-    *PTR = 5;
+    **PTR = 5;
 
     A a = {PTR, *PTR};
 
