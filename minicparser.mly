@@ -53,18 +53,21 @@
 %token <int> CONST
 %token PARO PARC COMMA SEMI BRAO BRAC DOT
 %token IF ELSE WHILE RETURN
-%token EQ LTH GTH GEQ LEQ EQEQ NEQ PLUS TIMES BY AND
+%token EQ LTH GTH GEQ LEQ EQEQ NEQ PLUS TIMES BY AND OR MOD
+%token ADDRESS
 %token MINUS NOT
 %token TRUE FALSE
 %token PUTCHAR
 %token EOF
 %token STRUCT
 
-%right NOT AND
+%left OR
+%left AND
 %left NEQ EQEQ
 %left LTH GTH GEQ LEQ
 %left PLUS MINUS
-%left TIMES BY
+%left TIMES BY MOD
+%right NOT ADDRESS
 
 %start prog
 %type <Ast_types.prog> prog
@@ -241,12 +244,15 @@ expr:
   | sub { $1 }
   | mul { $1 }
   | div { $1 }
+  | mod_op { $1 }
   | lth { $1 }
   | gth { $1 }
   | leq { $1 }
   | geq { $1 }
   | eq  { $1 }
   | neq { $1 }
+  | and_op { $1 }
+  | or_op { $1 }
   | get { $1 }
   | call { $1 }
   | bool { $1 }
@@ -262,42 +268,55 @@ expr:
 ;
 
 add:
-  expr PLUS expr { Add($1, $3) }
+  expr PLUS expr { BinOp(Plus, $1, $3) }
 ;
 
 sub:
-  expr MINUS expr { Sub($1, $3) }
+  expr MINUS expr { BinOp(Minus, $1, $3) }
 ;
 
 mul:
-  expr TIMES expr { Mul($1, $3) }
+  expr TIMES expr { BinOp(Times, $1, $3) }
 ;
 
 div:
-  expr BY expr { Div($1, $3) }
+  expr BY expr { BinOp(By, $1, $3) }
+;
+
+mod_op:
+  expr MOD expr { BinOp(Mod, $1, $3) }
+;
 
 lth:
-  expr LTH expr { Lth($1, $3) }
+  expr LTH expr { BinOp(Lth, $1, $3) }
 ;
 
 gth:
-  expr GTH expr { Gth($1, $3) }
+  expr GTH expr { BinOp(Gth, $1, $3) }
 ;
 
 leq:
-  expr LEQ expr { Leq($1, $3) }
+  expr LEQ expr { BinOp(Leq, $1, $3) }
 ;
 
 geq:
-  expr GEQ expr { Geq($1, $3) }
+  expr GEQ expr { BinOp(Geq, $1, $3) }
 ;
 
 eq:
-  expr EQEQ expr { Eq($1, $3) }
+  expr EQEQ expr { BinOp(Eq, $1, $3) }
 ;
 
 neq:
-  expr NEQ expr { Neq($1, $1) }
+  expr NEQ expr { BinOp(Neq, $1, $3) }
+;
+
+and_op :
+  expr AND expr { BinOp(And, $1, $3) }
+;
+
+or_op :
+  expr OR expr { BinOp(Or, $1, $3) }
 ;
 
 get:
@@ -326,7 +345,7 @@ deref:
 ;
 
 address:
-  AND expr { Address($2) }
+  ADDRESS expr { Address($2) }
 ;
 
 struct_access:

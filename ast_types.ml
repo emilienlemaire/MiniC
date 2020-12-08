@@ -14,18 +14,24 @@
  *  - Les opérateur binaires Gth Leq Geq Eq Neq
  *  - Les opérateurs unaires Not et Neg
  * *)
+type binop =
+  | Plus
+  | Minus
+  | Times
+  | By
+  | Mod
+  | Lth
+  | Gth
+  | Leq
+  | Geq
+  | Eq
+  | Neq
+  | And
+  | Or
+
 type expr =
   | Cst          of int
-  | Add          of expr * expr
-  | Sub          of expr * expr
-  | Mul          of expr * expr
-  | Div          of expr * expr
-  | Lth          of expr * expr
-  | Gth          of expr * expr
-  | Leq          of expr * expr
-  | Geq          of expr * expr
-  | Eq           of expr * expr
-  | Neq          of expr * expr
+  | BinOp        of binop * expr * expr
   | Get          of string
   | Not          of expr
   | Neg          of expr

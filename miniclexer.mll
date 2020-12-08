@@ -45,16 +45,19 @@ rule token = parse
   | "struct"   { STRUCT }
   | ';'        { SEMI }
   | '+'        { PLUS }
+  | '-'        { MINUS }
+  | '/'        { BY }
   | '*'        { TIMES }
+  | '%'        { MOD }
   | "<="       { LEQ }
   | ">="       { GEQ }
   | '<'        { LTH }
   | '>'        { GTH }
+  | "&&"       { AND }
+  | "||"       { OR }
   | '.'        { DOT }
   | '!'        { NOT }
-  | '-'        { MINUS }
-  | '/'        { BY }
-  | '&'        { AND }
+  | '&'        { ADDRESS }
   | ident as i { IDENT (i) }
   | _ as c     { failwith ( Printf.sprintf
                 "Unexpected character %d:%d '%c'" !line !col c ) }
