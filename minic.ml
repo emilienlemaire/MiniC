@@ -21,6 +21,7 @@
 
 open Minictypechecker
 open Ast_types
+open Printer
 
 module I = Minicparser.MenhirInterpreter
 
@@ -80,5 +81,5 @@ let _ =
         | None -> Error (Printf.sprintf "Syntax error: %s" err)
   in
   match res with
-    | Ok prog -> let _ = make_check prog in exit 0
+    | Ok prog -> let _ = make_check prog in print_structs prog.structs; exit 0
     | Error err -> Printf.eprintf "MiniC Error compiling: %s\n\t%s" Sys.argv.(1) err; exit 1
