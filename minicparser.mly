@@ -72,6 +72,13 @@
 
 prog:
     struct_def prog {
+      {
+        structs = $1::$2.structs;
+        globals = $2.globals;
+        functions = $2.functions;
+      }
+    }
+    | suite_prog {
       let assign_func =
         {
           name = "globals_assign";
@@ -80,15 +87,12 @@ prog:
           locals = [];
           code = !globals_assign;
         }
-      in
-      {
-        structs = $1::$2.structs;
-        globals = $2.globals;
-        functions = assign_func::$2.functions;
-      }
-    }
-    | suite_prog {
-        $1;
+        in
+        {
+          structs = [];
+          globals = $1.globals;
+          functions = assign_func::$1.functions
+        }
       }
 ;
 

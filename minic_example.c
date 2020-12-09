@@ -21,11 +21,13 @@ int PARAM = 5;
 
 int **PTR;
 
+struct B b1 = { 5 };
+
 int fact(int n) {
     if (n < 2) {
         return 1;
     } else {
-        return n * fact(n+-1);
+        return n * fact(n-1);
     }
 }
 
@@ -49,6 +51,7 @@ void main() {
     struct A a = {PTR, *PTR};
 
     putchar(example.theStr.a);
+    putchar(strPtr->a);
     putchar(fact(PARAM));
 }
 

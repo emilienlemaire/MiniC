@@ -17,7 +17,7 @@
 let alpha = ['a'-'z' 'A'-'Z']
 let digit = ['0'-'9']
 let ident = alpha (alpha | digit | '_')*
-let cst   = ('-')? (digit)+
+let cst   = (digit)+
 
 rule token = parse
   | ' '        { token lexbuf }
