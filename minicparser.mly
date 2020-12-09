@@ -357,6 +357,7 @@ struct_access:
 
 ptr_member_access:
   name = access ARROW member = IDENT { StructPtrMember(name, member) }
+;
 
 args_opt:
     { [] }

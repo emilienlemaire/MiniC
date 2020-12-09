@@ -5,13 +5,13 @@
 ### Compilation
 
 ```bash
-opam build
+dune build
 ```
 
 ### Exécution
 
 ```bash
-opam exec ./minic.exe minic_example.c
+dune exec ./minic.exe minic_example.c
 ```
 
 ## Notes
