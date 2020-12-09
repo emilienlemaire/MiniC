@@ -282,76 +282,8 @@ and check_expr (expr: expr) (ctx:context):typ =
   | BoolLit (_) -> Bool
   | StructMember (struct_access, member) ->
     get_members struct_access [member] ctx.vars
-    (*let name =*)
-      (*match n with*)
-      (*| Get(name) -> name*)
-      (*| _ ->*)
-        (*begin*)
-          (*Printf.printf*)
-            (*"This should not happen!!!"*)
-          (*;*)
-          (*raise (Invalid_argument "This should be a Get(n).")*)
-        (*end*)
-    (*in*)
-    (*let struct_type = get_var name ctx.vars in*)
-    (*let (name, struct_members) = match struct_type with*)
-      (*| Struct (name, members) -> (name, members)*)
-      (*| _ ->*)
-        (*begin*)
-          (*Printf.printf*)
-            (*"Trying to access member %s of type %s which is not a struct.\n"*)
-            (*member*)
-            (*(type_to_string struct_type)*)
-          (*;*)
-          (*raise TypeError*)
-        (*end*)
-    (*in*)
-    (*let member_type =*)
-      (*try List.assoc member struct_members*)
-      (*with Not_found ->*)
-        (* J'ai decide d'inclure cette erreur ici car meme si en soit ca n'est pas une
-         * erreur de type, verfier ceci est obligatoire pour verifier les type.*)
-        (*begin*)
-          (*Printf.printf*)
-            (*"Trying to access member %s which does not belong to the struct %s\n"*)
-            (*member*)
-            (*name*)
-          (*;*)
-          (*raise TypeError*)
-        (*end*)
-    (*in*)
-    (*member_type*)
   | StructPtrMember(struct_access, member) ->
     get_members struct_access [member] ctx.vars
-    (*let struct_type = get_var name ctx.vars in*)
-    (*let (name, struct_members) =*)
-      (*match struct_type with*)
-      (*| Ptr(Struct(name, members)) -> (name, members)*)
-      (*| _ ->*)
-        (*begin*)
-          (*Printf.printf*)
-            (*"Trying to access member %s of type %s which is not a pointer to a struct.\n"*)
-            (*member*)
-            (*(type_to_string struct_type)*)
-          (*;*)
-          (*raise TypeError*)
-        (*end*)
-    (*in*)
-    (*let member_type =*)
-      (*try List.assoc member struct_members*)
-      (*with Not_found ->*)
-        (* J'ai decide d'inclure cette erreur ici car meme si en soit ca n'est pas une
-         * erreur de type, verfier ceci est obligatoire pour verifier les type.*)
-        (*begin*)
-          (*Printf.printf*)
-            (*"Trying to access member %s which does not belong to the struct %s\n"*)
-            (*member*)
-            (*name*)
-          (*;*)
-          (*raise TypeError*)
-        (*end*)
-    (*in*)
-    (*member_type*)
   | Deref(expr) ->
     let deref_type = match (check_expr expr ctx) with
       | Ptr(typ) -> typ
@@ -552,7 +484,21 @@ let check_func (func: func_def) (ctx: context): context =
  * *)
 let rec check_funcs (funcs: func_def list) (ctx: context):context =
   match funcs with
-  | [] -> ctx
-  | hd::tl ->
-    check_funcs tl (check_func hd ctx)
+    | [] -> ctx
+    | hd::tl ->
+      let code = if hd.name = "main" then
+          (Expr(Call("globals_assign", []))::hd.code)
+        else
+          hd.code
+      in
+      let func =
+        {
+          name= hd.name;
+          params = hd.params;
+          return= hd.return;
+          locals = hd.locals;
+          code = code;
+        }
+      in
+      check_funcs tl (check_func func ctx)
 

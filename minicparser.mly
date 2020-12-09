@@ -61,6 +61,7 @@
 %left PLUS MINUS
 %left TIMES BY MOD
 %right NOT ADDRESS
+%left ARROW DOT
 
 %start prog
 %type <Ast_types.prog> prog
@@ -71,10 +72,19 @@
 
 prog:
     struct_def prog {
+      let assign_func =
+        {
+          name = "globals_assign";
+          params = [];
+          return = Void;
+          locals = [];
+          code = !globals_assign;
+        }
+      in
       {
         structs = $1::$2.structs;
         globals = $2.globals;
-        functions = $2.functions;
+        functions = assign_func::$2.functions;
       }
     }
     | suite_prog {
@@ -330,7 +340,7 @@ bool:
 ;
 
 deref:
-  TIMES expr { Deref($2) }
+  TIMES access { Deref($2) }
 ;
 
 address:

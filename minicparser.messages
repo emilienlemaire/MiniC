@@ -101,9 +101,9 @@ Expecting an identifier after keyword 'struct'.
 
 prog: TYPE IDENT EQ ADDRESS WHILE
 ##
-## Ends in an error in state: 51.
+## Ends in an error in state: 61.
 ##
-## address -> ADDRESS . expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC AND ]
+## address -> ADDRESS . expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ COMMA BY BRAC AND ]
 ##
 ## The known suffix of the stack is as follows:
 ## ADDRESS
@@ -113,7 +113,7 @@ Expecting an axpression after unary operator.
 
 prog: TYPE IDENT EQ BRAO TRUE COMMA WHILE
 ##
-## Ends in an error in state: 107.
+## Ends in an error in state: 113.
 ##
 ## separated_nonempty_list(COMMA,expr) -> expr COMMA . separated_nonempty_list(COMMA,expr) [ BRAC ]
 ##
@@ -125,7 +125,7 @@ Unexpected instruction inside an initializer list.
 
 prog: TYPE IDENT EQ BRAO TRUE WHILE
 ##
-## Ends in an error in state: 80.
+## Ends in an error in state: 86.
 ##
 ## add -> expr . PLUS expr [ TIMES PLUS OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ COMMA BY BRAC AND ]
 ## and_op -> expr . AND expr [ TIMES PLUS OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ COMMA BY BRAC AND ]
@@ -151,9 +151,9 @@ Unexpected instruction inside of an expression.
 
 prog: TYPE IDENT EQ BRAO WHILE
 ##
-## Ends in an error in state: 50.
+## Ends in an error in state: 60.
 ##
-## init_list -> BRAO . loption(separated_nonempty_list(COMMA,expr)) BRAC [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC AND ]
+## init_list -> BRAO . loption(separated_nonempty_list(COMMA,expr)) BRAC [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ COMMA BY BRAC AND ]
 ##
 ## The known suffix of the stack is as follows:
 ## BRAO
@@ -163,31 +163,52 @@ Unexpected instruction inside an initializer list.
 
 prog: TYPE IDENT EQ IDENT ARROW WHILE
 ##
-## Ends in an error in state: 117.
+## Ends in an error in state: 51.
 ##
-## ptr_member_access -> IDENT ARROW . IDENT [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC AND ]
+## ptr_member_access -> access ARROW . IDENT [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ EQ DOT COMMA BY BRAC ARROW AND ]
 ##
 ## The known suffix of the stack is as follows:
-## IDENT ARROW
+## access ARROW
 ##
 
 Expected an identifier after the '->' operator.
 
 prog: TYPE IDENT EQ IDENT DOT WHILE
 ##
-## Ends in an error in state: 115.
+## Ends in an error in state: 49.
 ##
-## struct_access -> IDENT DOT . IDENT [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC AND ]
+## struct_access -> access DOT . IDENT [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ EQ DOT COMMA BY BRAC ARROW AND ]
 ##
 ## The known suffix of the stack is as follows:
-## IDENT DOT
+## access DOT
 ##
 
 Expected identifier after '.' operator.
 
+prog: TYPE IDENT EQ IDENT EQ
+##
+## Ends in an error in state: 82.
+##
+## expr -> access . [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ COMMA BY BRAC AND ]
+## ptr_member_access -> access . ARROW IDENT [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ DOT COMMA BY BRAC ARROW AND ]
+## struct_access -> access . DOT IDENT [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ DOT COMMA BY BRAC ARROW AND ]
+##
+## The known suffix of the stack is as follows:
+## access
+##
+## WARNING: This example involves spurious reductions.
+## This implies that, although the LR(1) items shown above provide an
+## accurate view of the past (what has been recognized so far), they
+## may provide an INCOMPLETE view of the future (what was expected next).
+## In state 56, spurious reduction of production get -> IDENT 
+## In state 46, spurious reduction of production access -> get 
+##
+
+Expecting ';' after declaraion.
+
 prog: TYPE IDENT EQ IDENT PARO TRUE COMMA WHILE
 ##
-## Ends in an error in state: 110.
+## Ends in an error in state: 116.
 ##
 ## args -> expr COMMA . args [ PARC ]
 ##
@@ -199,7 +220,7 @@ Unexpected instruction inside an arguments list.
 
 prog: TYPE IDENT EQ IDENT PARO TRUE WHILE
 ##
-## Ends in an error in state: 109.
+## Ends in an error in state: 115.
 ##
 ## add -> expr . PLUS expr [ TIMES PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ COMMA BY AND ]
 ## and_op -> expr . AND expr [ TIMES PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ COMMA BY AND ]
@@ -225,9 +246,9 @@ Unexpected instruction inside of an expression.
 
 prog: TYPE IDENT EQ IDENT PARO WHILE
 ##
-## Ends in an error in state: 47.
+## Ends in an error in state: 57.
 ##
-## call -> IDENT PARO . args_opt PARC [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC AND ]
+## call -> IDENT PARO . args_opt PARC [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ COMMA BY BRAC AND ]
 ##
 ## The known suffix of the stack is as follows:
 ## IDENT PARO
@@ -237,37 +258,35 @@ Expecting ')' or a list of expression in a function call.
 
 prog: TYPE IDENT EQ IDENT WHILE
 ##
-## Ends in an error in state: 46.
+## Ends in an error in state: 56.
 ##
-## call -> IDENT . PARO args_opt PARC [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC AND ]
-## get -> IDENT . [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC AND ]
-## ptr_member_access -> IDENT . ARROW IDENT [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC AND ]
-## struct_access -> IDENT . DOT IDENT [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC AND ]
+## call -> IDENT . PARO args_opt PARC [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ COMMA BY BRAC AND ]
+## get -> IDENT . [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ EQ DOT COMMA BY BRAC ARROW AND ]
 ##
 ## The known suffix of the stack is as follows:
 ## IDENT
 ##
 
-Expecting an operator after identifier.
+Expecting an operator or ';' after identifier.
 
 prog: TYPE IDENT EQ MINUS TRUE WHILE
 ##
-## Ends in an error in state: 119.
+## Ends in an error in state: 121.
 ##
-## add -> expr . PLUS expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC AND ]
-## and_op -> expr . AND expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC AND ]
-## div -> expr . BY expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC AND ]
-## eq -> expr . EQEQ expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC AND ]
-## geq -> expr . GEQ expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC AND ]
-## gth -> expr . GTH expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC AND ]
-## leq -> expr . LEQ expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC AND ]
-## lth -> expr . LTH expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC AND ]
-## mod_op -> expr . MOD expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC AND ]
-## mul -> expr . TIMES expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC AND ]
-## neg -> MINUS expr . [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC AND ]
-## neq -> expr . NEQ expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC AND ]
-## or_op -> expr . OR expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC AND ]
-## sub -> expr . MINUS expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC AND ]
+## add -> expr . PLUS expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ COMMA BY BRAC AND ]
+## and_op -> expr . AND expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ COMMA BY BRAC AND ]
+## div -> expr . BY expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ COMMA BY BRAC AND ]
+## eq -> expr . EQEQ expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ COMMA BY BRAC AND ]
+## geq -> expr . GEQ expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ COMMA BY BRAC AND ]
+## gth -> expr . GTH expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ COMMA BY BRAC AND ]
+## leq -> expr . LEQ expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ COMMA BY BRAC AND ]
+## lth -> expr . LTH expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ COMMA BY BRAC AND ]
+## mod_op -> expr . MOD expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ COMMA BY BRAC AND ]
+## mul -> expr . TIMES expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ COMMA BY BRAC AND ]
+## neg -> MINUS expr . [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ COMMA BY BRAC AND ]
+## neq -> expr . NEQ expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ COMMA BY BRAC AND ]
+## or_op -> expr . OR expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ COMMA BY BRAC AND ]
+## sub -> expr . MINUS expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ COMMA BY BRAC AND ]
 ##
 ## The known suffix of the stack is as follows:
 ## MINUS expr
@@ -277,9 +296,9 @@ Unexpected instruction inside of an expression.
 
 prog: TYPE IDENT EQ MINUS WHILE
 ##
-## Ends in an error in state: 45.
+## Ends in an error in state: 55.
 ##
-## neg -> MINUS . expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC AND ]
+## neg -> MINUS . expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ COMMA BY BRAC AND ]
 ##
 ## The known suffix of the stack is as follows:
 ## MINUS
@@ -289,9 +308,9 @@ Expecting an expression after operator '-'.
 
 prog: TYPE IDENT EQ NOT WHILE
 ##
-## Ends in an error in state: 44.
+## Ends in an error in state: 54.
 ##
-## not -> NOT . expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC AND ]
+## not -> NOT . expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ COMMA BY BRAC AND ]
 ##
 ## The known suffix of the stack is as follows:
 ## NOT
@@ -301,13 +320,13 @@ Expecting an expression after operator '!'.
 
 prog: TYPE IDENT EQ PARO TRUE WHILE
 ##
-## Ends in an error in state: 121.
+## Ends in an error in state: 123.
 ##
 ## add -> expr . PLUS expr [ TIMES PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ BY AND ]
 ## and_op -> expr . AND expr [ TIMES PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ BY AND ]
 ## div -> expr . BY expr [ TIMES PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ BY AND ]
 ## eq -> expr . EQEQ expr [ TIMES PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ BY AND ]
-## expr -> PARO expr . PARC [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC AND ]
+## expr -> PARO expr . PARC [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ COMMA BY BRAC AND ]
 ## geq -> expr . GEQ expr [ TIMES PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ BY AND ]
 ## gth -> expr . GTH expr [ TIMES PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ BY AND ]
 ## leq -> expr . LEQ expr [ TIMES PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ BY AND ]
@@ -326,9 +345,9 @@ Missing ';' after instruction.
 
 prog: TYPE IDENT EQ PARO WHILE
 ##
-## Ends in an error in state: 43.
+## Ends in an error in state: 53.
 ##
-## expr -> PARO . expr PARC [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC AND ]
+## expr -> PARO . expr PARC [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ COMMA BY BRAC AND ]
 ##
 ## The known suffix of the stack is as follows:
 ## PARO
@@ -336,11 +355,25 @@ prog: TYPE IDENT EQ PARO WHILE
 
 Unexpected instruction inside of an expression.
 
+prog: TYPE IDENT EQ TIMES IDENT WHILE
+##
+## Ends in an error in state: 48.
+##
+## deref -> TIMES access . [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ EQ DOT COMMA BY BRAC ARROW AND ]
+## ptr_member_access -> access . ARROW IDENT [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ EQ DOT COMMA BY BRAC ARROW AND ]
+## struct_access -> access . DOT IDENT [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ EQ DOT COMMA BY BRAC ARROW AND ]
+##
+## The known suffix of the stack is as follows:
+## access
+##
+
+Expecting a ';' after a declaration.
+
 prog: TYPE IDENT EQ TIMES WHILE
 ##
 ## Ends in an error in state: 42.
 ##
-## deref -> TIMES . expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC AND ]
+## deref -> TIMES . access [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ EQ DOT COMMA BY BRAC ARROW AND ]
 ##
 ## The known suffix of the stack is as follows:
 ## TIMES
@@ -350,22 +383,22 @@ Expecting expression after '*' operator.
 
 prog: TYPE IDENT EQ TRUE AND TRUE WHILE
 ##
-## Ends in an error in state: 106.
+## Ends in an error in state: 112.
 ##
-## add -> expr . PLUS expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC AND ]
-## and_op -> expr . AND expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC AND ]
-## and_op -> expr AND expr . [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC AND ]
-## div -> expr . BY expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC AND ]
-## eq -> expr . EQEQ expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC AND ]
-## geq -> expr . GEQ expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC AND ]
-## gth -> expr . GTH expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC AND ]
-## leq -> expr . LEQ expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC AND ]
-## lth -> expr . LTH expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC AND ]
-## mod_op -> expr . MOD expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC AND ]
-## mul -> expr . TIMES expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC AND ]
-## neq -> expr . NEQ expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC AND ]
-## or_op -> expr . OR expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC AND ]
-## sub -> expr . MINUS expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC AND ]
+## add -> expr . PLUS expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ COMMA BY BRAC AND ]
+## and_op -> expr . AND expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ COMMA BY BRAC AND ]
+## and_op -> expr AND expr . [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ COMMA BY BRAC AND ]
+## div -> expr . BY expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ COMMA BY BRAC AND ]
+## eq -> expr . EQEQ expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ COMMA BY BRAC AND ]
+## geq -> expr . GEQ expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ COMMA BY BRAC AND ]
+## gth -> expr . GTH expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ COMMA BY BRAC AND ]
+## leq -> expr . LEQ expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ COMMA BY BRAC AND ]
+## lth -> expr . LTH expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ COMMA BY BRAC AND ]
+## mod_op -> expr . MOD expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ COMMA BY BRAC AND ]
+## mul -> expr . TIMES expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ COMMA BY BRAC AND ]
+## neq -> expr . NEQ expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ COMMA BY BRAC AND ]
+## or_op -> expr . OR expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ COMMA BY BRAC AND ]
+## sub -> expr . MINUS expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ COMMA BY BRAC AND ]
 ##
 ## The known suffix of the stack is as follows:
 ## expr AND expr
@@ -375,9 +408,9 @@ Unexpected instruction inside an expression.
 
 prog: TYPE IDENT EQ TRUE AND WHILE
 ##
-## Ends in an error in state: 105.
+## Ends in an error in state: 111.
 ##
-## and_op -> expr AND . expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC AND ]
+## and_op -> expr AND . expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ COMMA BY BRAC AND ]
 ##
 ## The known suffix of the stack is as follows:
 ## expr AND
@@ -387,9 +420,9 @@ Expecting an expression after operator '&&'.
 
 prog: TYPE IDENT EQ TRUE BY WHILE
 ##
-## Ends in an error in state: 87.
+## Ends in an error in state: 93.
 ##
-## div -> expr BY . expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC AND ]
+## div -> expr BY . expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ COMMA BY BRAC AND ]
 ##
 ## The known suffix of the stack is as follows:
 ## expr BY
@@ -399,22 +432,22 @@ Expecting an expression after operator '/'.
 
 prog: TYPE IDENT EQ TRUE EQEQ TRUE WHILE
 ##
-## Ends in an error in state: 104.
+## Ends in an error in state: 110.
 ##
-## add -> expr . PLUS expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC AND ]
-## and_op -> expr . AND expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC AND ]
-## div -> expr . BY expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC AND ]
-## eq -> expr . EQEQ expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC AND ]
-## eq -> expr EQEQ expr . [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC AND ]
-## geq -> expr . GEQ expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC AND ]
-## gth -> expr . GTH expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC AND ]
-## leq -> expr . LEQ expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC AND ]
-## lth -> expr . LTH expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC AND ]
-## mod_op -> expr . MOD expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC AND ]
-## mul -> expr . TIMES expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC AND ]
-## neq -> expr . NEQ expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC AND ]
-## or_op -> expr . OR expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC AND ]
-## sub -> expr . MINUS expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC AND ]
+## add -> expr . PLUS expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ COMMA BY BRAC AND ]
+## and_op -> expr . AND expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ COMMA BY BRAC AND ]
+## div -> expr . BY expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ COMMA BY BRAC AND ]
+## eq -> expr . EQEQ expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ COMMA BY BRAC AND ]
+## eq -> expr EQEQ expr . [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ COMMA BY BRAC AND ]
+## geq -> expr . GEQ expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ COMMA BY BRAC AND ]
+## gth -> expr . GTH expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ COMMA BY BRAC AND ]
+## leq -> expr . LEQ expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ COMMA BY BRAC AND ]
+## lth -> expr . LTH expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ COMMA BY BRAC AND ]
+## mod_op -> expr . MOD expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ COMMA BY BRAC AND ]
+## mul -> expr . TIMES expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ COMMA BY BRAC AND ]
+## neq -> expr . NEQ expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ COMMA BY BRAC AND ]
+## or_op -> expr . OR expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ COMMA BY BRAC AND ]
+## sub -> expr . MINUS expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ COMMA BY BRAC AND ]
 ##
 ## The known suffix of the stack is as follows:
 ## expr EQEQ expr
@@ -424,9 +457,9 @@ Unexpected instruction inside of an expression.
 
 prog: TYPE IDENT EQ TRUE EQEQ WHILE
 ##
-## Ends in an error in state: 103.
+## Ends in an error in state: 109.
 ##
-## eq -> expr EQEQ . expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC AND ]
+## eq -> expr EQEQ . expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ COMMA BY BRAC AND ]
 ##
 ## The known suffix of the stack is as follows:
 ## expr EQEQ
@@ -436,22 +469,22 @@ Expecting an expression after operator '=='.
 
 prog: TYPE IDENT EQ TRUE GEQ TRUE WHILE
 ##
-## Ends in an error in state: 102.
+## Ends in an error in state: 108.
 ##
-## add -> expr . PLUS expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC AND ]
-## and_op -> expr . AND expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC AND ]
-## div -> expr . BY expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC AND ]
-## eq -> expr . EQEQ expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC AND ]
-## geq -> expr . GEQ expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC AND ]
-## geq -> expr GEQ expr . [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC AND ]
-## gth -> expr . GTH expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC AND ]
-## leq -> expr . LEQ expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC AND ]
-## lth -> expr . LTH expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC AND ]
-## mod_op -> expr . MOD expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC AND ]
-## mul -> expr . TIMES expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC AND ]
-## neq -> expr . NEQ expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC AND ]
-## or_op -> expr . OR expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC AND ]
-## sub -> expr . MINUS expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC AND ]
+## add -> expr . PLUS expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ COMMA BY BRAC AND ]
+## and_op -> expr . AND expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ COMMA BY BRAC AND ]
+## div -> expr . BY expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ COMMA BY BRAC AND ]
+## eq -> expr . EQEQ expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ COMMA BY BRAC AND ]
+## geq -> expr . GEQ expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ COMMA BY BRAC AND ]
+## geq -> expr GEQ expr . [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ COMMA BY BRAC AND ]
+## gth -> expr . GTH expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ COMMA BY BRAC AND ]
+## leq -> expr . LEQ expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ COMMA BY BRAC AND ]
+## lth -> expr . LTH expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ COMMA BY BRAC AND ]
+## mod_op -> expr . MOD expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ COMMA BY BRAC AND ]
+## mul -> expr . TIMES expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ COMMA BY BRAC AND ]
+## neq -> expr . NEQ expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ COMMA BY BRAC AND ]
+## or_op -> expr . OR expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ COMMA BY BRAC AND ]
+## sub -> expr . MINUS expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ COMMA BY BRAC AND ]
 ##
 ## The known suffix of the stack is as follows:
 ## expr GEQ expr
@@ -461,9 +494,9 @@ Unexpected instruction outside of a function body.
 
 prog: TYPE IDENT EQ TRUE GEQ WHILE
 ##
-## Ends in an error in state: 101.
+## Ends in an error in state: 107.
 ##
-## geq -> expr GEQ . expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC AND ]
+## geq -> expr GEQ . expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ COMMA BY BRAC AND ]
 ##
 ## The known suffix of the stack is as follows:
 ## expr GEQ
@@ -473,22 +506,22 @@ Expecting an expression after operator '>='.
 
 prog: TYPE IDENT EQ TRUE GTH TRUE WHILE
 ##
-## Ends in an error in state: 100.
+## Ends in an error in state: 106.
 ##
-## add -> expr . PLUS expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC AND ]
-## and_op -> expr . AND expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC AND ]
-## div -> expr . BY expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC AND ]
-## eq -> expr . EQEQ expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC AND ]
-## geq -> expr . GEQ expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC AND ]
-## gth -> expr . GTH expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC AND ]
-## gth -> expr GTH expr . [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC AND ]
-## leq -> expr . LEQ expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC AND ]
-## lth -> expr . LTH expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC AND ]
-## mod_op -> expr . MOD expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC AND ]
-## mul -> expr . TIMES expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC AND ]
-## neq -> expr . NEQ expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC AND ]
-## or_op -> expr . OR expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC AND ]
-## sub -> expr . MINUS expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC AND ]
+## add -> expr . PLUS expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ COMMA BY BRAC AND ]
+## and_op -> expr . AND expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ COMMA BY BRAC AND ]
+## div -> expr . BY expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ COMMA BY BRAC AND ]
+## eq -> expr . EQEQ expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ COMMA BY BRAC AND ]
+## geq -> expr . GEQ expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ COMMA BY BRAC AND ]
+## gth -> expr . GTH expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ COMMA BY BRAC AND ]
+## gth -> expr GTH expr . [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ COMMA BY BRAC AND ]
+## leq -> expr . LEQ expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ COMMA BY BRAC AND ]
+## lth -> expr . LTH expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ COMMA BY BRAC AND ]
+## mod_op -> expr . MOD expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ COMMA BY BRAC AND ]
+## mul -> expr . TIMES expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ COMMA BY BRAC AND ]
+## neq -> expr . NEQ expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ COMMA BY BRAC AND ]
+## or_op -> expr . OR expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ COMMA BY BRAC AND ]
+## sub -> expr . MINUS expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ COMMA BY BRAC AND ]
 ##
 ## The known suffix of the stack is as follows:
 ## expr GTH expr
@@ -498,9 +531,9 @@ Unexpected instruction inside of an expression.
 
 prog: TYPE IDENT EQ TRUE GTH WHILE
 ##
-## Ends in an error in state: 99.
+## Ends in an error in state: 105.
 ##
-## gth -> expr GTH . expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC AND ]
+## gth -> expr GTH . expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ COMMA BY BRAC AND ]
 ##
 ## The known suffix of the stack is as follows:
 ## expr GTH
@@ -510,22 +543,22 @@ Expecting an expression after operation '>'.
 
 prog: TYPE IDENT EQ TRUE LEQ TRUE WHILE
 ##
-## Ends in an error in state: 98.
+## Ends in an error in state: 104.
 ##
-## add -> expr . PLUS expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC AND ]
-## and_op -> expr . AND expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC AND ]
-## div -> expr . BY expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC AND ]
-## eq -> expr . EQEQ expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC AND ]
-## geq -> expr . GEQ expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC AND ]
-## gth -> expr . GTH expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC AND ]
-## leq -> expr . LEQ expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC AND ]
-## leq -> expr LEQ expr . [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC AND ]
-## lth -> expr . LTH expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC AND ]
-## mod_op -> expr . MOD expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC AND ]
-## mul -> expr . TIMES expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC AND ]
-## neq -> expr . NEQ expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC AND ]
-## or_op -> expr . OR expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC AND ]
-## sub -> expr . MINUS expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC AND ]
+## add -> expr . PLUS expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ COMMA BY BRAC AND ]
+## and_op -> expr . AND expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ COMMA BY BRAC AND ]
+## div -> expr . BY expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ COMMA BY BRAC AND ]
+## eq -> expr . EQEQ expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ COMMA BY BRAC AND ]
+## geq -> expr . GEQ expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ COMMA BY BRAC AND ]
+## gth -> expr . GTH expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ COMMA BY BRAC AND ]
+## leq -> expr . LEQ expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ COMMA BY BRAC AND ]
+## leq -> expr LEQ expr . [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ COMMA BY BRAC AND ]
+## lth -> expr . LTH expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ COMMA BY BRAC AND ]
+## mod_op -> expr . MOD expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ COMMA BY BRAC AND ]
+## mul -> expr . TIMES expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ COMMA BY BRAC AND ]
+## neq -> expr . NEQ expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ COMMA BY BRAC AND ]
+## or_op -> expr . OR expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ COMMA BY BRAC AND ]
+## sub -> expr . MINUS expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ COMMA BY BRAC AND ]
 ##
 ## The known suffix of the stack is as follows:
 ## expr LEQ expr
@@ -535,9 +568,9 @@ Unexpected instruction inside of an expression.
 
 prog: TYPE IDENT EQ TRUE LEQ WHILE
 ##
-## Ends in an error in state: 97.
+## Ends in an error in state: 103.
 ##
-## leq -> expr LEQ . expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC AND ]
+## leq -> expr LEQ . expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ COMMA BY BRAC AND ]
 ##
 ## The known suffix of the stack is as follows:
 ## expr LEQ
@@ -547,22 +580,22 @@ Expecting an expression after operator '<='.
 
 prog: TYPE IDENT EQ TRUE LTH TRUE WHILE
 ##
-## Ends in an error in state: 96.
+## Ends in an error in state: 102.
 ##
-## add -> expr . PLUS expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC AND ]
-## and_op -> expr . AND expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC AND ]
-## div -> expr . BY expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC AND ]
-## eq -> expr . EQEQ expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC AND ]
-## geq -> expr . GEQ expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC AND ]
-## gth -> expr . GTH expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC AND ]
-## leq -> expr . LEQ expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC AND ]
-## lth -> expr . LTH expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC AND ]
-## lth -> expr LTH expr . [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC AND ]
-## mod_op -> expr . MOD expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC AND ]
-## mul -> expr . TIMES expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC AND ]
-## neq -> expr . NEQ expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC AND ]
-## or_op -> expr . OR expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC AND ]
-## sub -> expr . MINUS expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC AND ]
+## add -> expr . PLUS expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ COMMA BY BRAC AND ]
+## and_op -> expr . AND expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ COMMA BY BRAC AND ]
+## div -> expr . BY expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ COMMA BY BRAC AND ]
+## eq -> expr . EQEQ expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ COMMA BY BRAC AND ]
+## geq -> expr . GEQ expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ COMMA BY BRAC AND ]
+## gth -> expr . GTH expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ COMMA BY BRAC AND ]
+## leq -> expr . LEQ expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ COMMA BY BRAC AND ]
+## lth -> expr . LTH expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ COMMA BY BRAC AND ]
+## lth -> expr LTH expr . [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ COMMA BY BRAC AND ]
+## mod_op -> expr . MOD expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ COMMA BY BRAC AND ]
+## mul -> expr . TIMES expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ COMMA BY BRAC AND ]
+## neq -> expr . NEQ expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ COMMA BY BRAC AND ]
+## or_op -> expr . OR expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ COMMA BY BRAC AND ]
+## sub -> expr . MINUS expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ COMMA BY BRAC AND ]
 ##
 ## The known suffix of the stack is as follows:
 ## expr LTH expr
@@ -572,9 +605,9 @@ Unexpected instruction inside of an expression.
 
 prog: TYPE IDENT EQ TRUE LTH WHILE
 ##
-## Ends in an error in state: 95.
+## Ends in an error in state: 101.
 ##
-## lth -> expr LTH . expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC AND ]
+## lth -> expr LTH . expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ COMMA BY BRAC AND ]
 ##
 ## The known suffix of the stack is as follows:
 ## expr LTH
@@ -584,22 +617,22 @@ Expecting an expression after operator '>'.
 
 prog: TYPE IDENT EQ TRUE MINUS TRUE WHILE
 ##
-## Ends in an error in state: 94.
+## Ends in an error in state: 100.
 ##
-## add -> expr . PLUS expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC AND ]
-## and_op -> expr . AND expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC AND ]
-## div -> expr . BY expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC AND ]
-## eq -> expr . EQEQ expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC AND ]
-## geq -> expr . GEQ expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC AND ]
-## gth -> expr . GTH expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC AND ]
-## leq -> expr . LEQ expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC AND ]
-## lth -> expr . LTH expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC AND ]
-## mod_op -> expr . MOD expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC AND ]
-## mul -> expr . TIMES expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC AND ]
-## neq -> expr . NEQ expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC AND ]
-## or_op -> expr . OR expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC AND ]
-## sub -> expr . MINUS expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC AND ]
-## sub -> expr MINUS expr . [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC AND ]
+## add -> expr . PLUS expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ COMMA BY BRAC AND ]
+## and_op -> expr . AND expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ COMMA BY BRAC AND ]
+## div -> expr . BY expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ COMMA BY BRAC AND ]
+## eq -> expr . EQEQ expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ COMMA BY BRAC AND ]
+## geq -> expr . GEQ expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ COMMA BY BRAC AND ]
+## gth -> expr . GTH expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ COMMA BY BRAC AND ]
+## leq -> expr . LEQ expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ COMMA BY BRAC AND ]
+## lth -> expr . LTH expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ COMMA BY BRAC AND ]
+## mod_op -> expr . MOD expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ COMMA BY BRAC AND ]
+## mul -> expr . TIMES expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ COMMA BY BRAC AND ]
+## neq -> expr . NEQ expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ COMMA BY BRAC AND ]
+## or_op -> expr . OR expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ COMMA BY BRAC AND ]
+## sub -> expr . MINUS expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ COMMA BY BRAC AND ]
+## sub -> expr MINUS expr . [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ COMMA BY BRAC AND ]
 ##
 ## The known suffix of the stack is as follows:
 ## expr MINUS expr
@@ -609,9 +642,9 @@ Unexpected instruction inside of an expression.
 
 prog: TYPE IDENT EQ TRUE MINUS WHILE
 ##
-## Ends in an error in state: 93.
+## Ends in an error in state: 99.
 ##
-## sub -> expr MINUS . expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC AND ]
+## sub -> expr MINUS . expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ COMMA BY BRAC AND ]
 ##
 ## The known suffix of the stack is as follows:
 ## expr MINUS
@@ -621,9 +654,9 @@ Expecting an expression after operator '-'.
 
 prog: TYPE IDENT EQ TRUE MOD WHILE
 ##
-## Ends in an error in state: 85.
+## Ends in an error in state: 91.
 ##
-## mod_op -> expr MOD . expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC AND ]
+## mod_op -> expr MOD . expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ COMMA BY BRAC AND ]
 ##
 ## The known suffix of the stack is as follows:
 ## expr MOD
@@ -633,22 +666,22 @@ Expecting an expression after operator '%'.
 
 prog: TYPE IDENT EQ TRUE NEQ TRUE WHILE
 ##
-## Ends in an error in state: 92.
+## Ends in an error in state: 98.
 ##
-## add -> expr . PLUS expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC AND ]
-## and_op -> expr . AND expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC AND ]
-## div -> expr . BY expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC AND ]
-## eq -> expr . EQEQ expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC AND ]
-## geq -> expr . GEQ expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC AND ]
-## gth -> expr . GTH expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC AND ]
-## leq -> expr . LEQ expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC AND ]
-## lth -> expr . LTH expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC AND ]
-## mod_op -> expr . MOD expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC AND ]
-## mul -> expr . TIMES expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC AND ]
-## neq -> expr . NEQ expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC AND ]
-## neq -> expr NEQ expr . [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC AND ]
-## or_op -> expr . OR expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC AND ]
-## sub -> expr . MINUS expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC AND ]
+## add -> expr . PLUS expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ COMMA BY BRAC AND ]
+## and_op -> expr . AND expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ COMMA BY BRAC AND ]
+## div -> expr . BY expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ COMMA BY BRAC AND ]
+## eq -> expr . EQEQ expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ COMMA BY BRAC AND ]
+## geq -> expr . GEQ expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ COMMA BY BRAC AND ]
+## gth -> expr . GTH expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ COMMA BY BRAC AND ]
+## leq -> expr . LEQ expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ COMMA BY BRAC AND ]
+## lth -> expr . LTH expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ COMMA BY BRAC AND ]
+## mod_op -> expr . MOD expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ COMMA BY BRAC AND ]
+## mul -> expr . TIMES expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ COMMA BY BRAC AND ]
+## neq -> expr . NEQ expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ COMMA BY BRAC AND ]
+## neq -> expr NEQ expr . [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ COMMA BY BRAC AND ]
+## or_op -> expr . OR expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ COMMA BY BRAC AND ]
+## sub -> expr . MINUS expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ COMMA BY BRAC AND ]
 ##
 ## The known suffix of the stack is as follows:
 ## expr NEQ expr
@@ -658,9 +691,9 @@ Unexpected instruction inside of an expression.
 
 prog: TYPE IDENT EQ TRUE NEQ WHILE
 ##
-## Ends in an error in state: 91.
+## Ends in an error in state: 97.
 ##
-## neq -> expr NEQ . expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC AND ]
+## neq -> expr NEQ . expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ COMMA BY BRAC AND ]
 ##
 ## The known suffix of the stack is as follows:
 ## expr NEQ
@@ -670,22 +703,22 @@ Expecting an expression after operator '!='.
 
 prog: TYPE IDENT EQ TRUE OR TRUE WHILE
 ##
-## Ends in an error in state: 90.
+## Ends in an error in state: 96.
 ##
-## add -> expr . PLUS expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC AND ]
-## and_op -> expr . AND expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC AND ]
-## div -> expr . BY expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC AND ]
-## eq -> expr . EQEQ expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC AND ]
-## geq -> expr . GEQ expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC AND ]
-## gth -> expr . GTH expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC AND ]
-## leq -> expr . LEQ expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC AND ]
-## lth -> expr . LTH expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC AND ]
-## mod_op -> expr . MOD expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC AND ]
-## mul -> expr . TIMES expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC AND ]
-## neq -> expr . NEQ expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC AND ]
-## or_op -> expr . OR expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC AND ]
-## or_op -> expr OR expr . [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC AND ]
-## sub -> expr . MINUS expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC AND ]
+## add -> expr . PLUS expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ COMMA BY BRAC AND ]
+## and_op -> expr . AND expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ COMMA BY BRAC AND ]
+## div -> expr . BY expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ COMMA BY BRAC AND ]
+## eq -> expr . EQEQ expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ COMMA BY BRAC AND ]
+## geq -> expr . GEQ expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ COMMA BY BRAC AND ]
+## gth -> expr . GTH expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ COMMA BY BRAC AND ]
+## leq -> expr . LEQ expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ COMMA BY BRAC AND ]
+## lth -> expr . LTH expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ COMMA BY BRAC AND ]
+## mod_op -> expr . MOD expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ COMMA BY BRAC AND ]
+## mul -> expr . TIMES expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ COMMA BY BRAC AND ]
+## neq -> expr . NEQ expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ COMMA BY BRAC AND ]
+## or_op -> expr . OR expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ COMMA BY BRAC AND ]
+## or_op -> expr OR expr . [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ COMMA BY BRAC AND ]
+## sub -> expr . MINUS expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ COMMA BY BRAC AND ]
 ##
 ## The known suffix of the stack is as follows:
 ## expr OR expr
@@ -695,9 +728,9 @@ Unexpected instruction inside of an expression.
 
 prog: TYPE IDENT EQ TRUE OR WHILE
 ##
-## Ends in an error in state: 89.
+## Ends in an error in state: 95.
 ##
-## or_op -> expr OR . expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC AND ]
+## or_op -> expr OR . expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ COMMA BY BRAC AND ]
 ##
 ## The known suffix of the stack is as follows:
 ## expr OR
@@ -707,22 +740,22 @@ Expecting an expression after operator '||'.
 
 prog: TYPE IDENT EQ TRUE PLUS TRUE WHILE
 ##
-## Ends in an error in state: 84.
+## Ends in an error in state: 90.
 ##
-## add -> expr . PLUS expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC AND ]
-## add -> expr PLUS expr . [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC AND ]
-## and_op -> expr . AND expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC AND ]
-## div -> expr . BY expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC AND ]
-## eq -> expr . EQEQ expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC AND ]
-## geq -> expr . GEQ expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC AND ]
-## gth -> expr . GTH expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC AND ]
-## leq -> expr . LEQ expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC AND ]
-## lth -> expr . LTH expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC AND ]
-## mod_op -> expr . MOD expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC AND ]
-## mul -> expr . TIMES expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC AND ]
-## neq -> expr . NEQ expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC AND ]
-## or_op -> expr . OR expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC AND ]
-## sub -> expr . MINUS expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC AND ]
+## add -> expr . PLUS expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ COMMA BY BRAC AND ]
+## add -> expr PLUS expr . [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ COMMA BY BRAC AND ]
+## and_op -> expr . AND expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ COMMA BY BRAC AND ]
+## div -> expr . BY expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ COMMA BY BRAC AND ]
+## eq -> expr . EQEQ expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ COMMA BY BRAC AND ]
+## geq -> expr . GEQ expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ COMMA BY BRAC AND ]
+## gth -> expr . GTH expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ COMMA BY BRAC AND ]
+## leq -> expr . LEQ expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ COMMA BY BRAC AND ]
+## lth -> expr . LTH expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ COMMA BY BRAC AND ]
+## mod_op -> expr . MOD expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ COMMA BY BRAC AND ]
+## mul -> expr . TIMES expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ COMMA BY BRAC AND ]
+## neq -> expr . NEQ expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ COMMA BY BRAC AND ]
+## or_op -> expr . OR expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ COMMA BY BRAC AND ]
+## sub -> expr . MINUS expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ COMMA BY BRAC AND ]
 ##
 ## The known suffix of the stack is as follows:
 ## expr PLUS expr
@@ -732,9 +765,9 @@ Unexpected instruction inside of an expression.
 
 prog: TYPE IDENT EQ TRUE PLUS WHILE
 ##
-## Ends in an error in state: 83.
+## Ends in an error in state: 89.
 ##
-## add -> expr PLUS . expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC AND ]
+## add -> expr PLUS . expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ COMMA BY BRAC AND ]
 ##
 ## The known suffix of the stack is as follows:
 ## expr PLUS
@@ -744,9 +777,9 @@ Expecting an expression after operator '+'.
 
 prog: TYPE IDENT EQ TRUE TIMES WHILE
 ##
-## Ends in an error in state: 81.
+## Ends in an error in state: 87.
 ##
-## mul -> expr TIMES . expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ EQ COMMA BY BRAC AND ]
+## mul -> expr TIMES . expr [ TIMES SEMI PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ COMMA BY BRAC AND ]
 ##
 ## The known suffix of the stack is as follows:
 ## expr TIMES
@@ -756,7 +789,7 @@ Expecting an expression after operator '*'.
 
 prog: TYPE IDENT EQ TRUE WHILE
 ##
-## Ends in an error in state: 178.
+## Ends in an error in state: 179.
 ##
 ## add -> expr . PLUS expr [ TIMES SEMI PLUS OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ BY AND ]
 ## and_op -> expr . AND expr [ TIMES SEMI PLUS OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ BY AND ]
@@ -781,7 +814,7 @@ Unexpected instruction inside of an expression.
 
 prog: TYPE IDENT EQ WHILE
 ##
-## Ends in an error in state: 177.
+## Ends in an error in state: 178.
 ##
 ## option(__anonymous_3) -> EQ . expr [ SEMI ]
 ##
@@ -818,7 +851,7 @@ Unexpected instruction outside of function body.
 
 prog: TYPE IDENT PARO PARC BRAO IDENT EQ TRUE WHILE
 ##
-## Ends in an error in state: 164.
+## Ends in an error in state: 165.
 ##
 ## add -> expr . PLUS expr [ TIMES SEMI PLUS OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ BY AND ]
 ## and_op -> expr . AND expr [ TIMES SEMI PLUS OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ BY AND ]
@@ -843,7 +876,7 @@ Unexpected instruction inside of an expression.
 
 prog: TYPE IDENT PARO PARC BRAO IDENT EQ WHILE
 ##
-## Ends in an error in state: 163.
+## Ends in an error in state: 164.
 ##
 ## set -> access EQ . expr SEMI [ WHILE TYPE TRUE TIMES STRUCT RETURN PUTCHAR PARO NOT MINUS IF IDENT FALSE CONST BRAO BRAC ADDRESS ]
 ##
@@ -855,10 +888,12 @@ Expecting an expression after operator '='.
 
 prog: TYPE IDENT PARO PARC BRAO IDENT PARC
 ##
-## Ends in an error in state: 162.
+## Ends in an error in state: 163.
 ##
 ## expr -> access . [ TIMES SEMI PLUS OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ BY AND ]
+## ptr_member_access -> access . ARROW IDENT [ TIMES SEMI PLUS OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ EQ DOT BY ARROW AND ]
 ## set -> access . EQ expr SEMI [ WHILE TYPE TRUE TIMES STRUCT RETURN PUTCHAR PARO NOT MINUS IF IDENT FALSE CONST BRAO BRAC ADDRESS ]
+## struct_access -> access . DOT IDENT [ TIMES SEMI PLUS OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ EQ DOT BY ARROW AND ]
 ##
 ## The known suffix of the stack is as follows:
 ## access
@@ -867,15 +902,15 @@ prog: TYPE IDENT PARO PARC BRAO IDENT PARC
 ## This implies that, although the LR(1) items shown above provide an
 ## accurate view of the past (what has been recognized so far), they
 ## may provide an INCOMPLETE view of the future (what was expected next).
-## In state 46, spurious reduction of production get -> IDENT 
-## In state 65, spurious reduction of production access -> get 
+## In state 56, spurious reduction of production get -> IDENT 
+## In state 46, spurious reduction of production access -> get 
 ##
 
 Unexpected instruction inside an expression.
 
 prog: TYPE IDENT PARO PARC BRAO IF PARO TRUE PARC BRAO SEMI
 ##
-## Ends in an error in state: 139.
+## Ends in an error in state: 140.
 ##
 ## ifi -> IF PARO expr PARC BRAO . body BRAC ELSE BRAO body BRAC [ WHILE TYPE TRUE TIMES STRUCT RETURN PUTCHAR PARO NOT MINUS IF IDENT FALSE CONST BRAO BRAC ADDRESS ]
 ##
@@ -887,7 +922,7 @@ Expecting instructions inside 'if' body.
 
 prog: TYPE IDENT PARO PARC BRAO IF PARO TRUE PARC BRAO TRUE SEMI BRAC ELSE BRAO SEMI
 ##
-## Ends in an error in state: 157.
+## Ends in an error in state: 158.
 ##
 ## ifi -> IF PARO expr PARC BRAO body BRAC ELSE BRAO . body BRAC [ WHILE TYPE TRUE TIMES STRUCT RETURN PUTCHAR PARO NOT MINUS IF IDENT FALSE CONST BRAO BRAC ADDRESS ]
 ##
@@ -899,7 +934,7 @@ Expecting instructions inside 'else' body.
 
 prog: TYPE IDENT PARO PARC BRAO IF PARO TRUE PARC BRAO TRUE SEMI BRAC ELSE BRAO TRUE SEMI SEMI
 ##
-## Ends in an error in state: 158.
+## Ends in an error in state: 159.
 ##
 ## body -> body . instr [ WHILE TYPE TRUE TIMES STRUCT RETURN PUTCHAR PARO NOT MINUS IF IDENT FALSE CONST BRAO BRAC ADDRESS ]
 ## body -> body . local [ WHILE TYPE TRUE TIMES STRUCT RETURN PUTCHAR PARO NOT MINUS IF IDENT FALSE CONST BRAO BRAC ADDRESS ]
@@ -913,7 +948,7 @@ Expecting '}' at the end of a block.
 
 prog: TYPE IDENT PARO PARC BRAO IF PARO TRUE PARC BRAO TRUE SEMI BRAC ELSE WHILE
 ##
-## Ends in an error in state: 156.
+## Ends in an error in state: 157.
 ##
 ## ifi -> IF PARO expr PARC BRAO body BRAC ELSE . BRAO body BRAC [ WHILE TYPE TRUE TIMES STRUCT RETURN PUTCHAR PARO NOT MINUS IF IDENT FALSE CONST BRAO BRAC ADDRESS ]
 ##
@@ -925,7 +960,7 @@ Expecting '{' after keyword 'else'.
 
 prog: TYPE IDENT PARO PARC BRAO IF PARO TRUE PARC BRAO TRUE SEMI BRAC WHILE
 ##
-## Ends in an error in state: 155.
+## Ends in an error in state: 156.
 ##
 ## ifi -> IF PARO expr PARC BRAO body BRAC . ELSE BRAO body BRAC [ WHILE TYPE TRUE TIMES STRUCT RETURN PUTCHAR PARO NOT MINUS IF IDENT FALSE CONST BRAO BRAC ADDRESS ]
 ##
@@ -937,7 +972,7 @@ Expecting 'else' after 'if' block.
 
 prog: TYPE IDENT PARO PARC BRAO IF PARO TRUE PARC BRAO TRUE SEMI SEMI
 ##
-## Ends in an error in state: 154.
+## Ends in an error in state: 155.
 ##
 ## body -> body . instr [ WHILE TYPE TRUE TIMES STRUCT RETURN PUTCHAR PARO NOT MINUS IF IDENT FALSE CONST BRAO BRAC ADDRESS ]
 ## body -> body . local [ WHILE TYPE TRUE TIMES STRUCT RETURN PUTCHAR PARO NOT MINUS IF IDENT FALSE CONST BRAO BRAC ADDRESS ]
@@ -951,7 +986,7 @@ Expecting '}' at the end of a block.
 
 prog: TYPE IDENT PARO PARC BRAO IF PARO TRUE PARC WHILE
 ##
-## Ends in an error in state: 138.
+## Ends in an error in state: 139.
 ##
 ## ifi -> IF PARO expr PARC . BRAO body BRAC ELSE BRAO body BRAC [ WHILE TYPE TRUE TIMES STRUCT RETURN PUTCHAR PARO NOT MINUS IF IDENT FALSE CONST BRAO BRAC ADDRESS ]
 ##
@@ -963,7 +998,7 @@ Expecting '{' after if condition.
 
 prog: TYPE IDENT PARO PARC BRAO IF PARO TRUE WHILE
 ##
-## Ends in an error in state: 137.
+## Ends in an error in state: 138.
 ##
 ## add -> expr . PLUS expr [ TIMES PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ BY AND ]
 ## and_op -> expr . AND expr [ TIMES PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ BY AND ]
@@ -988,7 +1023,7 @@ Unexpected instruction inside of an expression.
 
 prog: TYPE IDENT PARO PARC BRAO IF PARO WHILE
 ##
-## Ends in an error in state: 136.
+## Ends in an error in state: 137.
 ##
 ## ifi -> IF PARO . expr PARC BRAO body BRAC ELSE BRAO body BRAC [ WHILE TYPE TRUE TIMES STRUCT RETURN PUTCHAR PARO NOT MINUS IF IDENT FALSE CONST BRAO BRAC ADDRESS ]
 ##
@@ -1000,7 +1035,7 @@ Unexpected instruction inside of an expression.
 
 prog: TYPE IDENT PARO PARC BRAO IF WHILE
 ##
-## Ends in an error in state: 135.
+## Ends in an error in state: 136.
 ##
 ## ifi -> IF . PARO expr PARC BRAO body BRAC ELSE BRAO body BRAC [ WHILE TYPE TRUE TIMES STRUCT RETURN PUTCHAR PARO NOT MINUS IF IDENT FALSE CONST BRAO BRAC ADDRESS ]
 ##
@@ -1012,7 +1047,7 @@ Expecting '(' after the keyword 'if'.
 
 prog: TYPE IDENT PARO PARC BRAO PUTCHAR PARO TRUE PARC WHILE
 ##
-## Ends in an error in state: 133.
+## Ends in an error in state: 134.
 ##
 ## putchar -> PUTCHAR PARO expr PARC . SEMI [ WHILE TYPE TRUE TIMES STRUCT RETURN PUTCHAR PARO NOT MINUS IF IDENT FALSE CONST BRAO BRAC ADDRESS ]
 ##
@@ -1024,7 +1059,7 @@ Expecting ';' after an instruction.
 
 prog: TYPE IDENT PARO PARC BRAO PUTCHAR PARO TRUE WHILE
 ##
-## Ends in an error in state: 132.
+## Ends in an error in state: 133.
 ##
 ## add -> expr . PLUS expr [ TIMES PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ BY AND ]
 ## and_op -> expr . AND expr [ TIMES PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ BY AND ]
@@ -1049,7 +1084,7 @@ Unexpected instruction inside of an expression.
 
 prog: TYPE IDENT PARO PARC BRAO PUTCHAR PARO WHILE
 ##
-## Ends in an error in state: 131.
+## Ends in an error in state: 132.
 ##
 ## putchar -> PUTCHAR PARO . expr PARC SEMI [ WHILE TYPE TRUE TIMES STRUCT RETURN PUTCHAR PARO NOT MINUS IF IDENT FALSE CONST BRAO BRAC ADDRESS ]
 ##
@@ -1061,7 +1096,7 @@ Unexpected instruction inside of an expression.
 
 prog: TYPE IDENT PARO PARC BRAO PUTCHAR WHILE
 ##
-## Ends in an error in state: 130.
+## Ends in an error in state: 131.
 ##
 ## putchar -> PUTCHAR . PARO expr PARC SEMI [ WHILE TYPE TRUE TIMES STRUCT RETURN PUTCHAR PARO NOT MINUS IF IDENT FALSE CONST BRAO BRAC ADDRESS ]
 ##
@@ -1073,7 +1108,7 @@ Expecting '(' after keyword 'putchar'.
 
 prog: TYPE IDENT PARO PARC BRAO RETURN TRUE WHILE
 ##
-## Ends in an error in state: 128.
+## Ends in an error in state: 129.
 ##
 ## add -> expr . PLUS expr [ TIMES SEMI PLUS OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ BY AND ]
 ## and_op -> expr . AND expr [ TIMES SEMI PLUS OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ BY AND ]
@@ -1098,7 +1133,7 @@ Unexpected instruction inside of an expression.
 
 prog: TYPE IDENT PARO PARC BRAO RETURN WHILE
 ##
-## Ends in an error in state: 127.
+## Ends in an error in state: 128.
 ##
 ## returni -> RETURN . expr SEMI [ WHILE TYPE TRUE TIMES STRUCT RETURN PUTCHAR PARO NOT MINUS IF IDENT FALSE CONST BRAO BRAC ADDRESS ]
 ##
@@ -1122,7 +1157,7 @@ Expecting an instruction inside function body.
 
 prog: TYPE IDENT PARO PARC BRAO TRUE SEMI SEMI
 ##
-## Ends in an error in state: 168.
+## Ends in an error in state: 169.
 ##
 ## body -> body . instr [ WHILE TYPE TRUE TIMES STRUCT RETURN PUTCHAR PARO NOT MINUS IF IDENT FALSE CONST BRAO BRAC ADDRESS ]
 ## body -> body . local [ WHILE TYPE TRUE TIMES STRUCT RETURN PUTCHAR PARO NOT MINUS IF IDENT FALSE CONST BRAO BRAC ADDRESS ]
@@ -1136,7 +1171,7 @@ Expecting '}' at the end of a function body.
 
 prog: TYPE IDENT PARO PARC BRAO TRUE WHILE
 ##
-## Ends in an error in state: 147.
+## Ends in an error in state: 148.
 ##
 ## add -> expr . PLUS expr [ TIMES SEMI PLUS OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ BY AND ]
 ## and_op -> expr . AND expr [ TIMES SEMI PLUS OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ BY AND ]
@@ -1161,7 +1196,7 @@ Unexpected instruction inside of an expression.
 
 prog: TYPE IDENT PARO PARC BRAO TYPE IDENT EQ TRUE WHILE
 ##
-## Ends in an error in state: 151.
+## Ends in an error in state: 152.
 ##
 ## add -> expr . PLUS expr [ TIMES SEMI PLUS OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ BY AND ]
 ## and_op -> expr . AND expr [ TIMES SEMI PLUS OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ BY AND ]
@@ -1186,7 +1221,7 @@ Unexpected instruction inside of an expression.
 
 prog: TYPE IDENT PARO PARC BRAO TYPE IDENT EQ WHILE
 ##
-## Ends in an error in state: 150.
+## Ends in an error in state: 151.
 ##
 ## option(__anonymous_4) -> EQ . expr [ SEMI ]
 ##
@@ -1198,7 +1233,7 @@ Expecting an expression after operator '='.
 
 prog: TYPE IDENT PARO PARC BRAO TYPE IDENT WHILE
 ##
-## Ends in an error in state: 149.
+## Ends in an error in state: 150.
 ##
 ## local -> decl . option(__anonymous_4) SEMI [ WHILE TYPE TRUE TIMES STRUCT RETURN PUTCHAR PARO NOT MINUS IF IDENT FALSE CONST BRAO BRAC ADDRESS ]
 ##
@@ -1210,7 +1245,7 @@ Expecting ';' after variable declaration.
 
 prog: TYPE IDENT PARO PARC BRAO WHILE PARO TRUE PARC BRAO SEMI
 ##
-## Ends in an error in state: 126.
+## Ends in an error in state: 127.
 ##
 ## whilei -> WHILE PARO expr PARC BRAO . body BRAC [ WHILE TYPE TRUE TIMES STRUCT RETURN PUTCHAR PARO NOT MINUS IF IDENT FALSE CONST BRAO BRAC ADDRESS ]
 ##
@@ -1222,7 +1257,7 @@ Expecting instructions inside a 'while' body.
 
 prog: TYPE IDENT PARO PARC BRAO WHILE PARO TRUE PARC BRAO TRUE SEMI SEMI
 ##
-## Ends in an error in state: 166.
+## Ends in an error in state: 167.
 ##
 ## body -> body . instr [ WHILE TYPE TRUE TIMES STRUCT RETURN PUTCHAR PARO NOT MINUS IF IDENT FALSE CONST BRAO BRAC ADDRESS ]
 ## body -> body . local [ WHILE TYPE TRUE TIMES STRUCT RETURN PUTCHAR PARO NOT MINUS IF IDENT FALSE CONST BRAO BRAC ADDRESS ]
@@ -1236,7 +1271,7 @@ Expecting '}' after the end of a block.
 
 prog: TYPE IDENT PARO PARC BRAO WHILE PARO TRUE PARC WHILE
 ##
-## Ends in an error in state: 125.
+## Ends in an error in state: 126.
 ##
 ## whilei -> WHILE PARO expr PARC . BRAO body BRAC [ WHILE TYPE TRUE TIMES STRUCT RETURN PUTCHAR PARO NOT MINUS IF IDENT FALSE CONST BRAO BRAC ADDRESS ]
 ##
@@ -1248,7 +1283,7 @@ Expecting '(' after the 'while' condition.
 
 prog: TYPE IDENT PARO PARC BRAO WHILE PARO TRUE WHILE
 ##
-## Ends in an error in state: 124.
+## Ends in an error in state: 125.
 ##
 ## add -> expr . PLUS expr [ TIMES PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ BY AND ]
 ## and_op -> expr . AND expr [ TIMES PLUS PARC OR NEQ MOD MINUS LTH LEQ GTH GEQ EQEQ BY AND ]
@@ -1309,7 +1344,7 @@ Expecting a '{' after a function prototype.
 
 prog: TYPE IDENT PARO TYPE IDENT COMMA WHILE
 ##
-## Ends in an error in state: 172.
+## Ends in an error in state: 173.
 ##
 ## params -> param COMMA . params [ PARC ]
 ##
@@ -1321,7 +1356,7 @@ Expecting a declaration after ','.
 
 prog: TYPE IDENT PARO TYPE IDENT WHILE
 ##
-## Ends in an error in state: 171.
+## Ends in an error in state: 172.
 ##
 ## params -> param . [ PARC ]
 ## params -> param . COMMA params [ PARC ]
@@ -1371,7 +1406,7 @@ Unexpected instruction outside of a function body.
 
 prog: TYPE IDENT WHILE
 ##
-## Ends in an error in state: 176.
+## Ends in an error in state: 177.
 ##
 ## func -> decl . PARO params_opt PARC BRAO body BRAC [ TYPE STRUCT EOF ]
 ## glob_var -> decl . option(__anonymous_3) [ SEMI ]
