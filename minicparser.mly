@@ -10,8 +10,7 @@
     | "bool" -> Bool
     | "void" -> Void
     | _ -> if (Hashtbl.mem struct_defs s) then
-        let ( name, members ) = Hashtbl.find struct_defs s in
-        Struct(name, members) 
+        Hashtbl.find struct_defs s
       else
         failwith (Printf.sprintf "Unknown type: %s" s)
 
@@ -21,13 +20,7 @@
     let _ = locals_tmp := !locals_tmp@[l] in
     match value with
       | None -> []
-      | Some n -> [Set(fst l, n)]
-
-  let add_local_struct ident members_val =
-    let _ = locals_tmp := !locals_tmp@[ident] in
-    match members_val with
-     | None -> []
-     | Some v -> [SetStruct((fst ident), v)]
+      | Some n -> [Set(Get(fst l), n)]
 
   let reset_locals =
     locals_tmp := []
@@ -35,7 +28,7 @@
   let (globals_assign: seq ref) = ref []
 
   let add_globals_assign s e =
-    globals_assign := !globals_assign@[Set(s, e)]
+    globals_assign := !globals_assign@[Set(Get s, e)]
 
   let pointer_num = ref 0
 
@@ -53,7 +46,7 @@
 %token <int> CONST
 %token PARO PARC COMMA SEMI BRAO BRAC DOT
 %token IF ELSE WHILE RETURN
-%token EQ LTH GTH GEQ LEQ EQEQ NEQ PLUS TIMES BY AND OR MOD
+%token EQ LTH GTH GEQ LEQ EQEQ NEQ PLUS TIMES BY AND OR MOD ARROW
 %token ADDRESS
 %token MINUS NOT
 %token TRUE FALSE
@@ -71,66 +64,43 @@
 
 %start prog
 %type <Ast_types.prog> prog
+%type <Ast_types.expr> expr
+%type <Ast_types.expr> access
 
 %%
 
 prog:
-    structs glob_vars funcs EOF { {structs = $1; globals = $2; functions = $3} }
+    struct_def prog {
+      {
+        structs = $1::$2.structs;
+        globals = $2.globals;
+        functions = $2.functions;
+      }
+    }
+    | suite_prog {
+        $1;
+      }
 ;
 
-structs:
-  list(struct_def) { $1 }
-;
-
-struct_def:
-  STRUCT id = IDENT BRAO d = struct_type_decls BRAC SEMI { Hashtbl.add struct_defs id (id, d); (id, d) }
-;
-
-decl:
-    t = TYPE id = IDENT { (id, (typ_of_string t)) }
-  | pointer_decl        { $1 }
-;
-
-pointer_decl:
-  t = TYPE nonempty_list(TIMES {incr pointer_num}) id = IDENT {
-    let typ = build_ptr (!pointer_num) (typ_of_string t) in
-    pointer_num := 0;
-    (id, typ)
+suite_prog:
+  glob_var SEMI suite_prog {
+      {
+        structs = [];
+        globals = $1::$3.globals;
+        functions = $3.functions;
+      }
+    }
+  | funcs EOF {
+    {
+      structs = [];
+      globals= [];
+      functions = $1;
+    }
   }
 ;
 
-struct_type_decls:
-  nonempty_list(struct_type_decl SEMI {$1}) { $1 }
-;
-
-struct_type_decl:
-    d = decl { d }
-  | s = struct_decl { s }
-;
-
-glob_vars:
-  | glob_var { [$1] } 
-  | glob_vars glob_var { $1@[$2] }
-;
-
-glob_var:
-    d = decl cst = opt_const SEMI { 
-      let _ = match cst with
-            | Some(n) -> (add_globals_assign (fst d) n)
-            | None -> ()
-      in
-      d
-    }
-  | struct_decl opt_init_list SEMI { $1 }
-;
-
-
-struct_decl:
-  n = IDENT id = IDENT { (id, (typ_of_string n)) }
-;
-
-opt_init_list:
-  option(EQ BRAO l = separated_list(COMMA, expr) BRAC { l }) { $1 }
+struct_def:
+  id = struct_prefix d = struct_body SEMI { Hashtbl.add struct_defs id (Struct(id, d)); (id, d) }
 ;
 
 funcs:
@@ -138,13 +108,47 @@ funcs:
   | funcs func { $1@[$2] }
 ;
 
-opt_const:
-    { None }
-  | EQ CONST { Some (Cst $2) }
+struct_body:
+  BRAO d = nonempty_list(decl SEMI {$1}) BRAC { d }
 ;
 
+decl:
+  t = TYPE id = IDENT { (id, typ_of_string t) }
+  | s = struct_prefix id = IDENT { (id, typ_of_string s) }
+  | pointer_decl { $1 }
+;
+
+struct_prefix:
+  STRUCT id=IDENT { id }
+;
+
+pointer_decl:
+  s = struct_prefix nonempty_list(TIMES {incr pointer_num}) id = IDENT {
+      let typ = build_ptr (!pointer_num) (typ_of_string s) in
+      pointer_num := 0;
+      (id, typ)
+    }
+  | t = TYPE nonempty_list(TIMES {incr pointer_num}) id = IDENT {
+      let typ = build_ptr (!pointer_num) (typ_of_string t) in
+      pointer_num := 0;
+      (id, typ)
+    }
+;
+
+glob_var:
+  d = decl e = option(EQ expr { $2 }) {
+    let id, _ = d in
+    match e with
+      | None -> d
+      | Some v ->
+        add_globals_assign id v;
+        d
+  }
+;
+
+
 func:
-  struct_type_decl PARO p = params_opt PARC BRAO b = body BRAC {
+  decl PARO p = params_opt PARC BRAO b = body BRAC {
       let (n, t) = $1 in
       let func_def = {
         name = n;
@@ -186,14 +190,10 @@ instr:
  | whilei { $1 }
  | returni { $1 }
  | expr SEMI { Expr ($1) }
- | set_struct { $1 }
- | set_struct_member { $1 }
- | set_ptr_val { $1 }
 ;
 
 local:
-    d = decl e = opt_const SEMI { add_local d e }
-  | s = struct_decl il = opt_init_list SEMI { add_local_struct s il }
+  d = decl e = option(EQ expr {$2}) SEMI { add_local d e }
 ;
 
 putchar:
@@ -201,7 +201,7 @@ putchar:
 ;
 
 set:
-  IDENT EQ expr SEMI { Set ($1, $3) }
+  access EQ expr SEMI { Set ($1, $3) }
 ;
 
 ifi:
@@ -220,22 +220,8 @@ returni:
   RETURN expr SEMI { Return ($2) }
 ;
 
-set_struct:
-  id = IDENT EQ members = init_list SEMI { SetStruct(id, members) }
-;
-
-set_struct_member:
-  name_member = struct_access EQ e = expr SEMI { 
-  let (name, member) = name_member in
-  SetStructMember(name, member, e) }
-;
-
-set_ptr_val:
-  d = deref EQ e = expr SEMI { SetPtrVal(d, e) }
-;
-
 init_list:
-  BRAO separated_list(COMMA, expr) BRAC { $2 }
+  BRAO separated_list(COMMA, expr) BRAC { InitList($2) }
 ;
 
 expr:
@@ -253,18 +239,21 @@ expr:
   | neq { $1 }
   | and_op { $1 }
   | or_op { $1 }
-  | get { $1 }
   | call { $1 }
   | bool { $1 }
   | not { $1 }
   | neg { $1 }
-  | deref { $1 }
+  | access { $1 }
   | address { $1 }
-  | name_member = struct_access {
-      let (name, member) = name_member in
-      StructMember(name, member)
-    }
+  | init_list { $1 }
   | PARO expr PARC { $2 }
+;
+
+access:
+  get { $1 }
+ | deref {$1}
+ | struct_access { $1 }
+ | ptr_member_access { $1 }
 ;
 
 add:
@@ -349,8 +338,11 @@ address:
 ;
 
 struct_access:
-  name = IDENT DOT member = IDENT { (name, member) }
+  name = access DOT member = IDENT { StructMember(name, member) }
 ;
+
+ptr_member_access:
+  name = access ARROW member = IDENT { StructPtrMember(name, member) }
 
 args_opt:
     { [] }

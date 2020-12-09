@@ -1,16 +1,20 @@
-struct str {
+struct firstStruct {
   int a;
   int b;
 };
 
 struct myStruct {
-    str theStr;
+    struct firstStruct theStr;
     int b;
 };
 
 struct A {
   int **a;
   int *b;
+};
+
+struct B {
+  int a;
 };
 
 int PARAM = 5;
@@ -32,16 +36,19 @@ void main() {
       putchar(12);
     }
 
-    str structExample = {2, (2+2)};
+    struct firstStruct structExample = {2, (2+2)};
+    struct myStruct example = {{1, 2}, 2};
+    struct firstStruct *strPtr;
     structExample = {2, 2};
     structExample.a = 14;
-    myStruct example = {structExample, 2};
+    *strPtr = {1, 2};
+    example.theStr.a = 42;
 
     **PTR = 5;
 
-    A a = {PTR, *PTR};
+    struct A a = {PTR, *PTR};
 
-    putchar(structExample.a);
+    putchar(example.theStr.a);
     putchar(fact(PARAM));
 }
 

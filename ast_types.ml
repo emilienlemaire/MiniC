@@ -30,16 +30,18 @@ type binop =
   | Or
 
 type expr =
-  | Cst          of int
-  | BinOp        of binop * expr * expr
-  | Get          of string
-  | Not          of expr
-  | Neg          of expr
-  | Call         of string * expr list
-  | BoolLit      of bool
-  | StructMember of string * string
-  | Deref        of expr
-  | Address      of expr
+  | Cst             of int
+  | BinOp           of binop * expr * expr
+  | Get             of string
+  | Not             of expr
+  | Neg             of expr
+  | Call            of string * expr list
+  | BoolLit         of bool
+  | StructMember    of expr * string
+  | StructPtrMember of expr * string
+  | Deref           of expr
+  | Address         of expr
+  | InitList        of expr list
 
 (*
  * Ajouts:
@@ -48,14 +50,11 @@ type expr =
  * *)
 type instr =
   | Putchar         of expr
-  | Set             of string * expr
+  | Set             of expr * expr
   | If              of expr * seq * seq
   | While           of expr * seq
   | Return          of expr
   | Expr            of expr
-  | SetStruct       of string * expr list
-  | SetStructMember of string * string * expr
-  | SetPtrVal       of expr * expr
 and seq = instr list
 
 (*

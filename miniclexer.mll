@@ -23,6 +23,8 @@ rule token = parse
   | ' '        { token lexbuf }
   | '\t'       { token lexbuf }
   | '\n'       { Lexing.new_line lexbuf; token lexbuf }
+  | "//"       { one_line_comment lexbuf }
+  | "/*"       { multiple_lines_comment lexbuf }
   | "int"      { TYPE "int"}
   | "bool"     { TYPE "bool" }
   | "void"     { TYPE "void" }
@@ -43,6 +45,7 @@ rule token = parse
   | "return"   { RETURN }
   | "putchar"  { PUTCHAR }
   | "struct"   { STRUCT }
+  | "->"       { ARROW }
   | ';'        { SEMI }
   | '+'        { PLUS }
   | '-'        { MINUS }
@@ -63,3 +66,11 @@ rule token = parse
                 "Unexpected character %d:%d '%c'" !line !col c ) }
   | eof        { EOF }
 
+and one_line_comment = parse
+  | '\n' { token lexbuf }
+  | _ { one_line_comment lexbuf }
+
+and multiple_lines_comment = parse
+  | "*/" { token lexbuf }
+  | '\n' { Lexing.new_line lexbuf; multiple_lines_comment lexbuf }
+  | _ { multiple_lines_comment lexbuf }
