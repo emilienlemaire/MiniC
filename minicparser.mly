@@ -1,5 +1,7 @@
 %{
   open Ast_types
+  
+  exception TypeError
 
   let struct_defs =
     Hashtbl.create 10
@@ -12,7 +14,13 @@
     | _ -> if (Hashtbl.mem struct_defs s) then
         Hashtbl.find struct_defs s
       else
-        failwith (Printf.sprintf "Unknown type: %s" s)
+        begin
+          Printf.printf
+            "Undefined type: %s\n"
+            s
+          ;
+          raise TypeError
+        end
 
   let locals_tmp: (string * typ) list ref = ref []
 
@@ -164,12 +172,17 @@ glob_var:
 func:
   decl PARO p = params_opt PARC BRAO b = body BRAC {
       let (n, t) = $1 in
+      let body = if n = "main" then
+          Expr((Call ("globals_assign", [])))::b
+        else
+          b
+      in
       let func_def = {
         name = n;
         params = p;
         return = (t);
         locals = !locals_tmp;
-        code = b;
+        code = body;
       } in
       reset_locals;
       func_def
@@ -344,7 +357,7 @@ bool:
 ;
 
 deref:
-  TIMES access { Deref($2) }
+  TIMES expr { Deref($2) }
 ;
 
 address:
@@ -352,11 +365,11 @@ address:
 ;
 
 struct_access:
-  name = access DOT member = IDENT { StructMember(name, member) }
+  name = expr DOT member = IDENT { StructMember(name, member) }
 ;
 
 ptr_member_access:
-  name = access ARROW member = IDENT { StructPtrMember(name, member) }
+  name = expr ARROW member = IDENT { StructPtrMember(name, member) }
 ;
 
 args_opt:

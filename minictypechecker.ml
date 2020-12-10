@@ -15,8 +15,8 @@
 open Ast_types
 
 exception TypeError
-
 exception Unreachable
+exception NotImplemented
 
 (* Type: context
  * Ce type a été créer afin d'avoir le contexte dans lequel on doit vérifier les
@@ -162,7 +162,10 @@ let rec get_members struct_access start_members ctx =
     | Get(name) -> revert_members (get_var name ctx) start_members
     | StructMember(n, member) -> get_members n (member::start_members) ctx
     | StructPtrMember(n, member) -> get_members n (member::start_members) ctx
-    | _ -> raise (Invalid_argument "Unrecheable")
+    | Deref(expr) ->
+      let (deref_expr, _) = deref expr 1 in
+      get_members deref_expr start_members ctx
+    | _ -> raise (Invalid_argument "TODO: Improve error.")
 
 let get_func (name: string) (funcs: (string * ( typ * typ list )) list): typ * typ list =
   try List.assoc name funcs
@@ -391,7 +394,7 @@ let rec check_instr (instr: instr) (ctx: context): typ =
       end
   | Return (e) ->
     let exprt = check_expr e ctx in
-    if exprt <> ctx.current_ret_type then
+    if not (equal_type exprt ctx.current_ret_type) then
       begin
         Printf.printf
           "Expected return type of %s instead of %s.\n"

@@ -31,11 +31,21 @@ int fact(int n) {
     }
 }
 
+struct firstStruct addBoth(struct firstStruct s, int i) {
+    return {s.a + i, s.a + i};
+}
+
 void main() {
     if (5 <= 12) {
       putchar(5);
     } else {
       putchar(12);
+    }
+
+    int i = 0;
+
+    while(i < 10) {
+      putchar(i);
     }
 
     struct firstStruct structExample = {2, (2+2)};
@@ -46,9 +56,13 @@ void main() {
     *strPtr = {1, 2};
     example.theStr.a = 42;
 
+    int v = (*strPtr).a;
+
     **PTR = 5;
 
     struct A a = {PTR, *PTR};
+
+    structExample.a = addBoth(structExample, 2).a;
 
     putchar(example.theStr.a);
     putchar(strPtr->a);
