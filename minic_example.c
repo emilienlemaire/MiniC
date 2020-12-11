@@ -64,6 +64,9 @@ void main() {
 
     structExample.a = addBoth(structExample, 2).a;
 
+    structExample.b = fact(5);
+     **(PTR + 1) = 12;
+
     putchar(example.theStr.a);
     putchar(strPtr->a);
     putchar(fact(PARAM));

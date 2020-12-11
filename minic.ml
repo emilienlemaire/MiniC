@@ -20,7 +20,6 @@
  * *)
 
 open Minictypechecker
-open Ast_types
 open Printer
 
 module I = Minicparser.MenhirInterpreter
@@ -60,15 +59,14 @@ let rec parse lexbuf (checkpoint : Ast_types.prog I.checkpoint) =
   | I.Rejected ->
        raise (SyntaxError (None, "Unknown syntax error."))
 
-let make_check prog =
-  let env = {
-    structs = prog.structs;
-    vars =  prog.globals;
-    funcs = [];
-    current_ret_type = Void;
-  } in
-  let _ = check_funcs prog.functions env in
-  Printf.printf "The program was validated by the analyzers\n"
+let main prog =
+  let _ =
+    try check_prog prog
+    with TypeError msg ->
+      Printf.eprintf "TypeError: %s\n" msg;
+      exit 1
+  in
+  print_prog prog; exit 0
 
 let _ =
   let cin = open_in Sys.argv.(1) in
@@ -81,5 +79,5 @@ let _ =
         | None -> Error (Printf.sprintf "Syntax error: %s" err)
   in
   match res with
-    | Ok prog -> let _ = make_check prog in print_prog prog; exit 0
+    | Ok prog -> main prog
     | Error err -> Printf.eprintf "MiniC Error compiling: %s\n\t%s" Sys.argv.(1) err; exit 1

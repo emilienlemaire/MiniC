@@ -13,495 +13,363 @@
  * *)
 
 open Ast_types
+open Printf
+module P = Printer
 
-exception TypeError
+exception TypeError of string
 exception Unreachable
 exception NotImplemented
+exception NotDefined of string
 
 (* Type: context
  * Ce type a été créer afin d'avoir le contexte dans lequel on doit vérifier les
  * tpyes. Contrairement à l'environnement, ce type ne contient pas de valeurs associées aux
  * variables.
  * *)
+type prototype = string * (typ * typ list)
 type context =
   {
     structs: (string * (string * typ) list) list;
     vars: (string * typ) list;
-    funcs: (string * (typ * typ list)) list;
-    current_ret_type: typ;
+    funcs: prototype list;
+    current_ret_type: typ option;
   }
+
+let member_num = ref 0
 
 (* Quelques fonctions d'aides afin d'afficher les erreurs de type.
  * *)
-let rec type_to_string t =
-  match t with
+let rec string_of_typ = function
   | Bool -> "bool"
   | Int -> "int"
   | Void -> "void"
   | Struct (n, _) -> Printf.sprintf "struct %s" n
-  | Ptr(typ) -> Printf.sprintf "Pointer to %s" (type_to_string typ)
+  | Ptr(typ) -> Printf.sprintf "Pointer to %s" (string_of_typ typ)
 
-let string_of_argt argst =
-  let rec loop argst acc =
-    match argst with
-    | [] -> acc
-    | hd::tl -> loop tl (String.concat " * " [acc; (type_to_string hd)])
-  in
-  let fstArg = type_to_string (List.hd argst) in
-  let str = String.concat "" ["("; fstArg] in
-  let str = loop (List.tl argst) str in
-  let str = String.concat "" [str; ")"] in
-  str
+let string_list_of_typs_list =
+  List.fold_left (fun acc typ ->
+      acc@[string_of_typ typ]
+    ) []
+
+let make_prototype (func: func_def): prototype =
+  let (_ , params_typ) = List.split func.params in
+  (func.name, (func.return, params_typ))
 
 let rec equal_type typ1 typ2 =
-  if typ1 = typ2 then
-    true
-  else
-    match typ1 with
-      | Struct(name1, members1) ->
-        begin
-          match typ2 with
-            | Struct(name2, members2) ->
-              if (name1 = "anon") || (name2 = "anon") then
-                check_anon_members members1 members2
-              else
-                false
-            | _ -> false
-        end
-         | _ -> false
-and check_anon_members m1 m2 =
-  match m1 with
-    | [] ->
-      if m2 = [] then
-        true
-      else
-        false
-    | (_, hd)::tl ->
-      begin
-        match m2 with
-         | [] -> false
-         | (_, hd2)::tl2 ->
-           if not (equal_type hd hd2) then
-             false
-           else
-             check_anon_members tl tl2
-      end
+  match typ1, typ2 with
+  | Struct(name1, members1), Struct(name2, members2) ->
+    if name1 = name2 then
+      true
+    else
+    if (name1 = "anon") || (name2 = "anon") then
+      let (_, members1_typs), (_, members2_typs) =
+        (List.split members1, List.split members2)
+      in
+      try List.for_all2 equal_type members1_typs members2_typs
+      with Invalid_argument _ -> raise ( TypeError (
+          sprintf "Invalid numbers of elements between two structs %s has %d and %s has %d."
+            name1
+            (List.length members1)
+            name2
+            (List.length members2)
+        ))
+    else
+      false
+  | Ptr(typ1), Ptr(typ2) -> equal_type typ1 typ2
+  | _ -> typ1 = typ2
 
-let rec deref expr acc =
-  match expr with
-  | Deref(e) -> Printf.printf "Deref "; deref e (acc+1)
-  | _ -> print_endline ""; (expr, acc)
-
-let rec pointer_type_of typ num =
-  if num = 0 then
-    typ
-  else
-    match typ with
-    | Ptr(typ) -> pointer_type_of typ (num-1)
-    | _ ->
-      begin
-        Printf.printf
-          "Trying de dereference type %s which is not a pointer type."
-          (type_to_string typ)
-        ;
-        raise TypeError
-      end
-
-let get_var (name: string) (vars: (string * typ) list): typ =
+let get_var_typ (name:string) (vars:(string * typ) list): typ =
   try List.assoc name vars
   with Not_found ->
-    Printf.printf
-      "Undefined variable: %s.\n"
-      name
-    ;
-    raise TypeError
-let rec revert_members (struct_type: typ) members =
-  match struct_type with
-    | Struct(name, struct_members) ->
-      begin
-        match members with
-          | [] -> raise Unreachable
-          | hd::[] ->
-            begin
-              try List.assoc hd struct_members
-              with Not_found ->
-                begin
-                  Printf.printf
-                    "Trying to access member %s of struct %s which does no contains it."
-                    hd
-                    name
-                  ;
-                  raise TypeError
-                end
-            end
-          | hd::tl ->
-            let new_struct = try List.assoc hd struct_members
-              with Not_found ->
-                begin
-                  Printf.printf
-                    "Trying to access member %s of struct %s which does no contains it."
-                    hd
-                    name
-                  ;
-                  raise TypeError
-                end
-            in
-            revert_members new_struct tl
-      end
-    | _ ->
-      begin
-        Printf.printf "Trying to access member %s from type %s which is not a struct type.\n"
-          (List.hd members)
-          (type_to_string struct_type)
-        ;
-        raise TypeError
-      end
+    raise (NotDefined 
+             (sprintf "Trying to access the variable %s which was never defined"
+                name
+             )
+          )
 
-let rec get_members struct_access start_members ctx =
-  match struct_access with
-    | Get(name) -> revert_members (get_var name ctx) start_members
-    | StructMember(n, member) -> get_members n (member::start_members) ctx
-    | StructPtrMember(n, member) -> get_members n (member::start_members) ctx
-    | Deref(expr) ->
-      let (deref_expr, _) = deref expr 1 in
-      get_members deref_expr start_members ctx
-    | _ -> raise (Invalid_argument "TODO: Improve error.")
-
-let get_func (name: string) (funcs: (string * ( typ * typ list )) list): typ * typ list =
-  try List.assoc name funcs
+let get_member_typ (struct_type: string) (member: string) (struct_members: (string * typ) list): typ =
+  try List.assoc member struct_members
   with Not_found ->
-    Printf.printf
-      "Symbol not found: %s.\n"
-      name
-    ;
-    raise Not_found
+    raise (NotDefined (
+        sprintf "Member %s is not in strcut type %s"
+          member
+          struct_type
+      ))
 
-(*
- * Fonction qui permet de vérifier qu'une expression est bien typée.
- * @param expr l'expression a vérifier
- * @param ctx le contexte dans lequel vérifier l'expression
- * @return Le type d'une expression bien typée.
- * *)
-let rec generate_anon_struct (exprs: expr list) (ctx: context) (members: (string * typ) list) (n: int): typ =
-  match exprs with
-    | [] -> Struct("anon", members)
-    | hd::tl ->
-      let expr_type = check_expr hd ctx in
-      let soi = string_of_int n in
-      generate_anon_struct tl ctx (members@[(soi, expr_type)]) (n+1)
-
-and check_expr (expr: expr) (ctx:context):typ =
-  match expr with
-  | Cst (_) -> Int
-  | BinOp(op, e1, e2) ->
-    let e1_type = check_expr e1 ctx in
-    let e2_type = check_expr e2 ctx in
-    let typ = match op with
-      | Plus
-      | Times
-      | Minus
-      | By
-      | Mod ->
-        if (equal_type e1_type e2_type) then
-          if e1_type = Int then
-            Int
-          else
-            begin
-              Printf.printf
-                "Trying to do a binary operation between non integer type."
-              ;
-              raise TypeError
-            end
-        else
-          begin
-            Printf.printf
-              "Trying to do an arithmetic operation between type %s and %s. Both must be interger."
-              (type_to_string e1_type)
-              (type_to_string e2_type)
-            ;
-            raise TypeError
-          end
-      | Lth
-      | Gth
-      | Leq
-      | Geq
-      | Eq
-      | Neq
-      | And
-      | Or ->
-        if ((equal_type e1_type e2_type)
-            || (e1_type = Int && e2_type = Bool)
-            || (e2_type = Int && e1_type = Bool)) then
-          Bool
-        else
-          begin
-            Printf.printf
-              "Trying to do a logic operation between type %s and %s. Both must be interger or bool."
-              (type_to_string e1_type)
-              (type_to_string e2_type)
-            ;
-            raise TypeError
-          end
-    in
-    typ
-  | Get (n) ->
-    get_var n ctx.vars
-  | Neg (expr) ->
-    if (check_expr expr ctx) <> Int then
-      begin
-        Printf.printf
-          "Trying to negate a non integer expression.\n"
-        ;
-        raise TypeError
-      end
-    else
-      Int
-  | Not (expr) ->
-    if (check_expr expr ctx) <> Bool then
-      begin 
-        Printf.printf
-          "Trying to negate a non bool expression.\n"
-        ;
-        raise TypeError
-      end
-    else
-      Bool
-  | Call (n, args) -> 
-    let proto = get_func n ctx.funcs in
-    let (ret, argt) = proto in
-    let (good, types) = check_args argt args ctx in
-    if not good then
-      begin
-        Printf.printf
-          "Invalid arguments type for function %s: expected %s instead of %s\n"
-          n
-          (string_of_argt argt)
-          (string_of_argt types)
-        ;
-        raise TypeError
-      end
-    else
-      ret
-  | BoolLit (_) -> Bool
-  | StructMember (struct_access, member) ->
-    get_members struct_access [member] ctx.vars
-  | StructPtrMember(struct_access, member) ->
-    get_members struct_access [member] ctx.vars
-  | Deref(expr) ->
-    let deref_type = match (check_expr expr ctx) with
-      | Ptr(typ) -> typ
-      | typ ->
-        begin
-          Printf.printf
-            "Trying to dereference an expression of type %s which is not a pointer type.\n"
-            (type_to_string typ)
-          ;
-          raise TypeError
-        end
-    in
-    deref_type
-  | Address(expr) ->
-    let expr_type = check_expr expr ctx in
-    Ptr(expr_type)
-  | InitList(expr_list) -> generate_anon_struct expr_list ctx [] 0
-
-(*
- *  Fonction qui permet de vérifier que tous les arguments donnés lors d'un appel
- *  de fonction sont du bon type.
- *  @param argst La liste des types des paramètres de la fonction
- *  @param args  La liste des expressions des arguments de l'appel de fonction.
- *  @return Un booléen vrai si tous les arguments sont de bon type, faux sinon
- *            et la liste des types des arguments, utile en cas d'erreur de typage.
- * *)
-and check_args (argst: typ list) (args: expr list) (ctx: context): bool * typ list =
-  let rec loop argst args res =
-    match args with
-    | [] -> res
-    | hd::tl ->
-      let (resb, resl) = res in
-      let expectedt = List.hd argst in
-      let actualt = check_expr hd ctx in
-      if expectedt <> actualt then
-        loop (List.tl argst) tl (false, resl@[actualt])
-      else
-        loop (List.tl argst) tl (resb, resl@[actualt])
-  in
-  loop argst args (true, [])
-
-(*
- * Fonction permettant de vérifier qu'une liste d'initialisation a les bons type
- * pour sa structure.
- * @param members La liste des membres de la structure.
- * @param vals    La liste des expressions de la liste d'initialisation.
- * @return Void si la liste des expressions est bien typée.
- * @raise TypeError si la liste des expressions ext mal typée.
- *
- *  A noter que l'on ne vérifier pas si celle-ci est finie à la fin, on pourrait donc donner
- *  une liste d'initialisation plus grande que la structure, tant que l'on a les bons types pour
- *  tous les membres de structure.
- * *)
-let rec check_struct_members (members: (string * typ) list) (vals:expr list) (ctx: context)=
-  match members with
-  | [] -> Void
-  | (name, member_type)::tl ->
-    let expr_typ = check_expr (List.hd vals) ctx in
-    if (equal_type expr_typ member_type) then
-      check_struct_members tl (List.tl vals) ctx
-    else
-      begin
-        Printf.printf
-          "Trying to assign member %s with an expression of type %s, when type %s is expected.\n"
+let get_func_ret_typ ({funcs=funcs;_}: context) (name: string): typ =
+  let (ret_typ, _) = try List.assoc name funcs
+    with Not_found -> raise ( NotDefined (
+        sprintf "Function not defined: %s"
           name
-          (type_to_string expr_typ)
-          (type_to_string member_type)
-        ;
-        raise TypeError
-      end
+      ))
+  in
+  ret_typ
 
-(*
- * Fonction qui vérifier que les expressions donnés dans une instruction sont bien typés.
- * *)
-let rec check_instr (instr: instr) (ctx: context): typ =
-  match instr with
-  | Putchar (_) -> Void
-  | Set (access, expr) -> check_set access expr ctx
-  | If (cond, then_seq, else_seq) -> 
-    if (check_expr cond ctx) <> Bool then
-      begin
-        Printf.printf
-          "The condition expect type bool instead of %s\n"
-          (type_to_string (check_expr cond ctx));
-        raise TypeError;
-      end
-    else
-      begin
-        let _ = check_seq then_seq ctx in
-        let _ = check_seq else_seq ctx in
-        Void
-      end
-  | While (cond, seq) ->
-    if (check_expr cond ctx) <> Bool then
-      begin
-        Printf.printf
-          "The condition expect type bool instead of %s\n"
-          (type_to_string (check_expr cond ctx));
-        raise TypeError;
-      end
-    else
-      begin
-        let _ = check_seq seq ctx in
-        Void
-      end
-  | Return (e) ->
-    let exprt = check_expr e ctx in
-    if not (equal_type exprt ctx.current_ret_type) then
-      begin
-        Printf.printf
-          "Expected return type of %s instead of %s.\n"
-          (type_to_string ctx.current_ret_type)
-          (type_to_string exprt);
-        raise TypeError
-      end
-    else
-      ctx.current_ret_type
-  | Expr (e) -> (check_expr e ctx)
-and check_seq seq ctx =
-  match seq with
-  | [] -> Void
-  | hd::tl ->
-    let _ = check_instr hd ctx in
-    check_seq tl ctx
-and check_set access expr ctx =
-  let expr_type = check_expr expr ctx in
-  let var_type = check_expr access ctx in
-  match access with
-    | Get(_) -> 
-      let typ = match var_type with
-        | Struct(_, members) ->
-          begin
-          match expr with
-            | InitList(expr_list) -> check_struct_members members expr_list ctx
-            | _ ->
-                if (equal_type expr_type var_type) then
-                  Void
-                else
-                  begin
-                    Printf.printf 
-                      "Trying to assign a value of type %s to a variable of type %s.\n"
-                      (type_to_string expr_type)
-                      (type_to_string var_type)
-                    ;
-                    raise TypeError
-                  end
-              end
-        | _ -> Void
-      in
-      typ
-    | Deref(var) ->
-        (*On ajoute Address a l'expression a assigner car cela equivaut
-         * (au niveau du typage) a déréférencé le pointeur a modifier. *)
-        check_set var (Address(expr)) ctx
-    | StructMember(struct_access, member) ->
-      let member_type = get_members struct_access [member] ctx.vars in
-      if (equal_type member_type expr_type) then
-        Void
-      else
-        begin
-          Printf.printf
-            "Trying to assign a value of type %s to member %s which has type %s.\n"
-            (type_to_string expr_type)
+let rec get_args_typs (ctx:context): expr list -> typ list = 
+  List.fold_left ( fun acc expr ->
+      acc@[get_expr_typ ctx expr]
+    ) []
+
+and get_anon_members_typs (ctx: context) (members: expr list): (string * typ) list =
+  List.fold_left (fun acc member_expr ->
+      incr member_num;
+      acc@["__m"^(string_of_int (!member_num)), (get_expr_typ ctx member_expr)]
+    ) [] members
+
+and get_access_typ (ctx: context): expr -> typ = function
+  | Get(n) -> get_var_typ n ctx.vars
+  | StructMember (access, member) as mbr ->
+    (
+      let typ = get_access_typ ctx access in
+      match typ with
+      | Struct(name, members) -> get_member_typ name member members
+      | Ptr(Struct(_)) -> raise ( TypeError (
+          P.print_expr_err mbr;
+          sprintf
+            "Trying to access member %s of a pointer to a struct with '.', did you mean '->'?\n"
             member
-            (type_to_string member_type)
-          ;
-          raise TypeError
-        end
-    | StructPtrMember(_) -> Void
-    | _ -> failwith "TypeError"
-(*
- * Fonction qui vérifie que le corps d'une fonction est entièrement bien typé.
- * @return Un context étendue de la fonction que l'on vien de vérifer
- * *)
-let check_func (func: func_def) (ctx: context): context =
-  let (_, paramst) = List.split func.params in
-  (* On ajoute le prototype de la fonction que l'on évalue afin de pouvoir
-   * évaluer des appels récursifs.
+        ))
+      | _ -> raise ( TypeError (
+          P.print_expr_err mbr;
+          sprintf
+            "Trying to access member %s from a non struct type %s."
+            member
+            (string_of_typ typ)
+        ))
+    )
+  | StructPtrMember(access, member) as ptr ->
+    (
+      let typ = get_access_typ ctx access in
+      match typ with
+      | Ptr(Struct(name, members)) -> get_member_typ name member members
+      | Struct(_) -> raise ( TypeError (
+          P.print_expr_err ptr;
+          sprintf
+            "Trying to access member %s of a struct with '->', did you mean '.'?\n"
+            member
+        ))
+      | _ -> raise ( TypeError (
+          P.print_expr_err ptr;
+          sprintf
+            "Trying to access member %s from a non struct type %s."
+            member
+            (string_of_typ typ)
+        ))
+    )
+  (* Pour les operations de ce type *(p + 1) = qqch où p est un pointer vers une variable de
+   * même type que qqch
    * *)
-  let proto = (func.name, (func.return, paramst)) in
-  let ctx2 = {
+  | Deref(BinOp((Plus|Minus), Get(n), _)) -> get_access_typ ctx (Deref(Get(n)))
+  | Deref( access ) ->
+    (
+      let typ = get_access_typ ctx access in
+      match typ with
+      | Ptr(typ') -> typ'
+      | _ -> raise ( TypeError (
+          P.print_expr_err access;
+          sprintf "Trying to dereference a variable of type %s which is not a pointer type."
+            (string_of_typ typ)
+        ))
+    )
+  | Call(name, _) -> get_func_ret_typ ctx name
+  | e -> raise ( TypeError (
+      P.print_expr_err e;
+      "Trying to access an invalid access expression."
+    ))
+and get_binop_typ (ctx: context) (lhs: expr) (rhs: expr): binop -> typ = function
+  | Plus | Minus | Times | By | Mod as binop->
+    let typ1 = get_expr_typ ctx lhs in
+    let typ2 = get_expr_typ ctx rhs in
+    begin
+      match typ1, typ2 with
+      | Int, Int -> Int
+      | Ptr typ, Int -> Ptr typ
+      | _ -> raise ( TypeError (
+          P.print_expr_err (BinOp (binop, lhs, rhs));
+          sprintf
+            "Operands of types %s and %s are incompatible with arithmetcs operations"
+            (string_of_typ typ1)
+            (string_of_typ typ2)
+        )
+        )
+    end
+  | Lth | Gth | Leq | Geq
+  | Eq  | Neq | And | Or as binop ->
+    let typ1 = get_expr_typ ctx lhs in
+    let typ2 = get_expr_typ ctx lhs in
+    begin
+      match typ1, typ2 with
+      | Int, Int
+      | Int, Bool
+      | Bool, Int
+      | Bool, Bool -> Bool
+      | _ -> raise ( TypeError (
+          P.print_expr_err (BinOp (binop, lhs, rhs));
+          sprintf
+            "Operands of types %s and %s are incompatible with logic operations"
+            (string_of_typ typ1)
+            (string_of_typ typ2)
+        ))
+    end
+
+and get_expr_typ (ctx: context): expr -> typ = function
+  | Cst(_) -> Int
+  | BinOp(binop, lhs, rhs) -> get_binop_typ ctx lhs rhs binop
+  | Get(name) -> get_var_typ name ctx.vars
+  | Not(expr) as e ->
+    begin
+      let expr_typ = get_expr_typ ctx expr in
+      match expr_typ with
+      | Bool | Int -> Bool
+      | _ ->
+        raise (TypeError (
+            P.print_expr_err e;
+            sprintf "Trying to negate an expression of type %s. Expecting a boolean or an integer.\n"
+              (string_of_typ expr_typ)
+          ))
+    end
+  | Neg(expr) as e -> 
+    begin
+      let expr_typ = get_expr_typ ctx expr in
+      if (equal_type expr_typ Int) then
+        Int
+      else
+        raise (TypeError (
+            P.print_expr_err e;
+            sprintf "Trying to inverse the sign of an expression of type %s. Expecting an integer."
+              (string_of_typ expr_typ)
+          ))
+    end
+  | Call(name, args) as c ->
+    let (ret_typ, params_typs) =
+      try List.assoc name ctx.funcs 
+      with Not_found ->
+        raise ( NotDefined (
+            P.print_expr_err c;
+            sprintf "Call to an undefined function: %s\n"
+              name
+          ))
+    in
+    let args_typs = get_args_typs ctx args in
+    let good_args =
+      begin
+        try List.for_all2 equal_type params_typs args_typs
+        with Invalid_argument _ ->
+          raise (TypeError (
+              P.print_expr_err c;
+              sprintf "Invalide number of arguments when calling %s, expecting %d instead of %d.\n"
+                name
+                (List.length params_typs)
+                (List.length args_typs))
+            )
+      end
+    in
+    if good_args then
+      ret_typ
+    else
+      raise (TypeError (
+          P.print_expr_err c;
+          sprintf "Wrong arguments types when calling %s, got (%s) instead of (%s)"
+            name
+            (String.concat ", " (string_list_of_typs_list args_typs))
+            (String.concat ", " (string_list_of_typs_list params_typs))
+        ))
+  | BoolLit(_) -> Bool
+  | Address(expr) -> Ptr(get_expr_typ ctx expr)
+  | InitList(expr_list) -> Struct("anon", get_anon_members_typs ctx expr_list)
+  (*| StructMember | StructPtrMember | Deref *)
+  | access -> get_access_typ ctx access
+
+let rec check_instr (ctx: context): instr -> context = function
+  | Putchar(expr) as p ->
+    (match get_expr_typ ctx expr with
+      | Bool
+      | Int -> ctx
+      | t -> raise (TypeError (
+          P.print_instr_err p;
+          sprintf "Trying to print a value of type %s, expecting bool or int."
+            (string_of_typ t)
+        ))
+    )
+  | Set(expr1, expr2) as set ->
+    let access_typ = get_access_typ ctx expr1 in
+    let expr_typ   = get_expr_typ ctx expr2 in
+    if (equal_type access_typ expr_typ) then
+      ctx
+    else
+      raise ( TypeError (
+          P.print_instr_err set;
+          sprintf "Trying to set a value of type %s to a variable of type %s."
+            (string_of_typ expr_typ)
+            (string_of_typ access_typ)
+        ))
+  | If(cond, thenb, elseb) as if_instr ->
+    let cond_typ = (get_expr_typ ctx cond) in
+    if cond_typ = Bool || cond_typ = Int then
+      let (ctx, _) = (check_seq ctx thenb, check_seq ctx elseb) in
+      ctx
+    else
+      raise ( TypeError (
+          P.print_instr_err if_instr;
+          sprintf "The condition of an if block must be a bool or an int, not a %s."
+            (string_of_typ cond_typ)
+        ))
+  | While(cond, whileb) as while_instr ->
+    let cond_typ = get_expr_typ ctx cond in
+    if cond_typ = Bool || cond_typ = Int then
+      check_seq ctx whileb
+    else
+      raise ( TypeError (
+          P.print_instr_err while_instr;
+          sprintf "The condition of an if block must be a bool or an int, not a %s."
+            (string_of_typ cond_typ)
+        ))
+  | Return(expr) as return ->
+    (match ctx.current_ret_type, (get_expr_typ ctx expr) with
+      | Some(ret_typ), expr_type ->
+        if equal_type ret_typ expr_type then
+          ctx
+        else
+          raise ( TypeError (
+              P.print_instr_err return;
+              sprintf "Expecting a return type of %s instead of %s."
+                (string_of_typ ret_typ)
+                (string_of_typ expr_type)
+            ))
+      | _ -> raise Unreachable)
+  | Expr(expr) ->
+    let _ = get_expr_typ ctx expr in
+    ctx
+and check_seq (ctx: context): seq -> context =
+  List.fold_left (check_instr) ctx
+
+let check_func (ctx: context) (func: func_def): context =
+  let ctx' = {
     structs= ctx.structs;
-    vars= ctx.vars@func.params@func.locals;
-    funcs= ctx.funcs@[proto];
-    current_ret_type = func.return;
-  } in
-  let _ = check_seq func.code ctx2 in
+    vars= (ctx.vars@func.locals@func.params);
+    funcs= (make_prototype func)::ctx.funcs;
+    current_ret_type= Some(func.return);
+  }
+  in
+  let _ = check_seq ctx' func.code in
   {
     structs= ctx.structs;
     vars= ctx.vars;
-    funcs= ctx2.funcs;
-    current_ret_type = ctx.current_ret_type;
+    funcs= ctx'.funcs;
+    current_ret_type=None;
   }
 
-(*
- * Fonction qui vérifie qu'une liste de fonction est bien typé.
- * @return Le contexte étendue de toutes les fonctions vérifiés.
- * *)
-let rec check_funcs (funcs: func_def list) (ctx: context):context =
-  match funcs with
-    | [] -> ctx
-    | hd::tl ->
-      let code = if hd.name = "main" then
-          (Expr(Call("globals_assign", []))::hd.code)
-        else
-          hd.code
-      in
-      let func =
-        {
-          name= hd.name;
-          params = hd.params;
-          return= hd.return;
-          locals = hd.locals;
-          code = code;
-        }
-      in
-      check_funcs tl (check_func func ctx)
+let check_funcs (ctx: context): func_def list -> context =
+  List.fold_left check_func ctx
+
+let check_prog (prog: prog) =
+  let ctx = {
+    structs= prog.structs;
+    vars= prog.globals;
+    funcs= [];
+    current_ret_type= None;
+  }
+  in
+  let _ = check_funcs ctx prog.functions in
+  ()
 

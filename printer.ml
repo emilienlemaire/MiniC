@@ -227,3 +227,15 @@ let print_prog prog =
   print_vars prog.globals;
   print_funcs prog.functions
 
+let print_expr_err expr =
+  print_newline ();
+  print_expr expr;
+  print_newline ();
+  print_string "\n^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n"
+
+let print_instr_err instr =
+  print_newline ();
+  print_instr instr;
+  print_newline ();
+  print_string "\n^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n"
+
