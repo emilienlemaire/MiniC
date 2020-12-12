@@ -1,6 +1,6 @@
 open Printf
 open MinicInterpreterTypes
-open Ast_types
+open MinicAstTypes
 
 module H = Hashtbl
 module MP = MinicMemoryPrinter
@@ -347,5 +347,4 @@ let interpret (prog: prog): unit =
   in
   Stack.push "main" env.call_stack;
   let env = interpret_func env main_func in
-  MP.print_frame env;
   ()

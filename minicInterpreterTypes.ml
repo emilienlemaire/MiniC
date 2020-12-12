@@ -1,5 +1,5 @@
 module H = Hashtbl
-module AST = Ast_types
+module AST = MinicAstTypes
 
 type var =
   | Int of int

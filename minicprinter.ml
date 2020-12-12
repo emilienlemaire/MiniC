@@ -1,5 +1,5 @@
 open Printf
-open Ast_types
+open MinicAstTypes
 
 let num_tabs = ref 0
 

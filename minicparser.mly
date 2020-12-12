@@ -1,5 +1,5 @@
 %{
-  open Ast_types
+  open MinicAstTypes
   
   exception TypeError
 
@@ -72,9 +72,9 @@
 %left ARROW DOT
 
 %start prog
-%type <Ast_types.prog> prog
-%type <Ast_types.expr> expr
-%type <Ast_types.expr> access
+%type <MinicAstTypes.prog> prog
+%type <MinicAstTypes.expr> expr
+%type <MinicAstTypes.expr> access
 
 %%
 

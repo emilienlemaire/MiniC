@@ -1,5 +1,5 @@
 {
-  open Minicparser
+  open MinicParser
 
   exception Eof
   

@@ -19,11 +19,11 @@
  *      menhir
  * *)
 
-open Minictypechecker
-open Minicprinter
-open Minicinterpreter
+open MinicTypeChecker
+open MinicPrinter
+open MinicInterpreter
 
-module I = Minicparser.MenhirInterpreter
+module I = MinicParser.MenhirInterpreter
 
 exception SyntaxError of ((int * int) option * string)
 
@@ -40,10 +40,10 @@ let get_parse_error env =
         try (Error_messages.message (I.number state)) with
         | Not_found -> "Unknown syntax error."
 
-let rec parse lexbuf (checkpoint : Ast_types.prog I.checkpoint) =
+let rec parse lexbuf (checkpoint : MinicAstTypes.prog I.checkpoint) =
   match checkpoint with
   | I.InputNeeded _env ->
-      let token = Miniclexer.token lexbuf in
+      let token = MinicLexer.token lexbuf in
       let startp = lexbuf.lex_start_p
       and endp = lexbuf.lex_curr_p in
       let checkpoint = I.offer checkpoint (token, startp, endp) in
@@ -74,7 +74,7 @@ let _ =
   let cin = open_in Sys.argv.(1) in
   let lexbuf = Lexing.from_channel cin in
   let res =
-    try Ok (parse lexbuf (Minicparser.Incremental.prog lexbuf.lex_curr_p))
+    try Ok (parse lexbuf (MinicParser.Incremental.prog lexbuf.lex_curr_p))
     with SyntaxError (pos, err) ->
       match pos with
         | Some (line, col) -> Error (Printf.sprintf "Syntax error: %d:%d %s" line col err)

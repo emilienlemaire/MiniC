@@ -12,9 +12,9 @@
  *
  * *)
 
-open Ast_types
+open MinicAstTypes
 open Printf
-module P = Minicprinter
+module P = MinicPrinter
 
 exception TypeError of string
 exception Unreachable
