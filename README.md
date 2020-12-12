@@ -15,6 +15,8 @@ dune exec ./minic.exe minic_example.c
 ```
 
 ## Notes
+J'ai commenté mon code aux endroits où cela me semblait important. Les commentaires viennent en
+extensions à ce README.
 
 ### Extensions
  - [x] Ajouts d'opérateur
@@ -22,10 +24,8 @@ dune exec ./minic.exe minic_example.c
  - [x] Pointeurs
  - [x] Erreurs syntaxiques verbeuses
  - [x] Afficheur
- - [ ] WIP:
-    - [ ] Interprète
-    - [ ] Compilateur
- - [ ] Non prévu:
-    - [ ] Tableaux
-    - [ ] Types unions
-    - [ ] Erreur identifiant ressemblant
+ - [X] Interprète
+ 
+### Choix de design et de modifications
+#### Modifications apportées à l'AST
+
