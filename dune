@@ -1,12 +1,15 @@
-(ocamllex miniclexer)
+(ocamllex minicLexer)
 (menhir
   (flags --table -v)
-  (modules minicparser))
+  (modules minicParser))
 
 (rule
   (targets error_messages.ml)
-  (deps minicparser.messages minicparser.mly)
+  (deps minicparser.messages minicParser.mly)
   (action (with-stdout-to %{targets} (run menhir --compile-errors %{deps}))))
+(env
+  (dev
+    (flags (:standard -w -26 -w -27))))
 
 (executable
   (name minic)

@@ -20,7 +20,8 @@
  * *)
 
 open Minictypechecker
-open Printer
+open Minicprinter
+open Minicinterpreter
 
 module I = Minicparser.MenhirInterpreter
 
@@ -66,7 +67,8 @@ let main prog =
       Printf.eprintf "TypeError: %s\n" msg;
       exit 1
   in
-  print_prog prog; exit 0
+  print_prog prog;
+  interpret prog
 
 let _ =
   let cin = open_in Sys.argv.(1) in

@@ -14,7 +14,7 @@
 
 open Ast_types
 open Printf
-module P = Printer
+module P = Minicprinter
 
 exception TypeError of string
 exception Unreachable
@@ -159,7 +159,7 @@ and get_access_typ (ctx: context): expr -> typ = function
   (* Pour les operations de ce type *(p + 1) = qqch où p est un pointer vers une variable de
    * même type que qqch
    * *)
-  | Deref(BinOp((Plus|Minus), Get(n), _)) -> get_access_typ ctx (Deref(Get(n)))
+  | Deref(BinOp((Plus|Minus), Get(n), Cst _)) -> get_access_typ ctx (Deref(Get(n)))
   | Deref( access ) ->
     (
       let typ = get_access_typ ctx access in

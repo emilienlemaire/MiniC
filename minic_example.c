@@ -32,10 +32,11 @@ int fact(int n) {
 }
 
 struct firstStruct addBoth(struct firstStruct s, int i) {
-    return {s.a + i, s.a + i};
+    return {s.a + i, s.b + i};
 }
 
 void main() {
+    putchar(PARAM);
     if (5 <= 12) {
       putchar(5);
     } else {
@@ -46,6 +47,7 @@ void main() {
 
     while(i < 10) {
       putchar(i);
+      i = i + 1;
     }
 
     struct firstStruct structExample = {2, (2+2)};
@@ -64,11 +66,11 @@ void main() {
 
     structExample.a = addBoth(structExample, 2).a;
 
-    structExample.b = fact(5);
+    //structExample.b = fact(5);
+    // Attention ceci est permis mais dans l'etat actuel de l'interpreteur
+    // cela mets 12 a l'address de *(a.b)
      **(PTR + 1) = 12;
 
-    putchar(example.theStr.a);
-    putchar(strPtr->a);
     putchar(fact(PARAM));
 }
 
