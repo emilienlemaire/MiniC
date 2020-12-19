@@ -4,6 +4,7 @@
   + [Compilation](#compilation)
   + [Exécution](#exécution)
 * [Notes](#notes)
+  + [Modifications de l'AST](#ast)
 * [Extensions](#extensions)
   + [Extensions réalisées](#extensions-réalisées)
   + [Implementation des extensions](#implementation-des-extensions)
@@ -42,11 +43,23 @@ dune exec -- ./minic.exe -display tests/minic_example.c
 ```
 
 ## Notes
-J'ai commenté mon code aux endroits où cela me semblait important. Les commentaires viennent en
-extensions à ce README.
+La plupart des fonctions ont des noms explicites qui ne nécessitent pas de commenter leur
+action, s'il y a des comportements de la fonction qui nécessite des précision je les ajouterais
+en commentaire de la fonction.
+
+Au début de chaque fichier un commentaire est également présent afin de présenter le contenu du
+fichier et donner les informations qui me semblent importantes pour ce fichier.
 
 Tous les fichiers utilisés pour tester ce programme sont dans le dossier `tests`, s'ils échouent
 leur nom contient le mot `error`.
+
+### <a name=ast></a> Modifications de l'AST
+J'ai modifié l'AST afin que l'on puisse avoir des instructions du genre suivant:
+```c
+  *(aStructPointer->aPointerMemeber) = 12;
+```
+L'instruction `set` a donc le constructeur suivant: `Set of expr * expr`
+
 
 ## Extensions
 ### Extensions réalisées
@@ -71,6 +84,8 @@ Les autres opérateurs acceptent tout type d'expressions.
 Pour l'ajout des structures je n'autorise pas l'utilisateur à créer des structures anonymes, mais
 dans mon vérificateur de type et mon interprète, les listes d'initialisation (`{1, 2, 3}`) sont vues
 commes des structures anonymes.
+
+Les strructures doivent être définies avant les fonctions.
 
 La syntaxe choisi pour définir, déclarer, modifier, ou accéder à une structure est présentée ci-dessous:
 ```c

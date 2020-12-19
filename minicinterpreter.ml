@@ -1,3 +1,18 @@
+(* Minic - Emilien Lemaire - DM de Compilation
+ * Fichier: minicInterpreter.ml
+ *  Ce fichier contient l'implémentation de mon interprète Minic.
+ *  Vous pouvez afficher l'état de la mémoire à tout moment en ajoutant
+ *  la ligne
+ *  MP.print_frame env;
+ *  à l'endroit souhaité.
+ *  Ce code fait souvent référence à access, access désigne des expressions
+ *  du type `a.b; a->b; *a; &a` qui peuvent être imbriqué, d'où les fonctions
+ *  particulières afin d'accéder aux variables ou adresses de ces accès.
+ *
+ *  Tous les types utilisées ici sont défini dans MinicAstTypes.ml et
+ *  MinicInterpreterTypes.ml
+ * *)
+
 open Printf
 open MinicInterpreterTypes
 open MinicAstTypes
@@ -8,10 +23,13 @@ module IOp = InterpreterOp
 
 exception Redefinition of string
 exception Unreachable of string
-exception MissingMain
-exception NotImplementedYet
 exception BadPointerAccess of string
+exception MissingMain
 
+(*
+ * Cette valeur permet de sauvegarder la dernière adresse utilisé par un
+ * pointeur.
+ * *)
 let ptr_address = ref 0
 
 let get_free_address ({mem=mem;_}: env): int =
@@ -23,6 +41,11 @@ let get_free_address ({mem=mem;_}: env): int =
   in
   loop mem 0
 
+(*
+ * Cette fonction supprime toutes les adresses non référencés dans
+ * mem_map, les pointeurs et les structs dans mem, sauf si cette
+ * adresse est référencé dans env.ret_var.
+ * *)
 let garbage_collector (env: env): env =
   let get_used_addresses (env:env): int list =
     let addr_map = H.fold (fun _ address acc ->
@@ -58,6 +81,9 @@ let garbage_collector (env: env): env =
     ) env.mem;
   env
 
+(*
+ * Crée une strcut et initilise ses membres.
+ * *)
 let rec make_struct (env: env) (members: (string * typ) list): (string * int) list =
   List.fold_left (fun acc (name, typ) ->
       let address = get_free_address env in
@@ -66,6 +92,9 @@ let rec make_struct (env: env) (members: (string * typ) list): (string * int) li
       acc@[name, address]
     ) [] members
 
+(*
+ * Crée les pointeurs et mets Null à l'adresse pointée.
+ * *)
 and make_ptr (env: env): typ -> var = function
   | Ptr(typ) -> 
     let address = get_free_address env in

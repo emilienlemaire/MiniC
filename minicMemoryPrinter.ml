@@ -1,3 +1,9 @@
+(* MiniC - Emilien Lemaire - DM de Compilation
+ * Fichier: minicMemoryPrinter.ml
+ * Ce fichier contient quelques fonctions qui permettent d'imprimer
+ * la mémoire à tout moment de l'interprétation.
+ * *)
+
 open MinicInterpreterTypes
 
 let string_of_bool b =
@@ -29,6 +35,9 @@ let rec string_of_var: var -> string = function
     )^")"
   | Null -> "Null"
 
+(*
+ * Fonction qui imprime seulement la partie mem de l'environnement.
+ * *)
 let print_mem (mem:memory) : unit =
   let l = List.sort (fun (key1, _) (key2, _) ->
       compare key1 key2
@@ -38,11 +47,18 @@ let print_mem (mem:memory) : unit =
       Printf.printf "%d: %s\n" address (string_of_var var)
     ) l
 
+(*
+ * Fonction qui imprime seulement la partie mem_map de l'environement.
+ * *)
 let print_mem_map: memory_map -> unit =
   Hashtbl.iter (fun name addres ->
       Printf.printf "%s: @%d\n" name addres
     )
 
+(*
+ * Fonction qui imprime les parties mem et mem_map de
+ * l'environnement.
+ * *)
 let print_frame ({mem=mem; mem_map=mem_map; _}: env): unit =
   print_string "________________Memory Map_______________\n";
   print_mem_map mem_map;

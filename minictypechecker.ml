@@ -1,15 +1,11 @@
 (* MiniC - Emilien Lemaire - Projet de Compilation
- * Fichier: minictypecher.ml
+ * Fichier: minicTypeChecker.ml
  * Fichier contenant toutes les fonctions qui permettent de verifier
  * les types de toutes les expressions et fonctions.
- * 
- * Quelques notes importantes:
- *  - J'ai decide de renvoyer un type Void quand j'analyse une instruction et qu'elle est valide
- *  - Pour verifier les types des structures, lorsque l'on utilise des listes d'initialization,
- *      pour leur assigner une valeur, les type des membres sont verfies les uns apres les autres
- *      suivant l'ordre dans lequel ils ont ete declare dans la definition de la structure.
- *  - 
  *
+ * Toutes les fonctions commençant par `get_` renvoient une valeur typ.
+ * Toutes les fonctions commençant par `check_` renvoient une valeur context,
+ * sauf `check_prog` qui renvoient unit.
  * *)
 
 open MinicAstTypes
@@ -21,12 +17,16 @@ exception Unreachable
 exception NotImplemented
 exception NotDefined of string
 
+(* Type: prototype
+ * Ce type permet de représenter les prototype des fonctions MiniC
+ * *)
+type prototype = string * (typ * typ list)
+
 (* Type: context
  * Ce type a été créer afin d'avoir le contexte dans lequel on doit vérifier les
  * tpyes. Contrairement à l'environnement, ce type ne contient pas de valeurs associées aux
  * variables.
  * *)
-type prototype = string * (typ * typ list)
 type context =
   {
     structs: (string * (string * typ) list) list;
@@ -55,7 +55,12 @@ let make_prototype (func: func_def): prototype =
   let (_ , params_typ) = List.split func.params in
   (func.name, (func.return, params_typ))
 
-let rec equal_type typ1 typ2 =
+(* 
+ * Fonction d'aide qui permet de vérifier si deux typ sont équivalents
+ * Elle sert à vérifier notament si une liste d'initialisation est
+ * compatible avec une struct.
+ * *)
+let rec equal_type (typ1: typ) (typ2: typ): bool =
   match typ1, typ2 with
   | Struct(name1, members1), Struct(name2, members2) ->
     if name1 = name2 then

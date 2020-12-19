@@ -7,13 +7,6 @@
  *      est expliqué en commentaire.
  * *)
 
-(*
- * Ajouts:
- *  - BoolLit afin de pouvoir repérer les expression 'true' et ' false'
- *  - StructMember afin de pouvoir repéré les expressions de la forme myStruct.theMember
- *  - Les opérateur binaires Gth Leq Geq Eq Neq
- *  - Les opérateurs unaires Not et Neg
- * *)
 type binop =
   | Plus
   | Minus
@@ -29,6 +22,18 @@ type binop =
   | And
   | Or
 
+(*
+ * Ajouts:
+ *  - BoolLit afin de pouvoir repérer les expression 'true' et ' false'
+ *  - StructMember afin de pouvoir repéré les expressions de la forme myStruct.theMember
+ *  - StructPtrMember afin de pouvoir accéder aux membres des pointeurs de structure
+ *  - Deref afin de déréférencer les pointeurs
+ *  - Address afin d'accéder aux adresse des variables
+ *  - InitList afin de représenter les listes d'initialisations
+ * Modifications:
+ *  - J'ai ajouté le constructeur BinOp afin d'avoir un seul constructeur
+ *     pour toutes les opérations binaires.
+ * *)
 type expr =
   | Cst             of int
   | BinOp           of binop * expr * expr
@@ -44,9 +49,9 @@ type expr =
   | InitList        of expr list
 
 (*
- * Ajouts:
- *  - SetStruct afin de pouvoir affecter de nouvelles valeurs à une structure
- *  - SetStructMember afin de pouvoir affecter une nouvelle valeur à un membre d'une structure
+ * Modifications:
+ *  - Set est devenu un constructeur de expr * expr, afin de pouvoir avoir
+ *     des expressions du type *(a->b) à gauche de l'opérateur '='.
  * *)
 type instr =
   | Putchar         of expr
@@ -60,8 +65,10 @@ and seq = instr list
 (*
  * Ajouts:
  *  - Struct: j'ai donné a Struct un constructeur string * (string * typ) list afin de pouvoir
- *   avoir le nom du type structure ainsi que les noms et types de ces membres. La liste est
- *   dans l'ordre des déclarations des membres lors de la définition de la structure.
+ *     avoir le nom du type structure ainsi que les noms et types de ces membres. La liste est
+ *     dans l'ordre des déclarations des membres lors de la définition de la structure.
+ *  - Ptr: j'ai donné a Ptr un constructeur typ, afin de pouvoir bien vérifier que les valeurs
+ *     pointées sont du bon type dans le vérificateur de type.
  *   *)
 type typ =
   | Int

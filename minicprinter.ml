@@ -1,3 +1,8 @@
+(* MiniC - Emilien Lemaire - DM de COmpilation
+ * Fichier: minicPrinter.ml
+ * Ce fichier contient les fonctions qui permettent d'afficher
+ * le programme à partir de l'AST.
+ * *)
 open Printf
 open MinicAstTypes
 
@@ -227,6 +232,9 @@ let print_prog prog =
   print_vars prog.globals;
   print_funcs prog.functions
 
+(* Ces deux fonctions sont utilisés dans le vérificateur de type
+ * afin d'afficher l'expression ou l'instruction qui est en faute.
+ * *)
 let print_expr_err expr =
   print_newline ();
   print_expr expr;
