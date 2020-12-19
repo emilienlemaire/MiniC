@@ -14,3 +14,4 @@ _build
 minicparser.messages.bak
 error_messages.ml.bak
 struct_erros.messages
+.merlin

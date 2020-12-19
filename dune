@@ -13,5 +13,6 @@
 
 (executable
   (name minic)
-  (libraries menhirLib)
+  (libraries menhirLib core)
+  (preprocess (pps ppx_jane))
   (modes byte exe))

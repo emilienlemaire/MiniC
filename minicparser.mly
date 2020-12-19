@@ -25,7 +25,7 @@
   let locals_tmp: (string * typ) list ref = ref []
 
   let add_local l value =
-    let _ = locals_tmp := !locals_tmp@[l] in
+    let () = locals_tmp := !locals_tmp@[l] in
     match value with
       | None -> []
       | Some n -> [Set(Get(fst l), n)]

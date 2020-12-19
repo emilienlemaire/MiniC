@@ -23,6 +23,41 @@ let get_free_address ({mem=mem;_}: env): int =
   in
   loop mem 0
 
+let garbage_collector (env: env): env =
+  let get_used_addresses (env:env): int list =
+    let addr_map = H.fold (fun _ address acc ->
+        address::acc
+      ) env.mem_map []
+    in
+    let addr_mem = H.fold (fun _ var acc ->
+        match (var: var) with
+        | Ptr(addr) -> addr::acc
+        | Struct(members) ->
+          List.fold_left (fun (acc_list: int list) ((_, addr): string * int) ->
+              addr::acc_list
+            ) acc members
+        | _ -> acc
+      ) env.mem addr_map
+    in
+    let addr_mem =
+      match env.ret_var with
+        | Ptr(addr) -> addr::addr_mem
+        | Struct(members) -> 
+          List.fold_left (fun (acc_list: int list) ((_, addr): string * int) ->
+              addr::acc_list
+            ) addr_mem members
+        | _ -> addr_mem
+    in
+    addr_mem
+  in
+  let addresses = get_used_addresses env in
+  H.iter (fun addr _ ->
+      if not (List.mem addr addresses) then
+        if (H.find env.mem addr) <> env.ret_var then 
+          H.remove env.mem addr
+    ) env.mem;
+  env
+
 let rec make_struct (env: env) (members: (string * typ) list): (string * int) list =
   List.fold_left (fun acc (name, typ) ->
       let address = get_free_address env in
@@ -86,7 +121,13 @@ let rec set_var (env: env) ((name, var): (string * var)): env =
 
 and set_var_at_address (env: env) (address: int): var -> env = function
   | InitList(vars) as il ->
-    (match H.find env.mem address with
+    let var = try H.find env.mem address
+      with Not_found -> raise (BadPointerAccess (
+          sprintf "Segmentation fault at address %d"
+            address
+        ))
+    in
+    (match var with
       | Struct(addresses) as s ->
         List.fold_left2 ( fun env (_, address) var ->
           set_var_at_address env address var
@@ -182,7 +223,9 @@ let rec get_val_of_access (env:env): expr -> var = function
 
 and get_address_of_access (env:env): expr -> int = function
   | Get(name) ->
-    H.find env.mem_map name
+   ( try H.find env.mem_map name
+    with Not_found ->
+      raise (Unreachable (sprintf "Couldn't find %s" name)))
   | StructMember(access, member) ->
     let struct_var = get_val_of_access env access in
     begin
@@ -259,7 +302,8 @@ and eval_call (env: env) (name: string) (args: expr list): var =
   let env = List.fold_left (set_var) env (List.combine args_name args_var) in
   let env = interpret_seq env func_def.code in
   let env = remove_locals env func_def in
-  let _ = Stack.pop env.call_stack in
+  let (_ : string) = Stack.pop env.call_stack in
+  let env = garbage_collector env in
   match func_def.return with
   | Struct(_, members) ->
     (match env.ret_var with
@@ -326,7 +370,7 @@ and interpret_instr (env:env): instr -> env = function
       ret_var= ret_val;
     }
   | Expr e ->
-    let _ = eval_expr env e in
+    let (_ : var) = eval_expr env e in
     env
 
 and interpret_seq (env: env): seq -> env =
@@ -347,4 +391,5 @@ let interpret (prog: prog): unit =
   in
   Stack.push "main" env.call_stack;
   let env = interpret_func env main_func in
+  MP.print_frame env;
   ()

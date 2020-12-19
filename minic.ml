@@ -19,8 +19,8 @@
  *      menhir
  * *)
 
+open Core
 open MinicTypeChecker
-open MinicPrinter
 open MinicInterpreter
 
 module I = MinicParser.MenhirInterpreter
@@ -38,7 +38,7 @@ let get_parse_error env =
     | lazy Nil -> "Invalid syntax"
     | lazy (Cons (I.Element (state, _, _, _), _)) ->
         try (Error_messages.message (I.number state)) with
-        | Not_found -> "Unknown syntax error."
+        | Not_found_s msg -> "Unknown syntax error."
 
 let rec parse lexbuf (checkpoint : MinicAstTypes.prog I.checkpoint) =
   match checkpoint with
@@ -60,18 +60,26 @@ let rec parse lexbuf (checkpoint : MinicAstTypes.prog I.checkpoint) =
   | I.Rejected ->
        raise (SyntaxError (None, "Unknown syntax error."))
 
-let main prog =
-  let _ =
+let run_interpreter prog =
+  let () =
     try check_prog prog
     with TypeError msg ->
       Printf.eprintf "TypeError: %s\n" msg;
       exit 1
   in
-  print_prog prog;
   interpret prog
 
-let _ =
-  let cin = open_in Sys.argv.(1) in
+let run_printer prog =
+  let () =
+    try check_prog prog
+    with TypeError msg -> 
+      Printf.eprintf "TypeError: %s\n" msg;
+      exit 1
+  in
+  MinicPrinter.print_prog prog
+
+let main filename =
+  let cin = In_channel.create filename in
   let lexbuf = Lexing.from_channel cin in
   let res =
     try Ok (parse lexbuf (MinicParser.Incremental.prog lexbuf.lex_curr_p))
@@ -80,6 +88,27 @@ let _ =
         | Some (line, col) -> Error (Printf.sprintf "Syntax error: %d:%d %s" line col err)
         | None -> Error (Printf.sprintf "Syntax error: %s" err)
   in
+  In_channel.close cin;
   match res with
-    | Ok prog -> main prog
-    | Error err -> Printf.eprintf "MiniC Error compiling: %s\n\t%s" Sys.argv.(1) err; exit 1
+    | Ok prog -> prog
+    | Error err -> Printf.eprintf "MiniC Error compiling: %s\n\t%s" filename err; exit 1
+
+let command =
+  Core.Command.basic
+    ~summary: "Interprete a MiniC file."
+    ~readme:(fun () -> "More detailed information")
+    Command.Let_syntax.(
+      let%map_open
+        display = flag "-display" no_arg ~doc:" displays the code from the generated AST."
+        and filename =
+          anon (maybe_with_default "-" ("filename" %: Filename.arg_type))
+      in
+      fun () ->
+        let prog = main filename in
+        if display then
+          run_printer prog
+        else
+          run_interpreter prog
+    )
+
+let () = Command.run command

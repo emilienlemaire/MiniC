@@ -338,7 +338,7 @@ let rec check_instr (ctx: context): instr -> context = function
             ))
       | _ -> raise Unreachable)
   | Expr(expr) ->
-    let _ = get_expr_typ ctx expr in
+    let (_: typ) = get_expr_typ ctx expr in
     ctx
 and check_seq (ctx: context): seq -> context =
   List.fold_left (check_instr) ctx
@@ -351,7 +351,7 @@ let check_func (ctx: context) (func: func_def): context =
     current_ret_type= Some(func.return);
   }
   in
-  let _ = check_seq ctx' func.code in
+  let (_ : context) = check_seq ctx' func.code in
   {
     structs= ctx.structs;
     vars= ctx.vars;
@@ -370,6 +370,6 @@ let check_prog (prog: prog) =
     current_ret_type= None;
   }
   in
-  let _ = check_funcs ctx prog.functions in
+  let (_: context) = check_funcs ctx prog.functions in
   ()
 

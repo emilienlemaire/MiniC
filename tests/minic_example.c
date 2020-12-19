@@ -17,9 +17,13 @@ struct B {
   int a;
 };
 
+struct firstStruct nonInitilized;
+
 int PARAM = 5;
 
 int **PTR;
+
+int *PTR2 = &PARAM;
 
 struct B b1 = { 5 };
 
@@ -31,8 +35,18 @@ int fact(int n) {
     }
 }
 
+int addOne(int i) {
+  int j = i + 1;
+  return j;
+}
+
 struct firstStruct addBoth(struct firstStruct s, int i) {
+  struct firstStruct tmp = {s.a + i, s.b + i};
+  if(i > 0) {
+    return tmp;
+  } else {
     return {s.a + i, s.b + i};
+  }
 }
 
 void main() {
@@ -44,13 +58,13 @@ void main() {
     }
 
     int i = 0;
+    struct firstStruct structExample = {2, (2+2)};
 
     while(i < 10) {
       putchar(i);
       i = i + 1;
     }
 
-    struct firstStruct structExample = {2, (2+2)};
     struct myStruct example = {{1, 2}, 2};
     struct firstStruct *strPtr;
     structExample = {2, 2};
@@ -60,15 +74,20 @@ void main() {
 
     int v = (*strPtr).a;
 
+
     **PTR = 5;
 
     struct A a = {PTR, *PTR};
+    structExample = addBoth(structExample, 2);
+    structExample.b = addBoth(structExample, -6).b;
 
-    structExample.a = addBoth(structExample, 2).a;
+    int w = addOne(12);
 
     //structExample.b = fact(5);
-    // Attention ceci est permis mais dans l'etat actuel de l'interpreteur
-    // cela mets 12 a l'address de *(a.b)
+    // Attention ceci est permis mais
+    // peut créer une erreur si l'adresse
+    // finale n'est pas valide, ou modifier
+    // une variable quelconque si elle est valide.
      **(PTR + 1) = 12;
 
     putchar(fact(PARAM));
