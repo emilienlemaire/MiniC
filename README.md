@@ -2,21 +2,21 @@
 * [Usage](#usage)
   + [Modules requis](#modules-requis)
   + [Compilation](#compilation)
-  + [Exécution](#ex-cution)
+  + [Exécution](#exécution)
 * [Notes](#notes)
 * [Extensions](#extensions)
   + [Extensions réalisées](#extensions-réalisées)
   + [Implementation des extensions](#implementation-des-extensions)
-    - [Ajouts d'opérateurs](#ajouts-d-op-rateurs)
+    - [Ajouts d'opérateurs](#op)
     - [Structures](#structures)
     - [Pointeurs](#pointeurs)
     - [Erreurs de syntaxe verbeuses](#erreurs-de-syntaxe-verbeuses)
     - [Afficheur](#afficheur)
   + [Interprète](#interprète)
-    - [Mémoire](#m-moire)
+    - [Mémoire](#mémoire)
     - [Variables non initialisées](#variables-non-initialisées)
     - [Structs dans la mémoire](#structs-dans-la-mémoire)
-    - [Typage dans l'interprète](#typage-dans-l-interprète)
+    - [Typage dans l'interprète](#inter)
     - [Exception Unreachable](#exception-unreachable)
     
 ## Usage
@@ -58,7 +58,7 @@ leur nom contient le mot `error`.
  - [X] Interprète
  
 ### Implementation des extensions
-#### Ajouts d'opérateurs
+#### <a name=op></a>Ajout d'opérateurs
 J'ai ajouté les opérateurs binaires suivants: `== != - / * % <= >= > && ||` et les opérateurs unaires
 suivants: `- ! &`.
 
@@ -243,7 +243,7 @@ par défaut est `Null`. Pour les structs chaque membre reçoit la valeur par dé
 Comme vous pouvez le voir dans la table, et afin de ce rapprocher du C, les membres des structs
 pointent vers une case mémoire, souvent la suivante.
 
-#### Typage dans l'interprète
+#### <a name=inter></a>Typage dans l'interprète
 Pour l'interprète j'ai créer de nouveaux types afin de mieux pouvoir les manipuler pour l'interprétation.
 Le plupart ne changent pas mais, j'ai ajouté un type `NamedInitList` qui permet, lorsque les fonctions
 retournent une struct de nommé la liste d'initialisation retournée et d'accéder directement aux membres
